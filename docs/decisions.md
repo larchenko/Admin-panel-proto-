@@ -9,6 +9,9 @@ One entry per decision. Newest at the bottom. Status: fixed / placeholder / open
 | 3 | 2026-09-20 | UI language English. Light theme only. No authentication in scope. One role (Master Admin). | fixed | See `domain.md`. |
 | 4 | 2026-09-20 | Tailwind v4 via the browser build (`@tailwindcss/browser`), no build step. | fixed for prototype | The browser build cannot `@import` files, so `assets/tailwind.js` fetches `theme.css` and hands it to Tailwind. Switch to Tailwind CLI only if pages get slow. Not for production. |
 | 5 | 2026-09-20 | Theme lives in one file `prototype/assets/theme.css`, imported by every page. | fixed | Tokens named exactly as shadcn (neutral preset), OKLCH values. |
-| 6 | 2026-09-20 | Font: Inter via Google Fonts. | placeholder | No brand yet. Replace in Phase 2. |
-| 7 | 2026-09-20 | Colours: shadcn neutral preset, near-black primary. | placeholder | No brand yet. Replace in Phase 2. Verify token set against the current Spartan theme before finalising. |
+| 6 | 2026-09-20 | Font: Inter via Google Fonts. | placeholder | No brand yet. Replace when a brand exists. |
+| 7 | 2026-09-20 | Colours: shadcn neutral preset, near-black primary. | placeholder | No brand yet. Replace when a brand exists. Token set verified against spartan.ng/documentation/theming on 2026-09-20: identical names, OKLCH. Added `--destructive-foreground` and `--chart-1..5` for parity. |
 | 8 | 2026-09-20 | Behaviour via native HTML (`<dialog>`, `popover`) plus minimal vanilla JS in `app.js`. | fixed | Keeps the deliverable an HTML prototype, not an app. |
+| 9 | 2026-09-20 | Base text size 14px (`text-sm`) on the body; three weights 400/500/600. Type roles listed on `kit/foundations.html`. | fixed | shadcn convention for dense admin UIs. |
+| 10 | 2026-09-20 | Icons: line variant by default; fill only for active nav / selected state. Sizes 16px inline, 20px nav and toolbar, 30px+ empty states. Icon-only controls need `aria-label` + tooltip. | fixed | One icon per meaning, vocabulary on `kit/foundations.html`. |
+| 11 | 2026-09-20 | Elevation: borders for content on the page; shadow only for floating layers (popover `shadow-md`, dialog `shadow-lg`, subtle `shadow-xs` on buttons/inputs). | fixed | Mirrors shadcn defaults. |

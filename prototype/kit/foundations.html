@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foundations · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <header class="border-b">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+      <a href="../index.html" class="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground">
+        <i class="ri-arrow-left-line"></i> Prototype
+      </a>
+      <span class="text-muted-foreground">Kit · Foundations</span>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-6 py-12">
+    <p class="text-muted-foreground">Phase 2</p>
+    <h1 class="mt-1 text-3xl font-semibold tracking-tight">Foundations</h1>
+    <p class="mt-3 max-w-2xl text-muted-foreground">
+      Everything a component is allowed to use: colour tokens, type scale, spacing, radius,
+      shadow and icon rules. Values shown are read live from <code class="rounded-sm bg-muted px-1 py-0.5">theme.css</code>,
+      so this page never goes stale. Font and colours are placeholders until a brand exists.
+    </p>
+
+    <!-- Table of contents -->
+    <nav class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-muted-foreground">
+      <a href="#colour" class="hover:text-foreground">Colour</a>
+      <a href="#typography" class="hover:text-foreground">Typography</a>
+      <a href="#spacing" class="hover:text-foreground">Spacing</a>
+      <a href="#radius" class="hover:text-foreground">Radius</a>
+      <a href="#shadow" class="hover:text-foreground">Shadow</a>
+      <a href="#icons" class="hover:text-foreground">Icons</a>
+      <a href="#spartan" class="hover:text-foreground">Spartan mapping</a>
+    </nav>
+
+    <!-- ============================================================ COLOUR -->
+    <section id="colour" class="mt-16">
+      <h2 class="text-xl font-semibold tracking-tight">Colour</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Tokens come in pairs: a surface and the text that sits on it (<em>-foreground</em>).
+        Components use the pair, never a raw colour. Values are OKLCH: lightness 0–1, chroma, hue.
+      </p>
+
+      <h3 class="mt-8 font-medium">Surfaces &amp; text</h3>
+      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="swatch" data-bg="background" data-fg="foreground" data-note="Page background and default text"></div>
+        <div class="swatch" data-bg="card" data-fg="card-foreground" data-note="Cards, panels"></div>
+        <div class="swatch" data-bg="popover" data-fg="popover-foreground" data-note="Dropdowns, tooltips"></div>
+        <div class="swatch" data-bg="muted" data-fg="muted-foreground" data-note="Subdued fills; captions, secondary text"></div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Roles</h3>
+      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="swatch" data-bg="primary" data-fg="primary-foreground" data-note="Main action per screen"></div>
+        <div class="swatch" data-bg="secondary" data-fg="secondary-foreground" data-note="Secondary buttons"></div>
+        <div class="swatch" data-bg="accent" data-fg="accent-foreground" data-note="Hover and selected rows / items"></div>
+        <div class="swatch" data-bg="destructive" data-fg="destructive-foreground" data-note="Delete, irreversible actions, errors"></div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Lines &amp; focus</h3>
+      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="swatch" data-bg="border" data-fg="foreground" data-note="Dividers, card outlines"></div>
+        <div class="swatch" data-bg="input" data-fg="foreground" data-note="Form field borders"></div>
+        <div class="swatch" data-bg="ring" data-fg="foreground" data-note="Keyboard focus ring"></div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Sidebar</h3>
+      <p class="mt-1 text-muted-foreground">Own set, so the navigation can differ from the content area later.</p>
+      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="swatch" data-bg="sidebar" data-fg="sidebar-foreground" data-note="Sidebar surface"></div>
+        <div class="swatch" data-bg="sidebar-primary" data-fg="sidebar-primary-foreground" data-note="Sidebar emphasis"></div>
+        <div class="swatch" data-bg="sidebar-accent" data-fg="sidebar-accent-foreground" data-note="Active nav item"></div>
+        <div class="swatch" data-bg="sidebar-border" data-fg="sidebar-foreground" data-note="Sidebar divider"></div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Charts</h3>
+      <p class="mt-1 text-muted-foreground">Kept for parity with Spartan. Not used until we have data views.</p>
+      <div class="mt-3 flex gap-2">
+        <div class="h-10 flex-1 rounded-md bg-chart-1"></div>
+        <div class="h-10 flex-1 rounded-md bg-chart-2"></div>
+        <div class="h-10 flex-1 rounded-md bg-chart-3"></div>
+        <div class="h-10 flex-1 rounded-md bg-chart-4"></div>
+        <div class="h-10 flex-1 rounded-md bg-chart-5"></div>
+      </div>
+    </section>
+
+    <!-- ======================================================== TYPOGRAPHY -->
+    <section id="typography" class="mt-16">
+      <h2 class="text-xl font-semibold tracking-tight">Typography</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Inter (placeholder). Base size for the back office is <strong>14px</strong> (<code class="rounded-sm bg-muted px-1 py-0.5">text-sm</code>),
+        the shadcn convention for dense admin screens. Three weights only: 400, 500, 600.
+      </p>
+
+      <div class="mt-6 divide-y rounded-lg border">
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Page title</span>
+          <span class="text-2xl font-semibold tracking-tight">Instruments</span>
+          <code class="text-xs text-muted-foreground">text-2xl font-semibold</code>
+        </div>
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Section title</span>
+          <span class="text-lg font-semibold">General information</span>
+          <code class="text-xs text-muted-foreground">text-lg font-semibold</code>
+        </div>
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Card title</span>
+          <span class="font-medium">Underlying assets</span>
+          <code class="text-xs text-muted-foreground">text-sm font-medium</code>
+        </div>
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Body</span>
+          <span>The product references one or more instruments and inherits their currency.</span>
+          <code class="text-xs text-muted-foreground">text-sm</code>
+        </div>
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Secondary</span>
+          <span class="text-muted-foreground">Last updated 2 hours ago by Master Admin</span>
+          <code class="text-xs text-muted-foreground">text-sm text-muted-foreground</code>
+        </div>
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Label</span>
+          <span class="font-medium">ISIN</span>
+          <code class="text-xs text-muted-foreground">text-sm font-medium</code>
+        </div>
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Caption / helper</span>
+          <span class="text-xs text-muted-foreground">12 characters, letters and digits</span>
+          <code class="text-xs text-muted-foreground">text-xs text-muted-foreground</code>
+        </div>
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Overline</span>
+          <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Settings</span>
+          <code class="text-xs text-muted-foreground">text-xs uppercase tracking-wide</code>
+        </div>
+        <div class="grid gap-2 p-4 sm:grid-cols-[12rem_1fr_10rem] sm:items-baseline">
+          <span class="text-muted-foreground">Code / identifiers</span>
+          <span class="font-mono">CH0012345678</span>
+          <code class="text-xs text-muted-foreground">font-mono</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================== SPACING -->
+    <section id="spacing" class="mt-16">
+      <h2 class="text-xl font-semibold tracking-tight">Spacing</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Tailwind's 4px grid. One unit = 0.25rem = 4px. We mostly use 1, 2, 3, 4, 6 and 8.
+        Inside components: 2–3. Between components: 4–6. Between sections: 8+.
+      </p>
+      <div class="mt-6 space-y-2">
+        <div class="flex items-center gap-4"><code class="w-10 text-xs text-muted-foreground">1</code><div class="h-4 w-1 bg-primary"></div><span class="text-muted-foreground">4px</span></div>
+        <div class="flex items-center gap-4"><code class="w-10 text-xs text-muted-foreground">2</code><div class="h-4 w-2 bg-primary"></div><span class="text-muted-foreground">8px</span></div>
+        <div class="flex items-center gap-4"><code class="w-10 text-xs text-muted-foreground">3</code><div class="h-4 w-3 bg-primary"></div><span class="text-muted-foreground">12px</span></div>
+        <div class="flex items-center gap-4"><code class="w-10 text-xs text-muted-foreground">4</code><div class="h-4 w-4 bg-primary"></div><span class="text-muted-foreground">16px</span></div>
+        <div class="flex items-center gap-4"><code class="w-10 text-xs text-muted-foreground">6</code><div class="h-4 w-6 bg-primary"></div><span class="text-muted-foreground">24px</span></div>
+        <div class="flex items-center gap-4"><code class="w-10 text-xs text-muted-foreground">8</code><div class="h-4 w-8 bg-primary"></div><span class="text-muted-foreground">32px</span></div>
+        <div class="flex items-center gap-4"><code class="w-10 text-xs text-muted-foreground">12</code><div class="h-4 w-12 bg-primary"></div><span class="text-muted-foreground">48px</span></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ RADIUS -->
+    <section id="radius" class="mt-16">
+      <h2 class="text-xl font-semibold tracking-tight">Radius</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        One base token <code class="rounded-sm bg-muted px-1 py-0.5">--radius</code> (<span data-var="--radius"></span>), the rest is derived.
+        Change the base and every corner follows.
+      </p>
+      <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div><div class="h-20 rounded-sm border bg-card"></div><p class="mt-2 font-medium">rounded-sm</p><p class="text-xs text-muted-foreground">badges, code, small chips</p></div>
+        <div><div class="h-20 rounded-md border bg-card"></div><p class="mt-2 font-medium">rounded-md</p><p class="text-xs text-muted-foreground">buttons, inputs, menu items</p></div>
+        <div><div class="h-20 rounded-lg border bg-card"></div><p class="mt-2 font-medium">rounded-lg</p><p class="text-xs text-muted-foreground">cards, dialogs, popovers</p></div>
+        <div><div class="h-20 rounded-xl border bg-card"></div><p class="mt-2 font-medium">rounded-xl</p><p class="text-xs text-muted-foreground">large containers, empty states</p></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ SHADOW -->
+    <section id="shadow" class="mt-16">
+      <h2 class="text-xl font-semibold tracking-tight">Shadow</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Shadows mark elevation only. Content that sits on the page uses a border, not a shadow.
+      </p>
+      <div class="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
+        <div><div class="h-20 rounded-lg border bg-card"></div><p class="mt-2 font-medium">border only</p><p class="text-xs text-muted-foreground">cards, tables, panels</p></div>
+        <div><div class="h-20 rounded-lg border bg-card shadow-xs"></div><p class="mt-2 font-medium">shadow-xs</p><p class="text-xs text-muted-foreground">buttons, inputs (subtle lift)</p></div>
+        <div><div class="h-20 rounded-lg border bg-card shadow-md"></div><p class="mt-2 font-medium">shadow-md</p><p class="text-xs text-muted-foreground">dropdowns, popovers</p></div>
+        <div><div class="h-20 rounded-lg border bg-card shadow-lg"></div><p class="mt-2 font-medium">shadow-lg</p><p class="text-xs text-muted-foreground">dialogs</p></div>
+      </div>
+    </section>
+
+    <!-- ============================================================= ICONS -->
+    <section id="icons" class="mt-16">
+      <h2 class="text-xl font-semibold tracking-tight">Icons</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        RemixIcon, used as an icon font: <code class="rounded-sm bg-muted px-1 py-0.5">&lt;i class="ri-search-line"&gt;&lt;/i&gt;</code>.
+        The icon inherits the text colour and its size follows <code class="rounded-sm bg-muted px-1 py-0.5">font-size</code>.
+      </p>
+
+      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+        <div class="rounded-lg border p-5">
+          <h3 class="font-medium">Rule 1 · Line by default, fill for "on"</h3>
+          <p class="mt-1 text-muted-foreground">Fill marks the active navigation item or a selected state. Nothing else.</p>
+          <div class="mt-4 flex flex-wrap gap-6">
+            <span class="inline-flex items-center gap-2"><i class="ri-home-5-line text-xl"></i> Home</span>
+            <span class="inline-flex items-center gap-2 font-medium"><i class="ri-home-5-fill text-xl"></i> Home (active)</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-star-line text-xl"></i> Watch</span>
+            <span class="inline-flex items-center gap-2 font-medium"><i class="ri-star-fill text-xl"></i> Watching</span>
+          </div>
+        </div>
+
+        <div class="rounded-lg border p-5">
+          <h3 class="font-medium">Rule 2 · Three sizes</h3>
+          <p class="mt-1 text-muted-foreground">Inline with text 16px, navigation and toolbar 20px, empty states 32px+.</p>
+          <div class="mt-4 space-y-3">
+            <p class="inline-flex items-center gap-2"><i class="ri-search-line text-base"></i> 16px · <code class="text-xs text-muted-foreground">text-base</code> · in buttons, inputs, table cells</p><br>
+            <p class="inline-flex items-center gap-2"><i class="ri-search-line text-xl"></i> 20px · <code class="text-xs text-muted-foreground">text-xl</code> · sidebar nav, toolbar icon buttons</p><br>
+            <p class="inline-flex items-center gap-2"><i class="ri-search-line text-3xl"></i> 30px · <code class="text-xs text-muted-foreground">text-3xl</code> · empty states, illustrations</p>
+          </div>
+        </div>
+
+        <div class="rounded-lg border p-5">
+          <h3 class="font-medium">Rule 3 · Icon + label, or icon with a tooltip</h3>
+          <p class="mt-1 text-muted-foreground">An icon alone must have an accessible name (<code class="rounded-sm bg-muted px-1 py-0.5">aria-label</code>) and a tooltip. Decorative icons get <code class="rounded-sm bg-muted px-1 py-0.5">aria-hidden</code>.</p>
+          <div class="mt-4 flex flex-wrap items-center gap-6">
+            <span class="inline-flex items-center gap-2"><i class="ri-add-line text-base" aria-hidden="true"></i> New instrument</span>
+            <span class="inline-flex size-8 items-center justify-center rounded-md border" role="img" aria-label="Filter"><i class="ri-filter-3-line text-xl"></i></span>
+          </div>
+        </div>
+
+        <div class="rounded-lg border p-5">
+          <h3 class="font-medium">Vocabulary we will reuse</h3>
+          <p class="mt-1 text-muted-foreground">Fix one icon per meaning so screens stay consistent.</p>
+          <div class="mt-4 grid grid-cols-2 gap-y-3 text-muted-foreground sm:grid-cols-3">
+            <span class="inline-flex items-center gap-2"><i class="ri-add-line text-xl text-foreground"></i> Create</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-pencil-line text-xl text-foreground"></i> Edit</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-delete-bin-line text-xl text-foreground"></i> Delete</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-search-line text-xl text-foreground"></i> Search</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-filter-3-line text-xl text-foreground"></i> Filter</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-arrow-up-down-line text-xl text-foreground"></i> Sort</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-more-2-line text-xl text-foreground"></i> More actions</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-external-link-line text-xl text-foreground"></i> Open</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-close-line text-xl text-foreground"></i> Close / clear</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-check-line text-xl text-foreground"></i> Confirm</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-error-warning-line text-xl text-foreground"></i> Warning</span>
+            <span class="inline-flex items-center gap-2"><i class="ri-information-line text-xl text-foreground"></i> Info</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================== SPARTAN -->
+    <section id="spartan" class="mt-16 mb-24">
+      <h2 class="text-xl font-semibold tracking-tight">Spartan mapping</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Token names and the OKLCH format match Spartan UI's theme file one to one. A developer copies the
+        <code class="rounded-sm bg-muted px-1 py-0.5">:root</code> block from <code class="rounded-sm bg-muted px-1 py-0.5">theme.css</code> into the Angular project's global styles and the theme is done.
+        Icons map to <code class="rounded-sm bg-muted px-1 py-0.5">@ng-icons/remixicon</code>; the icon name stays the same
+        (<code class="rounded-sm bg-muted px-1 py-0.5">ri-search-line</code> → <code class="rounded-sm bg-muted px-1 py-0.5">remixSearchLine</code>).
+      </p>
+    </section>
+  </main>
+
+  <script>
+    // Render swatches: read the live value of each token from the stylesheet.
+    // Tailwind loads asynchronously, so wait until the theme is actually applied.
+    const root = getComputedStyle(document.documentElement);
+    const val = (name) => root.getPropertyValue(name).trim();
+
+    function renderWhenReady() {
+      if (!val('--background')) { requestAnimationFrame(renderWhenReady); return; }
+      render();
+    }
+    function render() {
+    document.querySelectorAll('.swatch').forEach((el) => {
+      const bg = el.dataset.bg, fg = el.dataset.fg;
+      el.className = 'rounded-lg border overflow-hidden';
+      el.innerHTML = `
+        <div class="flex h-20 items-end p-3" style="background: var(--${bg}); color: var(--${fg})">
+          <span class="font-medium">Aa</span>
+        </div>
+        <div class="p-3">
+          <p class="font-medium">--${bg}</p>
+          <p class="font-mono text-xs text-muted-foreground">${val('--' + bg)}</p>
+          ${fg && fg !== 'foreground' && fg !== 'sidebar-foreground' || bg === 'background' || bg === 'sidebar'
+            ? `<p class="mt-1 font-medium">--${fg}</p><p class="font-mono text-xs text-muted-foreground">${val('--' + fg)}</p>` : ''}
+          <p class="mt-2 text-xs text-muted-foreground">${el.dataset.note}</p>
+        </div>`;
+    });
+    document.querySelectorAll('[data-var]').forEach((el) => { el.textContent = val(el.dataset.var); });
+    }
+    renderWhenReady();
+  </script>
+  <script src="../assets/app.js"></script>
+</body>
+</html>
