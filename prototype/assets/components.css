@@ -1,0 +1,44 @@
+/*
+  components.css — component recipes.
+
+  Each recipe is a short class (e.g. .btn .btn-outline .btn-sm) composed from the
+  same Tailwind utilities shadcn/ui uses. Why recipes instead of raw utilities in
+  the markup:
+    - markup stays readable for designers and reviewers
+    - one place to change a component
+    - maps literally onto Spartan Helm inputs:  .btn-outline  ->  hlmBtn variant="outline"
+
+  Convention:  .<component>            base
+               .<component>-<variant>  visual variant
+               .<component>-<size>     size (omit for default)
+  Icons inside components are <i class="ri-..."> and are sized by the recipe.
+*/
+
+@layer components {
+
+  /* ---------------------------------------------------------------- Button
+     shadcn: components/ui/button.tsx     Spartan: hlmBtn (variant, size)
+  */
+  .btn {
+    @apply inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap
+           rounded-md text-sm font-medium transition-all select-none
+           outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+           disabled:pointer-events-none disabled:opacity-50
+           aria-disabled:pointer-events-none aria-disabled:opacity-50
+           h-9 px-4 py-2 has-[>i]:px-3
+           [&_i]:text-base [&_i]:leading-none [&_i]:pointer-events-none;
+  }
+  /* variants */
+  .btn-default     { @apply bg-primary text-primary-foreground shadow-xs hover:bg-primary/90; }
+  .btn-secondary   { @apply bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80; }
+  .btn-outline     { @apply border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground; }
+  .btn-ghost       { @apply hover:bg-accent hover:text-accent-foreground; }
+  .btn-destructive { @apply bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20; }
+  .btn-link        { @apply text-primary underline-offset-4 hover:underline h-auto px-0 py-0; }
+  /* sizes */
+  .btn-sm   { @apply h-8 gap-1.5 px-3 has-[>i]:px-2.5; }
+  .btn-lg   { @apply h-10 px-6 has-[>i]:px-4; }
+  .btn-icon { @apply size-9 p-0 has-[>i]:px-0; }
+  .btn-icon.btn-sm { @apply size-8; }
+  .btn-icon.btn-lg { @apply size-10; }
+}

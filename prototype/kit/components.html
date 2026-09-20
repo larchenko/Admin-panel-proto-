@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Components · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <header class="border-b">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+      <a href="../index.html" class="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground">
+        <i class="ri-arrow-left-line"></i> Prototype
+      </a>
+      <nav class="flex gap-6 text-muted-foreground">
+        <a href="./foundations.html" class="hover:text-foreground">Foundations</a>
+        <span class="text-foreground">Components</span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-6 py-12">
+    <p class="text-muted-foreground">Phase 3</p>
+    <h1 class="mt-1 text-3xl font-semibold tracking-tight">Components</h1>
+    <p class="mt-3 max-w-2xl text-muted-foreground">
+      The building blocks screens are assembled from. Each component lists its variants, sizes and
+      states, the recipe classes to use, and the Spartan Helm equivalent. Recipes live in
+      <code class="rounded-sm bg-muted px-1 py-0.5">assets/components.css</code>.
+    </p>
+
+    <nav class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-muted-foreground">
+      <a href="#button" class="hover:text-foreground">Button</a>
+    </nav>
+
+    <!-- ============================================================ BUTTON -->
+    <section id="button" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Button</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlmBtn</code> · shadcn: <code>button.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Triggers an action. Base class <code class="rounded-sm bg-muted px-1 py-0.5">btn</code> plus one variant,
+        optionally one size. Default size is 36px high.
+      </p>
+
+      <!-- Variants -->
+      <h3 class="mt-8 font-medium">Variants</h3>
+      <p class="mt-1 text-muted-foreground">Left to right: descending emphasis. One <em>default</em> per screen.</p>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="btn btn-default">Default</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-destructive">Destructive</button>
+          <button class="btn btn-link">Link</button>
+        </div>
+      </div>
+      <div class="mt-3 grid gap-x-8 gap-y-2 text-muted-foreground sm:grid-cols-2">
+        <p><code class="text-foreground">btn-default</code> · the primary action of the screen or dialog: Save, Create</p>
+        <p><code class="text-foreground">btn-secondary</code> · a second action of equal weight next to a default</p>
+        <p><code class="text-foreground">btn-outline</code> · common secondary actions: Cancel, Export, Filter</p>
+        <p><code class="text-foreground">btn-ghost</code> · low-emphasis, toolbars, icon buttons in tables</p>
+        <p><code class="text-foreground">btn-destructive</code> · irreversible actions only, inside a confirmation</p>
+        <p><code class="text-foreground">btn-link</code> · inline in text, or "View all" style links</p>
+      </div>
+
+      <!-- Sizes -->
+      <h3 class="mt-8 font-medium">Sizes</h3>
+      <p class="mt-1 text-muted-foreground">Default 36px. Small 32px for dense table rows and toolbars. Large 40px is rare; use for empty-state calls to action.</p>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="btn btn-outline btn-sm">Small</button>
+          <button class="btn btn-outline">Default</button>
+          <button class="btn btn-outline btn-lg">Large</button>
+        </div>
+      </div>
+
+      <!-- With icons -->
+      <h3 class="mt-8 font-medium">With icons</h3>
+      <p class="mt-1 text-muted-foreground">Icon sits before the label. Icon-only buttons need <code class="rounded-sm bg-muted px-1 py-0.5">aria-label</code> and a tooltip.</p>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="btn btn-default"><i class="ri-add-line"></i> New instrument</button>
+          <button class="btn btn-outline"><i class="ri-download-2-line"></i> Export</button>
+          <button class="btn btn-outline btn-icon" aria-label="Filter" title="Filter"><i class="ri-filter-3-line"></i></button>
+          <button class="btn btn-ghost btn-icon" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button>
+          <button class="btn btn-ghost btn-icon btn-sm" aria-label="Edit" title="Edit"><i class="ri-pencil-line"></i></button>
+        </div>
+      </div>
+
+      <!-- States -->
+      <h3 class="mt-8 font-medium">States</h3>
+      <p class="mt-1 text-muted-foreground">Hover darkens the fill slightly. Focus shows a 3px ring (press Tab). Disabled fades to 50% and ignores the pointer. Loading swaps the icon for a spinner and disables the button.</p>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-4">
+          <div><p class="mb-3 text-xs text-muted-foreground">Rest</p><button class="btn btn-default">Save</button></div>
+          <div><p class="mb-3 text-xs text-muted-foreground">Focus (Tab to it)</p><button class="btn btn-default">Save</button></div>
+          <div><p class="mb-3 text-xs text-muted-foreground">Disabled</p><button class="btn btn-default" disabled>Save</button></div>
+          <div><p class="mb-3 text-xs text-muted-foreground">Loading</p><button class="btn btn-default" disabled aria-busy="true"><i class="ri-loader-4-line animate-spin"></i> Saving…</button></div>
+        </div>
+      </div>
+
+      <!-- Rules -->
+      <h3 class="mt-8 font-medium">Rules</h3>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>One <code class="text-foreground">btn-default</code> per view. If two actions compete, one of them is outline.</li>
+        <li>Destructive buttons never sit alone on a page; they live inside a confirmation dialog.</li>
+        <li>Labels are verbs: Save, Create instrument, Cancel. Not "OK", not "Yes".</li>
+        <li>In dialogs and forms the primary action is on the right, Cancel to its left.</li>
+        <li>Use <code class="text-foreground">&lt;button type="button"&gt;</code> unless the button submits a form.</li>
+      </ul>
+
+      <!-- Markup -->
+      <h3 class="mt-8 font-medium">Markup</h3>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;button type="button" class="btn btn-default"&gt;Save&lt;/button&gt;
+&lt;button type="button" class="btn btn-outline btn-sm"&gt;Cancel&lt;/button&gt;
+&lt;button type="button" class="btn btn-default"&gt;&lt;i class="ri-add-line"&gt;&lt;/i&gt; New instrument&lt;/button&gt;
+&lt;button type="button" class="btn btn-ghost btn-icon" aria-label="More actions" title="More actions"&gt;
+  &lt;i class="ri-more-2-line"&gt;&lt;/i&gt;
+&lt;/button&gt;</code></pre>
+      <p class="mt-3 text-xs text-muted-foreground">
+        Spartan equivalent: <code>&lt;button hlmBtn variant="outline" size="sm"&gt;Cancel&lt;/button&gt;</code>.
+        Variant and size names are identical.
+      </p>
+    </section>
+  </main>
+  <script src="../assets/app.js"></script>
+</body>
+</html>
