@@ -42,6 +42,9 @@
       <a href="#radio" class="hover:text-foreground">Radio</a>
       <a href="#switch" class="hover:text-foreground">Switch</a>
       <a href="#form-example" class="hover:text-foreground">Form example</a>
+      <a href="#card" class="hover:text-foreground">Card</a>
+      <a href="#badge" class="hover:text-foreground">Badge</a>
+      <a href="#table" class="hover:text-foreground">Table</a>
     </nav>
 
     <!-- ============================================================ BUTTON -->
@@ -525,6 +528,309 @@
           </ul>
         </aside>
       </div>
+    </section>
+
+    <!-- ============================================================== CARD -->
+    <section id="card" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Card</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlmCard</code> + <code>hlmCardHeader/Title/Description/Content/Footer</code> · shadcn: <code>card.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Groups related content under a title. Header, content, footer, each optional. A form section, a
+        details panel and a settings group are all cards. Deviation from shadcn: no shadow, radius <code class="rounded-sm bg-muted px-1 py-0.5">lg</code>, per foundations.
+      </p>
+
+      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Basic card</h3>
+            <p class="card-description">Header with title and description, then content.</p>
+          </div>
+          <div class="card-content">
+            <p>Content is plain body text or any other components. Padding is 24px all round.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">With an action</h3>
+            <p class="card-description">The action sits top-right and stays there.</p>
+            <div class="card-action"><button type="button" class="btn btn-outline btn-sm"><i class="ri-pencil-line"></i> Edit</button></div>
+          </div>
+          <div class="card-content">
+            <dl class="grid grid-cols-[8rem_1fr] gap-y-2">
+              <dt class="text-muted-foreground">ISIN</dt><dd class="font-mono">CH0598765432</dd>
+              <dt class="text-muted-foreground">Currency</dt><dd>CHF</dd>
+              <dt class="text-muted-foreground">Status</dt><dd><span class="badge badge-success"><span class="badge-dot"></span> Live</span></dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header border-b">
+            <h3 class="card-title">Form section</h3>
+            <p class="card-description">Bordered header and footer. This is the shape the form example uses.</p>
+          </div>
+          <div class="card-content">
+            <div class="field">
+              <label class="label" for="c-name">Name</label>
+              <input class="input" id="c-name" placeholder="e.g. Nestlé SA">
+            </div>
+          </div>
+          <div class="card-footer border-t justify-end gap-3">
+            <button type="button" class="btn btn-outline">Cancel</button>
+            <button type="button" class="btn btn-default">Save</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Flush content</h3>
+            <p class="card-description">A list or table that touches the card edges.</p>
+          </div>
+          <div class="card-content flush">
+            <ul class="divide-y border-t">
+              <li class="flex items-center justify-between px-6 py-3"><span>Distributors</span><span class="text-muted-foreground">12</span></li>
+              <li class="flex items-center justify-between px-6 py-3"><span>Advisors</span><span class="text-muted-foreground">48</span></li>
+              <li class="flex items-center justify-between px-6 py-3"><span>End clients</span><span class="text-muted-foreground">1'204</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Markup</h3>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="card"&gt;
+  &lt;div class="card-header"&gt;
+    &lt;h3 class="card-title"&gt;Title&lt;/h3&gt;
+    &lt;p class="card-description"&gt;One sentence.&lt;/p&gt;
+    &lt;div class="card-action"&gt;&lt;button class="btn btn-outline btn-sm"&gt;Edit&lt;/button&gt;&lt;/div&gt;   &lt;!-- optional --&gt;
+  &lt;/div&gt;
+  &lt;div class="card-content"&gt;…&lt;/div&gt;
+  &lt;div class="card-footer"&gt;…&lt;/div&gt;                                                  &lt;!-- optional --&gt;
+&lt;/div&gt;</code></pre>
+    </section>
+
+    <!-- ============================================================= BADGE -->
+    <section id="badge" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Badge</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlmBadge</code> · shadcn: <code>badge.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A short label for a status or category. Never interactive. Four shadcn variants plus three soft
+        status variants built on our success / warning / info tokens.
+      </p>
+
+      <h3 class="mt-8 font-medium">Variants</h3>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="badge badge-default">Default</span>
+          <span class="badge badge-secondary">Secondary</span>
+          <span class="badge badge-outline">Outline</span>
+          <span class="badge badge-destructive">Destructive</span>
+          <span class="badge badge-success">Success</span>
+          <span class="badge badge-warning">Warning</span>
+          <span class="badge badge-info">Info</span>
+        </div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Status vocabulary (proposal)</h3>
+      <p class="mt-1 text-muted-foreground">Lifecycle statuses are not confirmed yet (see <code>docs/domain.md</code>). This is the mapping rule to apply once they are: one variant per meaning, dot only on "alive" states.</p>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="flex items-center gap-3"><span class="badge badge-secondary">Draft</span><span class="text-muted-foreground">not yet visible to anyone</span></div>
+          <div class="flex items-center gap-3"><span class="badge badge-success"><span class="badge-dot"></span> Live</span><span class="text-muted-foreground">active, in use</span></div>
+          <div class="flex items-center gap-3"><span class="badge badge-warning"><span class="badge-dot"></span> Expiring</span><span class="text-muted-foreground">needs attention soon</span></div>
+          <div class="flex items-center gap-3"><span class="badge badge-info">In review</span><span class="text-muted-foreground">waiting on a process</span></div>
+          <div class="flex items-center gap-3"><span class="badge badge-outline">Matured</span><span class="text-muted-foreground">finished, kept for record</span></div>
+          <div class="flex items-center gap-3"><span class="badge badge-destructive">Failed</span><span class="text-muted-foreground">something broke, act now</span></div>
+        </div>
+      </div>
+
+      <h3 class="mt-8 font-medium">With icon and count</h3>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="badge badge-outline"><i class="ri-lock-line"></i> Read-only</span>
+          <span class="badge badge-secondary">CHF</span>
+          <span class="badge badge-secondary">EUR</span>
+          <span class="badge badge-default">12</span>
+        </div>
+      </div>
+      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;span class="badge badge-success"&gt;&lt;span class="badge-dot"&gt;&lt;/span&gt; Live&lt;/span&gt;
+&lt;span class="badge badge-outline"&gt;Matured&lt;/span&gt;</code></pre>
+    </section>
+
+    <!-- ============================================================= TABLE -->
+    <section id="table" class="mt-16 mb-24">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Table</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-table</code> · shadcn: <code>table.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        The list view of every entity. Toolbar above (search, filters, primary action), the table in a bordered
+        wrapper, footer below (count, pagination). Rows are 40px high; hover highlights, a checked row stays highlighted.
+        Data below is illustrative.
+      </p>
+
+      <div class="mt-6">
+        <div class="table-toolbar">
+          <div class="flex items-center gap-3">
+            <div class="input-icon w-64"><i class="ri-search-line"></i><input class="input input-sm" type="search" placeholder="Search products"></div>
+            <div class="select select-sm w-40">
+                <button type="button" class="select-trigger" id="t-status" aria-haspopup="listbox" aria-expanded="false"><span>All statuses</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="t-status" hidden>
+                  <div class="select-item" role="option" data-value="All statuses" tabindex="-1" aria-selected="true">All statuses</div>
+                  <div class="select-item" role="option" data-value="Draft" tabindex="-1">Draft</div>
+                  <div class="select-item" role="option" data-value="Live" tabindex="-1">Live</div>
+                  <div class="select-item" role="option" data-value="Expiring" tabindex="-1">Expiring</div>
+                  <div class="select-item" role="option" data-value="Matured" tabindex="-1">Matured</div>
+                </div>
+                <input type="hidden" name="status" value="All statuses">
+              </div>
+            <div class="select select-sm w-40">
+                <button type="button" class="select-trigger" id="t-ccy" aria-haspopup="listbox" aria-expanded="false"><span>All currencies</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="t-ccy" hidden>
+                  <div class="select-item" role="option" data-value="All currencies" tabindex="-1" aria-selected="true">All currencies</div>
+                  <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                  <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                  <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                </div>
+                <input type="hidden" name="ccy" value="All currencies">
+              </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button" class="btn btn-outline btn-sm"><i class="ri-download-2-line"></i> Export</button>
+            <button type="button" class="btn btn-default btn-sm"><i class="ri-add-line"></i> New product</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="check"><input class="checkbox" type="checkbox" aria-label="Select all"></th>
+                <th><button type="button" class="table-sort" aria-sort="ascending">Name <i class="ri-arrow-up-line"></i></button></th>
+                <th>ISIN</th>
+                <th>Type</th>
+                <th>Currency</th>
+                <th class="num"><button type="button" class="table-sort" aria-sort="none">Notional <i class="ri-expand-up-down-line"></i></button></th>
+                <th>Status</th>
+                <th><button type="button" class="table-sort" aria-sort="none">Maturity <i class="ri-expand-up-down-line"></i></button></th>
+                <th class="actions"><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
+              <td class="font-medium">Autocallable on SMI</td>
+              <td class="muted font-mono">CH0598765432</td>
+              <td class="muted">Yield enhancement</td>
+              <td>CHF</td>
+              <td class="num">1'250'000</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Live</span></td>
+              <td class="muted">18 Dec 2026</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            <tr>
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
+              <td class="font-medium">Capital Protection Note EURO STOXX 50</td>
+              <td class="muted font-mono">CH0512345678</td>
+              <td class="muted">Capital protection</td>
+              <td>EUR</td>
+              <td class="num">5'000'000</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Live</span></td>
+              <td class="muted">30 Jun 2028</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            <tr aria-selected="true">
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row" checked></td>
+              <td class="font-medium">Reverse Convertible Nestlé</td>
+              <td class="muted font-mono">CH0523456789</td>
+              <td class="muted">Yield enhancement</td>
+              <td>CHF</td>
+              <td class="num">750'000</td>
+              <td><span class="badge badge-warning"><span class="badge-dot"></span> Expiring</span></td>
+              <td class="muted">02 Oct 2026</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            <tr>
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
+              <td class="font-medium">Tracker Certificate Swiss Tech</td>
+              <td class="muted font-mono">CH0534567890</td>
+              <td class="muted">Participation</td>
+              <td>CHF</td>
+              <td class="num">2'100'000</td>
+              <td><span class="badge badge-secondary">Draft</span></td>
+              <td class="muted">—</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            <tr>
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
+              <td class="font-medium">Barrier Reverse Convertible Roche</td>
+              <td class="muted font-mono">CH0545678901</td>
+              <td class="muted">Yield enhancement</td>
+              <td>USD</td>
+              <td class="num">3'300'000</td>
+              <td><span class="badge badge-outline">Matured</span></td>
+              <td class="muted">15 Mar 2026</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <span>1 selected · 1–5 of 42</span>
+          <div class="flex items-center gap-2">
+            <span class="mr-2">Rows per page</span>
+            <div class="select select-sm w-20">
+                <button type="button" class="select-trigger" id="t-rows" aria-haspopup="listbox" aria-expanded="false"><span>5</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="t-rows" hidden>
+                  <div class="select-item" role="option" data-value="5" tabindex="-1" aria-selected="true">5</div>
+                  <div class="select-item" role="option" data-value="10" tabindex="-1">10</div>
+                  <div class="select-item" role="option" data-value="25" tabindex="-1">25</div>
+                  <div class="select-item" role="option" data-value="50" tabindex="-1">50</div>
+                </div>
+                <input type="hidden" name="rows" value="5">
+              </div>
+            <button type="button" class="btn btn-outline btn-icon btn-sm" aria-label="Previous page" title="Previous page" disabled><i class="ri-arrow-left-s-line"></i></button>
+            <button type="button" class="btn btn-outline btn-icon btn-sm" aria-label="Next page" title="Next page"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Rules</h3>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>First text column is the entity name, medium weight, and is the link to the detail view.</li>
+        <li>Identifiers in <code class="text-foreground">font-mono</code>, numbers right-aligned with <code class="text-foreground">num</code>, secondary columns in <code class="text-foreground">muted</code>.</li>
+        <li>Status is always a badge, always in its own column, never coloured text.</li>
+        <li>Row actions live in the last column behind one <em>More</em> button. Max one inline action besides it.</li>
+        <li>Sortable headers are buttons; <code class="text-foreground">aria-sort</code> tells the icon which way to point.</li>
+        <li>Empty, loading and error states of the table are separate components (next).</li>
+      </ul>
+
+      <h3 class="mt-8 font-medium">Markup</h3>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="table-wrap"&gt;
+  &lt;table class="table"&gt;
+    &lt;thead&gt;&lt;tr&gt;
+      &lt;th class="check"&gt;&lt;input class="checkbox" type="checkbox" aria-label="Select all"&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;button class="table-sort" aria-sort="ascending"&gt;Name &lt;i class="ri-arrow-up-line"&gt;&lt;/i&gt;&lt;/button&gt;&lt;/th&gt;
+      &lt;th class="num"&gt;Notional&lt;/th&gt;
+      &lt;th&gt;Status&lt;/th&gt;
+      &lt;th class="actions"&gt;&lt;span class="sr-only"&gt;Actions&lt;/span&gt;&lt;/th&gt;
+    &lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td class="check"&gt;&lt;input class="checkbox" type="checkbox" aria-label="Select row"&gt;&lt;/td&gt;
+        &lt;td class="font-medium"&gt;Autocallable on SMI&lt;/td&gt;
+        &lt;td class="num"&gt;1'250'000&lt;/td&gt;
+        &lt;td&gt;&lt;span class="badge badge-success"&gt;&lt;span class="badge-dot"&gt;&lt;/span&gt; Live&lt;/span&gt;&lt;/td&gt;
+        &lt;td class="actions"&gt;&lt;button class="btn btn-ghost btn-icon btn-sm" aria-label="More actions"&gt;&lt;i class="ri-more-2-line"&gt;&lt;/i&gt;&lt;/button&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
     </section>
   </main>
   <script src="../assets/app.js"></script>

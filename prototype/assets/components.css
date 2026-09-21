@@ -184,4 +184,72 @@
   .switch:checked { background-position: right 0 center; }
   /* setting row: switch on the right, label + description on the left */
   .switch-row { @apply flex items-center justify-between gap-6 rounded-lg border p-4; }
+
+  /* ------------------------------------------------------------------ Card
+     shadcn: card.tsx                     Spartan: hlmCard, hlmCardHeader, hlmCardTitle, hlmCardDescription, hlmCardContent, hlmCardFooter
+     Deviation from shadcn: rounded-lg and no shadow (see foundations: border for content, shadow for floating layers).
+  */
+  .card             { @apply flex flex-col gap-6 rounded-lg border bg-card py-6 text-card-foreground; }
+  .card-header      { @apply grid auto-rows-min items-start gap-1.5 px-6 has-[.card-action]:grid-cols-[1fr_auto]; }
+  .card-header.border-b { @apply pb-6; }
+  .card-title       { @apply font-medium leading-none; }
+  .card-description { @apply text-sm text-muted-foreground; }
+  .card-action      { @apply col-start-2 row-span-2 row-start-1 self-start justify-self-end; }
+  .card-content     { @apply px-6; }
+  .card-footer      { @apply flex items-center px-6; }
+  .card-footer.border-t { @apply pt-6; }
+  /* flush content: a table or list that should touch the card edges */
+  .card-content.flush { @apply px-0; }
+
+  /* ----------------------------------------------------------------- Badge
+     shadcn: badge.tsx                    Spartan: hlmBadge (variant)
+     Four shadcn variants + three soft status variants (our addition).
+  */
+  .badge {
+    @apply inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-md border px-2 py-0.5 text-xs font-medium
+           transition-[color,box-shadow]
+           [&>i]:text-xs [&>i]:leading-none [&>i]:pointer-events-none;
+  }
+  .badge-default     { @apply border-transparent bg-primary text-primary-foreground; }
+  .badge-secondary   { @apply border-transparent bg-secondary text-secondary-foreground; }
+  .badge-destructive { @apply border-transparent bg-destructive text-destructive-foreground; }
+  .badge-outline     { @apply text-foreground; }
+  /* soft status variants: tinted background, coloured text */
+  .badge-success     { @apply border-transparent bg-success/10 text-success; }
+  .badge-warning     { @apply border-transparent bg-warning/10 text-warning; }
+  .badge-info        { @apply border-transparent bg-info/10 text-info; }
+  /* status dot:  <span class="badge badge-success"><span class="badge-dot"></span> Live</span> */
+  .badge-dot         { @apply size-1.5 rounded-full bg-current; }
+
+  /* ----------------------------------------------------------------- Table
+     shadcn: table.tsx                    Spartan: hlmTable / hlm-table (brn-table)
+     Markup: <div class="table-wrap"><table class="table">…</table></div>
+     Deviation from shadcn: cell padding px-3 (shadcn p-2) and px-4 on the outer cells so text aligns with card/toolbar edges.
+  */
+  .table-wrap { @apply relative w-full overflow-x-auto rounded-lg border; }
+  .table      { @apply w-full caption-bottom text-sm; }
+  .table caption { @apply mt-4 text-sm text-muted-foreground; }
+  .table thead tr { @apply border-b bg-muted/40; }
+  .table th {
+    @apply h-10 whitespace-nowrap px-3 text-left align-middle font-medium text-foreground
+           first:pl-4 last:pr-4;
+  }
+  .table td { @apply whitespace-nowrap px-3 py-2 align-middle first:pl-4 last:pr-4; }
+  .table tbody tr { @apply border-b transition-colors hover:bg-muted/50 last:border-0; }
+  .table tbody tr[aria-selected="true"] { @apply bg-muted; }
+  /* cell modifiers */
+  .table .num   { @apply text-right tabular-nums; }        /* numbers: right-aligned, equal-width digits */
+  .table .check { @apply w-10 pr-0; }                      /* checkbox column */
+  .table .check .checkbox { @apply block; }
+  .table .actions { @apply w-px text-right; }              /* row actions: shrink to content */
+  .table .muted { @apply text-muted-foreground; }
+  /* sortable header:  <th><button class="table-sort" aria-sort="ascending">Name <i class="ri-arrow-up-line"></i></button></th> */
+  .table-sort {
+    @apply -ml-2 inline-flex h-8 items-center gap-1 rounded-md px-2 font-medium
+           hover:bg-accent hover:text-accent-foreground [&>i]:text-sm [&>i]:text-muted-foreground;
+  }
+  .table-sort[aria-sort="ascending"] > i, .table-sort[aria-sort="descending"] > i { @apply text-foreground; }
+  /* toolbar above the table and footer below it */
+  .table-toolbar { @apply flex items-center justify-between gap-3 pb-4; }
+  .table-footer  { @apply flex items-center justify-between gap-3 pt-4 text-sm text-muted-foreground; }
 }
