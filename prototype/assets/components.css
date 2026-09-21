@@ -46,8 +46,8 @@
      shadcn: field.tsx / label.tsx        Spartan: hlm-form-field, hlmLabel, hlm-hint, hlm-error
      Structure:  .field > .label + control + .field-description? + .field-error?
   */
-  .field        { @apply grid gap-2; }
-  .field-row    { @apply grid gap-6 sm:grid-cols-2; }          /* two fields side by side */
+  .field        { @apply grid content-start gap-2; }              /* content-start: rows never stretch to a taller sibling */
+  .field-row    { @apply grid items-start gap-6 sm:grid-cols-2; } /* two fields side by side, aligned to the top */
   .label        { @apply flex items-center gap-2 text-sm font-medium leading-none select-none; }
   .label-optional { @apply text-xs font-normal text-muted-foreground; }
   .field-description { @apply text-xs text-muted-foreground; }
@@ -86,23 +86,47 @@
   }
 
   /* ---------------------------------------------------------------- Select
-     Native <select> styled like .input, with a chevron.
+     Custom select: trigger button + listbox. Identical in every browser.
      shadcn: select.tsx (Radix)           Spartan: hlm-select (brn-select)
-     Prototype uses the native element; the open list is browser-styled.
+     Behaviour (open/close, keyboard, value) lives in assets/app.js.
+     Markup:
+       <div class="select">
+         <button type="button" class="select-trigger" data-placeholder aria-haspopup="listbox" aria-expanded="false">
+           <span>Select currency</span><i class="ri-arrow-down-s-line"></i>
+         </button>
+         <div class="select-content" role="listbox" hidden>
+           <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+         </div>
+         <input type="hidden" name="currency" value="">
+       </div>
   */
-  .select {
-    @apply h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-background py-1 pl-3 pr-9 text-sm shadow-xs
+  .select { @apply relative w-full; }
+  .select-trigger {
+    @apply flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs
            transition-[color,box-shadow] outline-none
            focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
            aria-invalid:border-destructive aria-invalid:ring-destructive/20
-           disabled:cursor-not-allowed disabled:opacity-50;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23737373' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.625rem center;
-    background-size: 1rem;
+           disabled:cursor-not-allowed disabled:opacity-50
+           data-[placeholder]:text-muted-foreground;
   }
-  .select-sm { @apply h-8; }
-  .select:has(option[value=""]:checked) { @apply text-muted-foreground; }   /* placeholder option */
+  .select-trigger > span { @apply truncate text-left; }
+  .select-trigger > i    { @apply shrink-0 text-base leading-none text-muted-foreground transition-transform; }
+  .select-trigger[aria-expanded="true"] > i { @apply rotate-180; }
+  .select-sm .select-trigger { @apply h-8; }
+  .select-content {
+    @apply absolute left-0 top-[calc(100%+4px)] z-50 max-h-72 min-w-full overflow-y-auto rounded-md border
+           bg-popover p-1 text-popover-foreground shadow-md;
+  }
+  .select-item {
+    @apply relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none
+           hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
+           aria-disabled:pointer-events-none aria-disabled:opacity-50;
+  }
+  .select-item[aria-selected="true"]::after {
+    content: "";
+    @apply absolute right-2 size-4 bg-current;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
 
   /* -------------------------------------------------------------- Checkbox
      shadcn: checkbox.tsx (Radix)         Spartan: hlm-checkbox

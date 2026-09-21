@@ -256,38 +256,99 @@
         <p class="text-xs text-muted-foreground">Spartan: <code>hlm-select</code> · shadcn: <code>select.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">
-        Pick one from a short list (up to ~15 items). The prototype uses the native <code class="rounded-sm bg-muted px-1 py-0.5">&lt;select&gt;</code>,
-        so the closed state matches the input and the open list is browser-styled. Spartan renders a styled list;
-        that difference is accepted. For long lists use a searchable combobox (later).
+        Pick one from a short list (up to ~15 items). A trigger button that looks like an input, and a list
+        that opens below it. Fully custom, so it is identical in every browser. Behaviour is in
+        <code class="rounded-sm bg-muted px-1 py-0.5">app.js</code>: click or Space/Enter/arrows to open, arrows to move,
+        Enter to choose, Escape to close. For long lists use a searchable combobox (later).
       </p>
       <div class="mt-6 rounded-lg border p-6">
         <div class="grid gap-6 sm:grid-cols-3">
           <div class="field">
             <label class="label" for="s1">Currency</label>
-            <select class="select" id="s1">
-              <option value="" selected>Select currency</option>
-              <option>CHF</option><option>EUR</option><option>USD</option><option>GBP</option>
-            </select>
+            <div class="select">
+              <button type="button" class="select-trigger" id="s1" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Select currency</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s1" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+              </div>
+              <input type="hidden" name="currency-1" value="">
+            </div>
+            <p class="field-description">Placeholder state. Click to open.</p>
           </div>
           <div class="field">
             <label class="label" for="s2">Currency</label>
-            <select class="select" id="s2">
-              <option value="">Select currency</option>
-              <option selected>CHF</option><option>EUR</option><option>USD</option><option>GBP</option>
-            </select>
+            <div class="select">
+              <button type="button" class="select-trigger" id="s2" aria-haspopup="listbox" aria-expanded="false"><span>CHF</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s2" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1" aria-selected="true">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+              </div>
+              <input type="hidden" name="currency-2" value="CHF">
+            </div>
+            <p class="field-description">With a value. The chosen item shows a check.</p>
           </div>
           <div class="field">
             <label class="label" for="s3">Currency</label>
-            <select class="select" id="s3" disabled>
-              <option selected>CHF</option>
-            </select>
+            <div class="select">
+              <button type="button" class="select-trigger" id="s3" aria-haspopup="listbox" aria-expanded="false" disabled><span>CHF</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s3" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1" aria-selected="true">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+              </div>
+              <input type="hidden" name="currency-3" value="CHF">
+            </div>
+            <p class="field-description">Disabled.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="s4">Currency</label>
+            <div class="select">
+              <button type="button" class="select-trigger" id="s4" aria-haspopup="listbox" aria-expanded="false" data-placeholder aria-invalid="true"><span>Select currency</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s4" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+              </div>
+              <input type="hidden" name="currency-4" value="">
+            </div>
+            <p class="field-error"><i class="ri-error-warning-line"></i> Select a currency.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="s5">Small (toolbars)</label>
+            <div class="select select-sm">
+              <button type="button" class="select-trigger" id="s5" aria-haspopup="listbox" aria-expanded="false"><span>All</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s5" hidden>
+                <div class="select-item" role="option" data-value="All" tabindex="-1" aria-selected="true">All</div>
+                <div class="select-item" role="option" data-value="Draft" tabindex="-1">Draft</div>
+                <div class="select-item" role="option" data-value="Live" tabindex="-1">Live</div>
+                <div class="select-item" role="option" data-value="Matured" tabindex="-1">Matured</div>
+              </div>
+              <input type="hidden" name="status" value="All">
+            </div>
           </div>
         </div>
       </div>
-      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;select class="select" id="currency"&gt;
-  &lt;option value="" selected&gt;Select currency&lt;/option&gt;   &lt;!-- placeholder: empty value --&gt;
-  &lt;option&gt;CHF&lt;/option&gt;
-&lt;/select&gt;</code></pre>
+      <h3 class="mt-8 font-medium">Markup</h3>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="select"&gt;
+  &lt;button type="button" class="select-trigger" id="ccy" data-placeholder aria-haspopup="listbox" aria-expanded="false"&gt;
+    &lt;span&gt;Select currency&lt;/span&gt;&lt;i class="ri-arrow-down-s-line"&gt;&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;div class="select-content" role="listbox" aria-labelledby="ccy" hidden&gt;
+    &lt;div class="select-item" role="option" data-value="CHF" tabindex="-1"&gt;CHF&lt;/div&gt;
+    &lt;div class="select-item" role="option" data-value="EUR" tabindex="-1"&gt;EUR&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;input type="hidden" name="currency" value=""&gt;
+&lt;/div&gt;</code></pre>
+      <p class="mt-3 text-xs text-muted-foreground">
+        The hidden input carries the value for the form. Remove <code>data-placeholder</code> and set <code>aria-selected="true"</code> on an item to start with a value.
+        Spartan: <code>&lt;hlm-select&gt;&lt;hlm-select-trigger&gt;…&lt;hlm-select-content&gt;&lt;hlm-option&gt;</code>.
+      </p>
     </section>
 
     <!-- ========================================================== CHECKBOX -->
@@ -419,10 +480,15 @@
               </div>
               <div class="field">
                 <label class="label" for="ex-ccy">Currency</label>
-                <select class="select" id="ex-ccy">
-                  <option value="" selected>Select currency</option>
-                  <option>CHF</option><option>EUR</option><option>USD</option>
-                </select>
+<div class="select">
+              <button type="button" class="select-trigger" id="ex-ccy" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Select currency</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="ex-ccy" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+              </div>
+              <input type="hidden" name="currency" value="">
+            </div>
               </div>
             </div>
             <fieldset class="field">
@@ -455,7 +521,7 @@
             <li>ISIN and Currency share a row because both are short and belong together.</li>
             <li>The invalid field shows the error in place of its description.</li>
             <li>Actions sit in a footer, primary on the right, and the form scrolls as one unit.</li>
-            <li>Every control is a native element, so Tab, Space and arrow keys already work.</li>
+            <li>Inputs, radios and checkboxes are native elements; the select is custom but follows the same keyboard rules: Tab, Space, arrows, Enter, Escape.</li>
           </ul>
         </aside>
       </div>
