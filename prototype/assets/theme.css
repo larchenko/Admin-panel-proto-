@@ -18,7 +18,7 @@
 /* 1. Design tokens ------------------------------------------------------- */
 :root {
   /* Shape */
-  --radius: 0.625rem;                        /* 10px base corner radius */
+  --radius: 0.25rem;                         /* 4px base corner radius */
 
   /* Surfaces and text */
   --background: oklch(1 0 0);                /* page background */
@@ -59,7 +59,7 @@
 
   /* Lines and focus */
   --border: oklch(0.922 0 0);                /* dividers, card borders */
-  --input: oklch(0.922 0 0);                 /* form field borders */
+  --input: oklch(0.668 0 0);                 /* form field borders — 3:1 against the page, see decision 28 */
   --ring: oklch(0.550 0.150 281.533);        /* keyboard focus ring — brand hue */
 
   /* Sidebar (has its own set so it can differ from the page) */
@@ -128,6 +128,8 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
+  /* shadcn's steps: sm = base-4, md = base-2, lg = base, xl = base+4.
+     At a 4px base that gives 0 / 2 / 4 / 8px. */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

@@ -157,7 +157,8 @@
       <p class="mt-1 max-w-2xl text-muted-foreground">
         A line is not text: what matters is how it reads against the page behind it, so these are measured
         against <code class="rounded-sm bg-muted px-1 py-0.5">--background</code>. WCAG asks 3:1 for a line that is the only
-        thing marking a control. The shadcn border and input greys do not reach it — see the note below.
+        thing marking a control, so <code class="rounded-sm bg-muted px-1 py-0.5">--input</code> was darkened until it passes.
+        <code class="rounded-sm bg-muted px-1 py-0.5">--border</code> keeps the light shadcn grey — see the note below.
       </p>
       <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <div class="swatch" data-bg="border" data-fg="foreground" data-against="--background" data-note="Dividers, card outlines"></div>
@@ -165,10 +166,11 @@
         <div class="swatch" data-bg="ring" data-fg="foreground" data-against="--background" data-note="Keyboard focus ring"></div>
       </div>
       <p class="mt-3 max-w-2xl text-muted-foreground">
-        Open: <code class="rounded-sm bg-muted px-1 py-0.5">--input</code> is
-        <code class="rounded-sm bg-muted px-1 py-0.5">oklch(0.922 0 0)</code>, 1.26:1 against white. A field border that
-        passes 3:1 would be <code class="rounded-sm bg-muted px-1 py-0.5">oklch(0.668 0 0)</code> — noticeably darker and a
-        visible departure from shadcn. Decision pending; it affects every input, select and table line.
+        The two greys are deliberately different. <code class="rounded-sm bg-muted px-1 py-0.5">--input</code> is the boundary
+        of a control — input, textarea, select, checkbox, radio, outline button — and a user has to see where to click, so it
+        is <code class="rounded-sm bg-muted px-1 py-0.5">oklch(0.668 0 0)</code>, the lightest grey that still clears 3:1.
+        <code class="rounded-sm bg-muted px-1 py-0.5">--border</code> only separates content that is already visible —
+        card edges, table rules, dividers — so it stays at the light shadcn grey and the page does not turn into a grid.
       </p>
 
       <h3 class="mt-8 font-medium">Sidebar</h3>
@@ -270,8 +272,8 @@
     <section id="radius" class="mt-16">
       <h2 class="text-xl font-semibold tracking-tight">Radius</h2>
       <p class="mt-2 max-w-2xl text-muted-foreground">
-        One base token <code class="rounded-sm bg-muted px-1 py-0.5">--radius</code> (<span data-var="--radius"></span>), the rest is derived.
-        Change the base and every corner follows.
+        One base token <code class="rounded-sm bg-muted px-1 py-0.5">--radius</code> (<span data-var="--radius"></span> = 4px), the rest is derived
+        with shadcn's steps: base−4 / base−2 / base / base+4, so <strong>0 / 2 / 4 / 8px</strong>. Change the base and every corner follows.
       </p>
       <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div><div class="h-20 rounded-sm border bg-card"></div><p class="mt-2 font-medium">rounded-sm</p><p class="text-xs text-muted-foreground">badges, code, small chips</p></div>
