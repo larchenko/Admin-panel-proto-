@@ -41,4 +41,123 @@
   .btn-icon { @apply size-9 p-0 has-[>i]:px-0; }
   .btn-icon.btn-sm { @apply size-8; }
   .btn-icon.btn-lg { @apply size-10; }
+
+  /* ------------------------------------------------------------ Form field
+     shadcn: field.tsx / label.tsx        Spartan: hlm-form-field, hlmLabel, hlm-hint, hlm-error
+     Structure:  .field > .label + control + .field-description? + .field-error?
+  */
+  .field        { @apply grid gap-2; }
+  .field-row    { @apply grid gap-6 sm:grid-cols-2; }          /* two fields side by side */
+  .label        { @apply flex items-center gap-2 text-sm font-medium leading-none select-none; }
+  .label-optional { @apply text-xs font-normal text-muted-foreground; }
+  .field-description { @apply text-xs text-muted-foreground; }
+  .field-error  { @apply flex items-center gap-1.5 text-xs text-destructive; }
+  .field-error i { @apply text-sm leading-none; }
+
+  /* ----------------------------------------------------------------- Input
+     shadcn: input.tsx                    Spartan: hlmInput
+     Invalid state: add aria-invalid="true" to the control.
+  */
+  .input {
+    @apply flex h-9 w-full min-w-0 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs
+           transition-[color,box-shadow] outline-none
+           placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground
+           focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+           aria-invalid:border-destructive aria-invalid:ring-destructive/20
+           disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50
+           read-only:bg-muted read-only:text-muted-foreground;
+  }
+  .input-sm { @apply h-8; }
+  /* input with a leading icon:  <div class="input-icon"><i class="ri-search-line"></i><input class="input"></div> */
+  .input-icon { @apply relative; }
+  .input-icon > i { @apply pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base leading-none text-muted-foreground; }
+  .input-icon > .input { @apply pl-9; }
+
+  /* -------------------------------------------------------------- Textarea
+     shadcn: textarea.tsx                 Spartan: hlmInput on <textarea>
+  */
+  .textarea {
+    @apply flex min-h-16 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs
+           transition-[color,box-shadow] outline-none field-sizing-content
+           placeholder:text-muted-foreground
+           focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+           aria-invalid:border-destructive aria-invalid:ring-destructive/20
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* ---------------------------------------------------------------- Select
+     Native <select> styled like .input, with a chevron.
+     shadcn: select.tsx (Radix)           Spartan: hlm-select (brn-select)
+     Prototype uses the native element; the open list is browser-styled.
+  */
+  .select {
+    @apply h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-background py-1 pl-3 pr-9 text-sm shadow-xs
+           transition-[color,box-shadow] outline-none
+           focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+           aria-invalid:border-destructive aria-invalid:ring-destructive/20
+           disabled:cursor-not-allowed disabled:opacity-50;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23737373' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.625rem center;
+    background-size: 1rem;
+  }
+  .select-sm { @apply h-8; }
+  .select:has(option[value=""]:checked) { @apply text-muted-foreground; }   /* placeholder option */
+
+  /* -------------------------------------------------------------- Checkbox
+     shadcn: checkbox.tsx (Radix)         Spartan: hlm-checkbox
+     Native <input type="checkbox"> with appearance:none.
+  */
+  .checkbox {
+    @apply size-4 shrink-0 appearance-none rounded-[4px] border border-input bg-background shadow-xs
+           transition-shadow outline-none
+           checked:border-primary checked:bg-primary
+           focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+           aria-invalid:border-destructive aria-invalid:ring-destructive/20
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .checkbox:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  /* checkbox + label on one line:  <label class="choice"><input class="checkbox"> Label</label> */
+  .choice { @apply flex items-start gap-2 text-sm leading-none; }
+  .choice > .checkbox, .choice > .radio { @apply mt-px; }
+  .choice .field-description { @apply mt-1.5; }
+
+  /* ----------------------------------------------------------------- Radio
+     shadcn: radio-group.tsx (Radix)      Spartan: hlm-radio-group / hlm-radio
+  */
+  .radio {
+    @apply aspect-square size-4 shrink-0 appearance-none rounded-full border border-input bg-background shadow-xs
+           transition-[color,box-shadow] outline-none
+           checked:border-primary
+           focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+           aria-invalid:border-destructive aria-invalid:ring-destructive/20
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .radio:checked { background-image: radial-gradient(circle, var(--primary) 0 3px, transparent 3.5px); }
+  .radio-group { @apply grid gap-3; }
+
+  /* ---------------------------------------------------------------- Switch
+     shadcn: switch.tsx (Radix)           Spartan: hlm-switch
+     Native <input type="checkbox" role="switch">; thumb is a background gradient.
+  */
+  .switch {
+    @apply inline-block h-[1.15rem] w-8 shrink-0 cursor-pointer appearance-none rounded-full border border-transparent bg-input shadow-xs
+           transition-all outline-none
+           checked:bg-primary
+           focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+           disabled:cursor-not-allowed disabled:opacity-50;
+    background-image: radial-gradient(circle, var(--background) 0 45%, transparent 50%);
+    background-size: 1rem 1rem;
+    background-repeat: no-repeat;
+    background-position: left 0 center;
+    transition: background-color .15s, background-position .15s;
+  }
+  .switch:checked { background-position: right 0 center; }
+  /* setting row: switch on the right, label + description on the left */
+  .switch-row { @apply flex items-center justify-between gap-6 rounded-lg border p-4; }
 }

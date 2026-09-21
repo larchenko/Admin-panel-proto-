@@ -34,6 +34,14 @@
 
     <nav class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-muted-foreground">
       <a href="#button" class="hover:text-foreground">Button</a>
+      <a href="#field" class="hover:text-foreground">Form field</a>
+      <a href="#input" class="hover:text-foreground">Input</a>
+      <a href="#textarea" class="hover:text-foreground">Textarea</a>
+      <a href="#select" class="hover:text-foreground">Select</a>
+      <a href="#checkbox" class="hover:text-foreground">Checkbox</a>
+      <a href="#radio" class="hover:text-foreground">Radio</a>
+      <a href="#switch" class="hover:text-foreground">Switch</a>
+      <a href="#form-example" class="hover:text-foreground">Form example</a>
     </nav>
 
     <!-- ============================================================ BUTTON -->
@@ -127,6 +135,330 @@
         Spartan equivalent: <code>&lt;button hlmBtn variant="outline" size="sm"&gt;Cancel&lt;/button&gt;</code>.
         Variant and size names are identical.
       </p>
+    </section>
+
+    <!-- ======================================================== FORM FIELD -->
+    <section id="field" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Form field</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-form-field</code>, <code>hlmLabel</code>, <code>hlm-hint</code>, <code>hlm-error</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        The wrapper every control lives in. Label above, control, then an optional description or an error.
+        Label and control are linked with <code class="rounded-sm bg-muted px-1 py-0.5">for</code>/<code class="rounded-sm bg-muted px-1 py-0.5">id</code>;
+        description and error with <code class="rounded-sm bg-muted px-1 py-0.5">aria-describedby</code>.
+      </p>
+
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-8 sm:grid-cols-3">
+          <div class="field">
+            <label class="label" for="f1">Name</label>
+            <input class="input" id="f1" placeholder="e.g. Autocallable on SMI">
+            <p class="field-description">Shown to end users in the product list.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="f2">Internal code <span class="label-optional">Optional</span></label>
+            <input class="input" id="f2">
+          </div>
+          <div class="field">
+            <label class="label" for="f3">ISIN</label>
+            <input class="input" id="f3" value="CH00123" aria-invalid="true" aria-describedby="f3-err">
+            <p class="field-error" id="f3-err"><i class="ri-error-warning-line"></i> ISIN must be 12 characters.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Rules</h3>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>Fields are required by default. Mark the exceptions with <code class="text-foreground">label-optional</code>. No asterisks.</li>
+        <li>Description explains format or consequence in one sentence. Do not repeat the label.</li>
+        <li>Error replaces the description, names the problem and, where possible, the fix.</li>
+        <li>Validate on blur and on submit, never on every keystroke.</li>
+        <li>Two fields side by side only when they are short and related (<code class="text-foreground">field-row</code>): currency and amount, first and last name.</li>
+      </ul>
+
+      <h3 class="mt-8 font-medium">Markup</h3>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="field"&gt;
+  &lt;label class="label" for="isin"&gt;ISIN&lt;/label&gt;
+  &lt;input class="input" id="isin" aria-describedby="isin-help"&gt;
+  &lt;p class="field-description" id="isin-help"&gt;12 characters, letters and digits.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- invalid --&gt;
+&lt;div class="field"&gt;
+  &lt;label class="label" for="isin"&gt;ISIN&lt;/label&gt;
+  &lt;input class="input" id="isin" aria-invalid="true" aria-describedby="isin-err"&gt;
+  &lt;p class="field-error" id="isin-err"&gt;&lt;i class="ri-error-warning-line"&gt;&lt;/i&gt; ISIN must be 12 characters.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+    </section>
+
+    <!-- ============================================================= INPUT -->
+    <section id="input" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Input</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlmInput</code> · shadcn: <code>input.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">Single-line text. 36px high like the default button, so they align in toolbars. <code class="rounded-sm bg-muted px-1 py-0.5">input-sm</code> is 32px for dense table toolbars.</p>
+
+      <h3 class="mt-8 font-medium">States</h3>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-3">
+          <div class="field"><span class="text-xs text-muted-foreground">Empty</span><input class="input" placeholder="Placeholder"></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Filled</span><input class="input" value="Autocallable on SMI"></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Focus (click in)</span><input class="input" placeholder="Click me"></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Invalid</span><input class="input" value="CH00123" aria-invalid="true"></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Disabled</span><input class="input" value="Not editable" disabled></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Read-only</span><input class="input" value="PRD-000412" readonly></div>
+        </div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Variants</h3>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-3">
+          <div class="field"><span class="text-xs text-muted-foreground">With leading icon</span>
+            <div class="input-icon"><i class="ri-search-line"></i><input class="input" type="search" placeholder="Search instruments"></div></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Small (toolbars)</span>
+            <div class="input-icon"><i class="ri-search-line"></i><input class="input input-sm" type="search" placeholder="Search"></div></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Number</span><input class="input" type="number" value="1000000" step="1000"></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Date</span><input class="input" type="date" value="2026-12-18"></div>
+          <div class="field"><span class="text-xs text-muted-foreground">Monospace (identifiers)</span><input class="input font-mono" value="CH0012345678"></div>
+        </div>
+      </div>
+      <p class="mt-3 text-muted-foreground">Read-only is for values the system owns (IDs, timestamps). Disabled is for values the user could edit in another state.</p>
+    </section>
+
+    <!-- ========================================================== TEXTAREA -->
+    <section id="textarea" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Textarea</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlmInput</code> on <code>&lt;textarea&gt;</code> · shadcn: <code>textarea.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">Multi-line text. Grows with content (<code class="rounded-sm bg-muted px-1 py-0.5">field-sizing: content</code>), minimum 64px.</p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div class="field">
+            <label class="label" for="ta1">Description <span class="label-optional">Optional</span></label>
+            <textarea class="textarea" id="ta1" placeholder="Internal notes about this instrument"></textarea>
+          </div>
+          <div class="field">
+            <label class="label" for="ta2">Description</label>
+            <textarea class="textarea" id="ta2" aria-invalid="true" aria-describedby="ta2-err">Too short</textarea>
+            <p class="field-error" id="ta2-err"><i class="ri-error-warning-line"></i> Enter at least 20 characters.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ SELECT -->
+    <section id="select" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Select</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-select</code> · shadcn: <code>select.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Pick one from a short list (up to ~15 items). The prototype uses the native <code class="rounded-sm bg-muted px-1 py-0.5">&lt;select&gt;</code>,
+        so the closed state matches the input and the open list is browser-styled. Spartan renders a styled list;
+        that difference is accepted. For long lists use a searchable combobox (later).
+      </p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-3">
+          <div class="field">
+            <label class="label" for="s1">Currency</label>
+            <select class="select" id="s1">
+              <option value="" selected>Select currency</option>
+              <option>CHF</option><option>EUR</option><option>USD</option><option>GBP</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" for="s2">Currency</label>
+            <select class="select" id="s2">
+              <option value="">Select currency</option>
+              <option selected>CHF</option><option>EUR</option><option>USD</option><option>GBP</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" for="s3">Currency</label>
+            <select class="select" id="s3" disabled>
+              <option selected>CHF</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;select class="select" id="currency"&gt;
+  &lt;option value="" selected&gt;Select currency&lt;/option&gt;   &lt;!-- placeholder: empty value --&gt;
+  &lt;option&gt;CHF&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+    </section>
+
+    <!-- ========================================================== CHECKBOX -->
+    <section id="checkbox" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Checkbox</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-checkbox</code> · shadcn: <code>checkbox.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">Independent yes/no choices, or several from a list. Wrap control and text in a <code class="rounded-sm bg-muted px-1 py-0.5">label.choice</code> so the whole row is clickable.</p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-3">
+          <div class="grid gap-3">
+            <label class="choice"><input class="checkbox" type="checkbox"> Unchecked</label>
+            <label class="choice"><input class="checkbox" type="checkbox" checked> Checked</label>
+            <label class="choice"><input class="checkbox" type="checkbox" disabled> Disabled</label>
+            <label class="choice"><input class="checkbox" type="checkbox" checked disabled> Checked, disabled</label>
+          </div>
+          <div class="grid gap-3">
+            <p class="label">Visible to</p>
+            <label class="choice"><input class="checkbox" type="checkbox" checked> Distributors</label>
+            <label class="choice"><input class="checkbox" type="checkbox" checked> Advisors</label>
+            <label class="choice"><input class="checkbox" type="checkbox"> End clients</label>
+          </div>
+          <div>
+            <label class="choice">
+              <input class="checkbox" type="checkbox">
+              <span>
+                Publish immediately
+                <span class="field-description block">The product appears in the end-user service as soon as it is saved.</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;label class="choice"&gt;&lt;input class="checkbox" type="checkbox"&gt; Distributors&lt;/label&gt;</code></pre>
+    </section>
+
+    <!-- ============================================================= RADIO -->
+    <section id="radio" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Radio</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-radio-group</code>, <code>hlm-radio</code> · shadcn: <code>radio-group.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">Exactly one of 2–5 options, all visible at once. More than five: use a select. Group with a <code class="rounded-sm bg-muted px-1 py-0.5">fieldset</code> so the group has a name.</p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-2">
+          <fieldset class="field">
+            <legend class="label mb-3">Product type</legend>
+            <div class="radio-group">
+              <label class="choice"><input class="radio" type="radio" name="pt" checked> Capital protection</label>
+              <label class="choice"><input class="radio" type="radio" name="pt"> Yield enhancement</label>
+              <label class="choice"><input class="radio" type="radio" name="pt"> Participation</label>
+              <label class="choice"><input class="radio" type="radio" name="pt" disabled> Leverage (not available)</label>
+            </div>
+          </fieldset>
+          <fieldset class="field">
+            <legend class="label mb-3">Settlement</legend>
+            <div class="radio-group">
+              <label class="choice"><input class="radio" type="radio" name="st" checked>
+                <span>Cash<span class="field-description block">Pays out in the product currency.</span></span></label>
+              <label class="choice"><input class="radio" type="radio" name="st">
+                <span>Physical<span class="field-description block">Delivers the underlying instrument.</span></span></label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ SWITCH -->
+    <section id="switch" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="text-xl font-semibold tracking-tight">Switch</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-switch</code> · shadcn: <code>switch.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        On/off that takes effect immediately, typically in Settings. Inside a form that has a Save button use a checkbox instead.
+      </p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div class="flex flex-wrap items-center gap-6">
+            <label class="choice items-center"><input class="switch" type="checkbox" role="switch"> Off</label>
+            <label class="choice items-center"><input class="switch" type="checkbox" role="switch" checked> On</label>
+            <label class="choice items-center"><input class="switch" type="checkbox" role="switch" disabled> Disabled</label>
+          </div>
+          <div class="grid gap-3">
+            <div class="switch-row">
+              <div>
+                <label class="label" for="sw1">Maintenance mode</label>
+                <p class="field-description mt-1.5">End users see a maintenance page. Admins keep access.</p>
+              </div>
+              <input class="switch" type="checkbox" role="switch" id="sw1">
+            </div>
+            <div class="switch-row">
+              <div>
+                <label class="label" for="sw2">Email notifications</label>
+                <p class="field-description mt-1.5">Send a summary when a product changes status.</p>
+              </div>
+              <input class="switch" type="checkbox" role="switch" id="sw2" checked>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================== FORM EXAMPLE -->
+    <section id="form-example" class="mt-16">
+      <h2 class="text-xl font-semibold tracking-tight">Form example</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Everything above composed the way a create/edit screen will use it. Field names are illustrative,
+        not the final Instrument model. Section = card with a title, fields stacked in one column,
+        related short fields in a row, actions right-aligned at the end.
+      </p>
+      <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_20rem]">
+        <form class="rounded-lg border bg-card" onsubmit="return false">
+          <div class="border-b px-6 py-4">
+            <h3 class="font-medium">General information</h3>
+            <p class="field-description mt-1">Identifies the instrument across the system.</p>
+          </div>
+          <div class="grid gap-6 p-6">
+            <div class="field">
+              <label class="label" for="ex-name">Name</label>
+              <input class="input" id="ex-name" placeholder="e.g. Nestlé SA">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label class="label" for="ex-isin">ISIN</label>
+                <input class="input font-mono" id="ex-isin" value="CH00123" aria-invalid="true" aria-describedby="ex-isin-err">
+                <p class="field-error" id="ex-isin-err"><i class="ri-error-warning-line"></i> ISIN must be 12 characters.</p>
+              </div>
+              <div class="field">
+                <label class="label" for="ex-ccy">Currency</label>
+                <select class="select" id="ex-ccy">
+                  <option value="" selected>Select currency</option>
+                  <option>CHF</option><option>EUR</option><option>USD</option>
+                </select>
+              </div>
+            </div>
+            <fieldset class="field">
+              <legend class="label mb-3">Asset class</legend>
+              <div class="radio-group">
+                <label class="choice"><input class="radio" type="radio" name="ex-ac" checked> Equity</label>
+                <label class="choice"><input class="radio" type="radio" name="ex-ac"> Index</label>
+                <label class="choice"><input class="radio" type="radio" name="ex-ac"> Commodity</label>
+              </div>
+            </fieldset>
+            <div class="field">
+              <label class="label" for="ex-desc">Description <span class="label-optional">Optional</span></label>
+              <textarea class="textarea" id="ex-desc" placeholder="Internal notes"></textarea>
+              <p class="field-description">Not shown to end users.</p>
+            </div>
+            <label class="choice">
+              <input class="checkbox" type="checkbox" checked>
+              <span>Active<span class="field-description block">Inactive instruments cannot be added to new products.</span></span>
+            </label>
+          </div>
+          <div class="flex items-center justify-end gap-3 border-t px-6 py-4">
+            <button type="button" class="btn btn-outline">Cancel</button>
+            <button type="submit" class="btn btn-default">Save instrument</button>
+          </div>
+        </form>
+        <aside class="text-muted-foreground">
+          <h3 class="font-medium text-foreground">What to notice</h3>
+          <ul class="mt-2 list-disc space-y-2 pl-5">
+            <li>One column. Eyes travel down, not across.</li>
+            <li>ISIN and Currency share a row because both are short and belong together.</li>
+            <li>The invalid field shows the error in place of its description.</li>
+            <li>Actions sit in a footer, primary on the right, and the form scrolls as one unit.</li>
+            <li>Every control is a native element, so Tab, Space and arrow keys already work.</li>
+          </ul>
+        </aside>
+      </div>
     </section>
   </main>
   <script src="../assets/app.js"></script>
