@@ -214,12 +214,16 @@
   .badge-secondary   { @apply border-transparent bg-secondary text-secondary-foreground; }
   .badge-destructive { @apply border-transparent bg-destructive text-destructive-foreground; }
   .badge-outline     { @apply text-foreground; }
-  /* soft status variants: tinted background, coloured text */
-  .badge-success     { @apply border-transparent bg-success/10 text-success; }
-  .badge-warning     { @apply border-transparent bg-warning/10 text-warning; }
-  .badge-info        { @apply border-transparent bg-info/10 text-info; }
-  /* status dot:  <span class="badge badge-success"><span class="badge-dot"></span> Live</span> */
+  /* soft status variants: 10% tint of the status colour, text in its -ink shade (see theme.css) */
+  .badge-success     { @apply border-transparent bg-success/10 text-success-ink; }
+  .badge-warning     { @apply border-transparent bg-warning/10 text-warning-ink; }
+  .badge-info        { @apply border-transparent bg-info/10 text-info-ink; }
+  /* status dot:  <span class="badge badge-success"><span class="badge-dot"></span> Live</span>
+     The dot carries the full-strength status colour; it is decorative, the label carries the meaning. */
   .badge-dot         { @apply size-1.5 rounded-full bg-current; }
+  .badge-success .badge-dot { @apply bg-success; }
+  .badge-warning .badge-dot { @apply bg-warning; }
+  .badge-info .badge-dot    { @apply bg-info; }
 
   /* ----------------------------------------------------------------- Table
      shadcn: table.tsx                    Spartan: hlmTable / hlm-table (brn-table)

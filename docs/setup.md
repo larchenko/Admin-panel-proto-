@@ -36,4 +36,4 @@ docs/
 
 - Tailwind CSS v4 browser build `@tailwindcss/browser@4.1.14`
 - RemixIcon `remixicon@4.6.0`
-- Inter via Google Fonts
+- Archivo via Google Fonts (weights 400/500/600)
