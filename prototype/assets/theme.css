@@ -11,8 +11,19 @@
   transfers to Spartan UI Helm components without renaming.
   Colours are in OKLCH: (lightness 0..1, chroma, hue). Chroma 0 = pure grey.
 
-  Brand: primary #200766, statuses #C03347 / #D09425 / #33A35E, font Archivo.
-  Neutrals stay pure grey (chroma 0) so the brand colour is the only colour on the page.
+  Brand: primary #200766, font Archivo. Neutrals stay pure grey (chroma 0) so the
+  brand colour is the only colour on the page.
+
+  The tokens below come in two layers, and the line between them matters:
+
+    BRAND   — the hue and everything built from it. This is what a white-label swap replaces.
+    SYSTEM  — neutrals, lines, and the status colours. A white-label swap leaves these alone.
+
+  Rule: status colours are never derived from, tinted with, or replaced by the brand.
+  A status describes the state of the system, not who owns the product. If green becomes
+  violet because a client's brand is violet, the colour stops carrying information and the
+  user has to read every label. Corollary: if a client's brand lands on a status hue — a
+  green brand, a red brand — the brand moves in the UI, the status does not.
 */
 
 /* 1. Design tokens ------------------------------------------------------- */
@@ -28,52 +39,59 @@
   --popover: oklch(1 0 0);                   /* dropdowns, tooltips */
   --popover-foreground: oklch(0.145 0 0);
 
-  /* Roles */
+  /* --- BRAND (a white-label swap replaces this block, and nothing else) --- */
   --primary: oklch(0.260 0.145 281.533);     /* brand #200766 */
   --primary-foreground: oklch(0.985 0 0);    /* text on primary */
+  --accent: oklch(0.960 0.010 281.533);      /* hover / selected rows: 4% brand tint */
+  --accent-foreground: oklch(0.260 0.145 281.533);
+  /* --ring and three --sidebar-* tokens are also built from this hue; they are marked below. */
+
+  /* --- SYSTEM: neutral roles --- */
   --secondary: oklch(0.97 0 0);              /* secondary buttons, quiet fills */
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);                  /* subdued backgrounds */
   --muted-foreground: oklch(0.556 0 0);      /* secondary text, captions */
-  --accent: oklch(0.960 0.010 281.533);      /* hover / selected rows: 4% brand tint */
-  --accent-foreground: oklch(0.260 0.145 281.533);
-  --destructive: oklch(0.542 0.177 17.718);  /* brand red #C03347 — delete, errors */
-  --destructive-foreground: oklch(0.985 0 0); /* text on a solid destructive fill */
-  --destructive-ink: oklch(0.542 0.177 17.718); /* text on a destructive tint — same value, it already passes */
 
-  /* Semantic status colours (our addition; shadcn has none).
+  /* --- SYSTEM: status (never re-themed — see the rule at the top of this file) ---
+     Not in shadcn, except --destructive, which we treat as a status too.
      Three tokens each, because one colour cannot do all three jobs:
-       --x       the colour itself: dots, solid fills, bars. The brand value, untouched.
+       --x       the colour itself: dots, solid fills, bars.
        --x-foreground  text on a SOLID --x fill.
        --x-ink   text on a 10% tint of --x (the soft badge). Same hue, darkened until it
-                 reaches 4.5:1 on that tint; the raw brand green and yellow reach only 2.9 and 2.4. */
-  --success: oklch(0.636 0.144 152.314);     /* brand green #33A35E — live, active, completed */
+                 reaches 4.5:1 on that tint; the raw green and yellow reach only 2.9 and 2.4. */
+  --destructive: oklch(0.542 0.177 17.718);  /* #C03347 — delete, errors, failed */
+  --destructive-foreground: oklch(0.985 0 0); /* text on a solid destructive fill */
+  --destructive-ink: oklch(0.542 0.177 17.718); /* text on a destructive tint — same value, it already passes */
+  --success: oklch(0.636 0.144 152.314);     /* #33A35E — live, active, completed */
   --success-foreground: oklch(0.145 0 0);    /* near-black: white on this green is 3.2:1 */
   --success-ink: oklch(0.515 0.144 152.314);
-  --warning: oklch(0.708 0.137 77.179);      /* brand yellow #D09425 — pending, expiring, needs attention */
+  --warning: oklch(0.708 0.137 77.179);      /* #D09425 — pending, expiring, needs attention */
   --warning-foreground: oklch(0.145 0 0);    /* near-black: white on this yellow is 2.6:1 */
   --warning-ink: oklch(0.548 0.137 77.179);
-  --info: oklch(0.500 0.160 281.533);        /* brand hue, lightened — informational, in progress */
+  --info: oklch(0.500 0.160 240);            /* #006AB4 — informational, in progress.
+                                                Hue 240: a plain blue, 42 degrees off the brand and
+                                                deliberately not derived from it. */
   --info-foreground: oklch(0.985 0 0);
-  --info-ink: oklch(0.500 0.160 281.533);    /* same value, it already passes */
+  --info-ink: oklch(0.500 0.160 240);        /* same value, it already passes */
 
   /* Lines and focus */
   --border: oklch(0.922 0 0);                /* dividers, card borders */
   --input: oklch(0.668 0 0);                 /* form field borders — 3:1 against the page, see decision 28 */
-  --ring: oklch(0.550 0.150 281.533);        /* keyboard focus ring — brand hue */
+  --ring: oklch(0.550 0.150 281.533);        /* keyboard focus ring — BRAND hue */
 
   /* Sidebar (has its own set so it can differ from the page) */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.260 0.145 281.533);
+  --sidebar-primary: oklch(0.260 0.145 281.533);  /* BRAND */
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.960 0.010 281.533);   /* active nav item */
-  --sidebar-accent-foreground: oklch(0.260 0.145 281.533);
+  --sidebar-accent: oklch(0.960 0.010 281.533);   /* active nav item — BRAND */
+  --sidebar-accent-foreground: oklch(0.260 0.145 281.533);  /* BRAND */
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.550 0.150 281.533);
+  --sidebar-ring: oklch(0.550 0.150 281.533);     /* BRAND */
 
   /* Charts (kept for parity with Spartan; unused until we have data views.
-     Still the shadcn defaults — rebuild from the brand hue when the first chart appears.) */
+     Still the shadcn defaults — rebuild from the brand hue when the first chart appears.
+     A series that encodes a status takes the status colour, not a chart colour.) */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);

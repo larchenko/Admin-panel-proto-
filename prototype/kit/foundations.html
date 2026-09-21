@@ -69,11 +69,43 @@
             </div>
           </div>
           <p class="mt-6 text-muted-foreground">
-            Carries <code class="rounded-sm bg-muted px-1 py-0.5">--primary</code>, the focus ring, the active nav item,
-            the selected-row tint and the <em>info</em> status. Greys stay neutral (chroma&nbsp;0) so this is the only
-            colour competing for attention on a screen full of data.
+            Carries <code class="rounded-sm bg-muted px-1 py-0.5">--primary</code>, the focus ring, the active nav item
+            and the selected-row tint. Greys stay neutral (chroma&nbsp;0) so this is the only colour competing for
+            attention on a screen full of data. It does not reach the status colours — see below.
           </p>
         </div>
+      </div>
+
+      <div class="mt-3 rounded-lg border p-6">
+        <p class="text-xs uppercase tracking-wide text-muted-foreground">What a white-label swap replaces</p>
+        <div class="mt-4 grid gap-6 sm:grid-cols-2">
+          <div>
+            <p class="font-medium">Brand — replaced</p>
+            <ul class="mt-2 space-y-1 font-mono text-xs text-muted-foreground">
+              <li>--primary, --primary-foreground</li>
+              <li>--accent, --accent-foreground</li>
+              <li>--ring</li>
+              <li>--sidebar-primary, --sidebar-accent, --sidebar-ring</li>
+            </ul>
+          </div>
+          <div>
+            <p class="font-medium">System — left alone</p>
+            <ul class="mt-2 space-y-1 font-mono text-xs text-muted-foreground">
+              <li>--background, --foreground, --card, --popover</li>
+              <li>--secondary, --muted</li>
+              <li>--border, --input</li>
+              <li>--success, --warning, --info, --destructive</li>
+            </ul>
+          </div>
+        </div>
+        <p class="mt-4 max-w-2xl text-muted-foreground">
+          Status colours are never derived from, tinted with, or replaced by the brand. A status describes the state of
+          the system, not who owns the product — if green turns violet because a client's brand is violet, the colour
+          stops carrying information and every badge has to be read word by word. If a client's brand lands on a status
+          hue, the brand moves in the UI; the status does not. That is also why
+          <code class="rounded-sm bg-muted px-1 py-0.5">--info</code> is a plain blue at hue 240 rather than a lighter
+          cut of the brand: it was the one status that had no value of its own.
+        </p>
       </div>
     </section>
 
@@ -107,7 +139,8 @@
         <code class="rounded-sm bg-muted px-1 py-0.5">--success</code> is the colour itself (dots, solid fills),
         <code class="rounded-sm bg-muted px-1 py-0.5">--success-foreground</code> is text on a solid fill, and
         <code class="rounded-sm bg-muted px-1 py-0.5">--success-ink</code> is text on the 10% tint used by soft badges.
-        The brand green and yellow reach only 2.9:1 and 2.4:1 as text, so the ink shade is the same hue darkened until it passes 4.5:1.
+        The green and yellow reach only 2.9:1 and 2.4:1 as text, so the ink shade is the same hue darkened until it passes 4.5:1.
+        These four colours are fixed: they are never derived from the brand and a white-label swap does not touch them.
       </p>
       <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <div class="swatch" data-bg="success" data-fg="success-foreground" data-note="Live, active, completed"></div>
