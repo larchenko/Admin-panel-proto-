@@ -16,6 +16,85 @@
 
 @layer components {
 
+  /* ------------------------------------------------------------ Typography
+     The type ladder. Roles, not sizes: the markup asks for a page title, not
+     for 24px. Specimen on kit/foundations.html, ladder recorded in decision 9.
+
+       level  role              size  weight  colour            recipe / utilities
+       h1     Page title        36    600     foreground        .page-title
+       h2     Dialog / section  24    600     foreground        .dialog-title .section-title
+       h3     Card / subsection 18    600     foreground        .card-title .form-section-title
+              Body              14    400     foreground        (body default)
+              Emphasis          14    500     foreground        .label, name cell
+              Secondary         14    400     muted-foreground  .page-description .card-description
+              Overline          12    600     muted-foreground  .overline, table th, .menu-label, .sidebar-group-label
+              Caption           12    400     muted-foreground  .field-description .prop-label .stat-label
+
+     Three heading levels, and the steps get smaller on the way down: 36 -> 24 is
+     1.5x, 24 -> 18 is 1.33x, 18 -> 14 is 1.29x, 14 -> 12 is 1.17x. That is the
+     shape a scale should have — the further from the body text, the bigger the
+     jump — and it is why the page title can be read from across the room while
+     the card title only has to win against the line under it.
+
+     The rule that keeps the ladder readable: EVERY STEP CHANGES AT LEAST TWO OF
+     size, weight and colour. Weight alone does not carry a level — Archivo 500
+     against 400 at 14px is a difference you can measure and cannot see, which is
+     why the three headings above are 600 and each one is also a size apart. 500
+     is left for emphasis inside a line of body text, where the words around it
+     are the reference.
+
+     The overline is the one place where 600 does carry a level on its own, and it
+     can: against 14/400 body it is also two steps smaller and a grey lighter. No
+     uppercase — it was tried and dropped (decision 77). Keep these labels to one
+     to three words; the role is scanned, not read.
+  */
+  .section-title { @apply text-2xl font-semibold tracking-tight; }
+  .overline      {
+    @apply text-xs font-semibold text-muted-foreground;
+    /* Tailwind ships its own `overline` utility (text-decoration-line: overline) and the
+       utilities layer always beats the components layer, so without this every
+       class="overline" renders with a line drawn above the text. `!important` is the only
+       thing that wins from in here: an important declaration in an earlier layer outranks a
+       normal one in a later layer. The name is kept because it is the role's name in the type
+       ladder and in decisions 77/78 — see decision 88. */
+    text-decoration-line: none !important;
+  }
+
+  /* --------------------------------------------------------------- Spacing
+     The spacing ladder. Tailwind's 4px grid, but only seven steps of it are in
+     use and every one has a job. Specimen on kit/foundations.html, rule recorded
+     in decision 87.
+
+       step  px   role
+       0.5   2    two lines that are one value            .cell  .stat-value
+       1     4    items in a list that is one object      .sidebar-menu  .tabs-list  .prop
+       1.5   6    icon next to 12px text; menu row pad    .field-error  .metric-label  .menu-item
+       2     8    label -> control; icon -> label; two    .field  .btn  .page-actions
+                  separate buttons; table cell py
+       3     12   inside a control; table column gutter   .input  .table td  .table-toolbar
+       4     16   field -> field; block -> its furniture  .form-section-body  .table-toolbar  .dialog-header
+       6     24   page inset; block -> block; section ->  .shell-body  .card  .form-section  .field-row
+                  section; two fields side by side
+
+     5 (20) and 7 (28) are NOT on the ladder: each sits between two steps that
+     already mean something, so it can only blur one of them. Half steps under 2
+     (px-2.5, px-1.5) belong to a control's own drawing, not to page spacing.
+
+     Four rules:
+     1. EVERY GAP IS LARGER THAN THE GAPS INSIDE IT. A form holds together on
+        this alone: 8 inside a field, 16 between fields, 24 between sections.
+        A group's inner gap therefore decides the gap around it.
+     2. ACROSS IS WIDER THAN DOWN. Side by side 24 (.field-row), stacked 16.
+        Stacked, a label separates the two controls; on one line nothing does,
+        and two bordered boxes 16 apart read as one control split in half.
+     3. PADDING HAS THREE TIERS: control 12, band 16 (dialog header/footer,
+        alert, metric), container 24 (card, dialog body, page).
+     4. 24 IS THE CEILING ON A SCREEN. Anything needing more separation gets a
+        rule, a surface or a container. The one exception is an empty table body
+        (48), where the space is the message. The kit's own pages use 32/64
+        between sections — they are documents, not screens.
+  */
+
   /* ---------------------------------------------------------------- Button
      shadcn: components/ui/button.tsx     Spartan: hlmBtn (variant, size)
   */
@@ -48,6 +127,11 @@
   */
   .field        { @apply grid content-start gap-2; }              /* content-start: rows never stretch to a taller sibling */
   .field-row    { @apply grid items-start gap-6 sm:grid-cols-2; } /* two fields side by side, aligned to the top */
+  /* three across, for a set of values that is one thing: the SIX triplet
+     (code, schema, bc) is read and filled together, and splitting it over two
+     rows made it look like two unrelated pairs (decision 85). Not a width trick
+     — use it only when the three fields belong to each other. */
+  .field-row-3  { @apply grid items-start gap-6 sm:grid-cols-3; }
   .label        { @apply flex items-center gap-2 text-sm font-medium leading-none select-none; }
   .label-optional { @apply text-xs font-normal text-muted-foreground; }
   .field-description { @apply text-xs text-muted-foreground; }
@@ -113,10 +197,17 @@
   .select-trigger > i    { @apply shrink-0 text-base leading-none text-muted-foreground transition-transform; }
   .select-trigger[aria-expanded="true"] > i { @apply rotate-180; }
   .select-sm .select-trigger { @apply h-8; }
+  /* The list opens below the trigger and flips above when there is no room for
+     it there — the same rule, the same 4px gap and the same 8px gutter as the
+     row-action menu (decision 80). The side is decided on open, in app.js, and
+     written here as data-side; app.js also caps the height to the room that
+     side actually has, so a long list scrolls instead of running off the
+     screen. 288px (max-h-72) stays the ceiling. */
   .select-content {
     @apply absolute left-0 top-[calc(100%+4px)] z-50 max-h-72 min-w-full overflow-y-auto rounded-md border
            bg-popover p-1 text-popover-foreground shadow-md;
   }
+  .select-content[data-side="top"] { @apply top-auto bottom-[calc(100%+4px)]; }
   .select-item {
     @apply relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none
            hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
@@ -150,6 +241,30 @@
   .choice { @apply flex items-start gap-2 text-sm leading-none; }
   .choice > .checkbox, .choice > .radio { @apply mt-px; }
   .choice .field-description { @apply mt-1.5; }
+
+  /* ------------------------------------------------- Static checkbox (read-only)
+     A boolean a row reports but nobody edits here — Pricer on the instruments
+     list. It looks like the checkbox above and is deliberately not one: a
+     <span>, so it takes no tab stop, has no cursor and is announced as nothing.
+     The value is carried for a screen reader by the sr-only label beside it.
+       <span class="check-static" data-on></span><span class="sr-only">In pricer</span>
+       <span class="check-static"></span><span class="sr-only">Not in pricer</span>
+     Why not a tick and an em dash: both are thin marks of about the same size,
+     so a column of them reads as texture rather than as two states. A filled
+     square against an empty square differs in shape, weight and colour at once,
+     and still differs with the colour taken away.
+     No shadow-xs, unlike the real checkbox — the one cue that it is not a control.
+  */
+  .check-static {
+    @apply inline-block size-4 shrink-0 rounded-md border border-input bg-background align-middle;
+  }
+  .check-static[data-on] {
+    @apply border-primary bg-primary;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 
   /* ----------------------------------------------------------------- Radio
      shadcn: radio-group.tsx (Radix)      Spartan: hlm-radio-group / hlm-radio
@@ -192,7 +307,7 @@
   .card             { @apply flex flex-col gap-6 rounded-lg border bg-card py-6 text-card-foreground; }
   .card-header      { @apply grid auto-rows-min items-start gap-1.5 px-6 has-[.card-action]:grid-cols-[1fr_auto]; }
   .card-header.border-b { @apply pb-6; }
-  .card-title       { @apply font-medium leading-none; }
+  .card-title       { @apply text-lg font-semibold leading-snug; }
   .card-description { @apply text-sm text-muted-foreground; }
   .card-action      { @apply col-start-2 row-span-2 row-start-1 self-start justify-self-end; }
   .card-content     { @apply px-6; }
@@ -235,6 +350,12 @@
      13 instrument types — a pill container that wide reads as a toolbar, not as
      navigation. Roles, keyboard behaviour and Helm structure are unchanged; only
      the trigger's styling differs, so the developer restyles hlmTabsTrigger.
+     The selected tab carries two cues, not one: a 3px brand underline that sits
+     over the strip's 1px border, and the label in brand colour. The underline
+     alone was too thin to find at this width; colour alone would fail for a
+     user who cannot separate the brand purple from the muted grey. Weight is
+     NOT used, because a bolder label would reflow the whole strip on every
+     click.
      Markup:
        <div class="tabs-list" role="tablist">
          <button type="button" class="tab" role="tab" aria-selected="true">All</button>
@@ -246,10 +367,33 @@
            text-sm font-medium text-muted-foreground transition-colors outline-none
            hover:text-foreground
            focus-visible:ring-[3px] focus-visible:ring-ring/50
-           after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-transparent after:content-[''];
+           after:absolute after:inset-x-0 after:-bottom-px after:h-[3px] after:rounded-t-sm after:bg-transparent after:content-[''];
   }
-  .tab[aria-selected="true"] { @apply text-foreground after:bg-primary; }
+  .tab[aria-selected="true"] { @apply text-primary after:bg-primary; }
   .tab-count { @apply rounded-sm bg-muted px-1.5 text-xs font-normal text-muted-foreground tabular-nums; }
+
+  /* ------------------------------------------------------------ Toggle group
+     shadcn: toggle-group.tsx (Radix)     Spartan: hlm-toggle-group (brn-toggle-group)
+     A short row of mutually exclusive options that switch what a block SHOWS,
+     not what the page shows: the period a chart is drawn over. Single select,
+     so exactly one item is pressed at any time and pressing the pressed one
+     does nothing.
+
+     Not tabs: tabs swap panels and own the content under them; this swaps a
+     parameter of one panel and lives inside it. Two underline strips on one
+     screen would also read as two levels of navigation.
+
+     Markup:
+       <div class="toggle-group" role="group" aria-label="Chart period">
+         <button type="button" class="toggle-item" aria-pressed="true">1Y</button>
+  */
+  .toggle-group { @apply inline-flex items-center gap-0.5; }
+  .toggle-item {
+    @apply inline-flex h-8 shrink-0 cursor-pointer select-none items-center rounded-md px-2.5 text-xs font-medium
+           text-muted-foreground outline-none transition-colors
+           hover:bg-accent hover:text-accent-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+  .toggle-item[aria-pressed="true"] { @apply bg-muted text-foreground; }
 
   /* ------------------------------------------------------------------ Menu
      shadcn: dropdown-menu.tsx (Radix)    Spartan: hlm-menu (brn-menu)
@@ -275,39 +419,660 @@
            focus:bg-destructive/10 focus:text-destructive-ink [&>i]:text-destructive-ink;
   }
   .menu-separator { @apply -mx-1 my-1 h-px bg-border; }
-  .menu-label     { @apply px-2 py-1.5 text-xs font-medium text-muted-foreground; }
+  .menu-label     { @apply px-2 py-1.5 text-xs font-semibold text-muted-foreground; }
+
+  /* --------------------------------------------------------- Column chooser
+     shadcn: dropdown-menu + a data-table column menu   Spartan: hlm-menu
+     One popover that does both jobs a wide table needs: which columns are shown,
+     and in what order. It is a .menu with a fixed header and a scrolling list.
+     Markup:
+       <button class="btn btn-outline btn-sm" popovertarget="columns-menu">…</button>
+       <div class="menu column-menu" id="columns-menu" popover data-columns>
+         <div class="column-menu-header">…<button class="btn btn-link btn-sm" data-columns-reset>Reset</button></div>
+         <ul class="column-list">
+           <li class="column-item" data-col="type">
+             <span class="column-handle" tabindex="0" role="button">…</span>
+             <input class="checkbox" type="checkbox" checked> <span>Type</span>
+           </li>
+         </ul>
+       </div>
+     Behaviour in app.js (Column chooser). Dragging lifts a floating copy of the
+     row; the row's own slot becomes an empty gap, and the rows in between slide
+     over to open that gap where the drop will land. The order changes on release,
+     not under the pointer. The handle is also focusable and moves the row with
+     ArrowUp / ArrowDown, so the order can be built without a mouse.
+  */
+  .column-menu        { @apply w-72 p-0; }
+  .column-menu-header { @apply flex items-center justify-between gap-2 border-b py-2 pl-3 pr-2; }
+  .column-list        { @apply max-h-80 overflow-y-auto p-1; }
+  .column-item {
+    @apply flex items-center gap-2 rounded-sm py-1.5 pl-1 pr-2 text-sm
+           hover:bg-accent hover:text-accent-foreground;
+  }
+  .column-item > label { @apply flex flex-1 items-center gap-2 truncate; }
+  .column-handle {
+    @apply flex size-6 shrink-0 cursor-grab touch-none items-center justify-center rounded-sm text-base
+           text-muted-foreground outline-none hover:text-foreground
+           focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+  /* Dragging: the row you grabbed becomes the gap — it keeps its space and loses
+     its contents — and the rows in between slide one row over to carry that gap
+     to where the drop will land. .column-ghost is the copy under the pointer.
+     The slide is the feedback, so the transition is on the rows, not decoration. */
+  .column-item[data-dragging]       { @apply bg-muted/50 hover:bg-muted/50; }
+  .column-item[data-dragging] > *   { @apply invisible; }
+  .column-list[data-dragging]       { @apply select-none; }
+  .column-list[data-dragging] .column-item { @apply transition-transform duration-150 ease-out; }
+  .column-list[data-dragging] .column-item:not([data-dragging]) { @apply hover:bg-transparent hover:text-inherit; }
+  .column-ghost {
+    @apply pointer-events-none fixed z-50 rounded-sm border bg-popover text-popover-foreground
+           opacity-95 shadow-lg;
+    animation: column-lift .12s ease-out forwards;
+  }
+  .column-ghost .column-handle { @apply cursor-grabbing text-foreground; }
+  .column-ghost[data-settling] {
+    @apply shadow-sm;
+    animation: none;
+    transition: top .14s ease-out, left .14s ease-out, transform .14s ease-out, box-shadow .14s ease-out;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .column-list[data-dragging] .column-item { transition: none; }
+    .column-ghost, .column-ghost[data-settling] { animation: none; transition: none; }
+  }
+  /* Locked: always visible, always first. No handle, no checkbox to uncheck. */
+  .column-item[data-locked]          { @apply text-muted-foreground hover:bg-transparent hover:text-muted-foreground; }
+  .column-item[data-locked] .column-handle { @apply cursor-default opacity-30 hover:text-muted-foreground; }
+  .column-lock        { @apply ml-auto shrink-0 text-xs text-muted-foreground; }
+
+  /* ------------------------------------------------------------- Filters
+     shadcn: popover.tsx + form fields    Spartan: hlm-popover (brn-popover)
+     One panel behind one button, and one chip row that says what it left on
+     (decision 89). The panel is a native popover like the menu, so it renders
+     in the top layer and the browser gives us Escape and click-outside; it is
+     wider than a menu because its fields are laid out two across, which is what
+     keeps it short enough to open downward under the toolbar.
+     Markup:
+       <button class="btn btn-outline btn-sm" popovertarget="filters" aria-haspopup="dialog">
+         Filters <span class="btn-count" data-filter-count hidden>0</span></button>
+       <div class="menu filter-panel" id="filters" popover data-align="start"> … </div>
+       <div class="filter-chips" data-chips hidden></div>
+     Behaviour — which fields, how a chip clears itself — is in app.js.
+  */
+  /* overflow-visible: a popover scrolls its own content by default, which would
+     trap a select list inside the panel and cut it off at the panel's edge. The
+     list is allowed out; it caps its own height against the viewport (80). */
+  .filter-panel         { @apply w-[520px] overflow-visible p-0; }
+  .filter-panel-header  { @apply flex items-center justify-between gap-2 border-b py-2 pl-3 pr-2; }
+  .filter-panel-body    { @apply grid gap-4 p-3; }
+  /* a group of fields that is one subject, ruled off from the plain ones above */
+  .filter-panel-group   { @apply grid gap-3 border-t pt-4; }
+
+  /* The chip row. Every filter the panel hides has a chip here, so the query is
+     readable with the panel shut; a filter whose own control is on screen — the
+     search box, the type tab, the Failed updates cell — has none, because a
+     chip for it would be a second copy of a state already visible. */
+  .filter-chips { @apply flex flex-wrap items-center gap-2 pb-4; }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-md border bg-muted/40 py-1 pl-2.5 pr-1 text-xs font-medium;
+  }
+  .chip-label { @apply font-normal text-muted-foreground; }
+  .chip-clear {
+    @apply flex size-4 shrink-0 items-center justify-center rounded-sm text-sm leading-none text-muted-foreground outline-none
+           hover:bg-accent hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+  /* how many filters are hidden in the panel; the same drawing as .tab-count */
+  .btn-count { @apply rounded-sm bg-muted px-1.5 text-xs font-normal text-muted-foreground tabular-nums; }
+
+  /* --------------------------------------------------------------- Tooltip
+     shadcn: tooltip.tsx (Radix)          Spartan: hlmTooltip (brnTooltip)
+     One shared bubble, driven by data-tooltip="…" on any element; behaviour and
+     placement live in app.js. Built on the native popover attribute for the same
+     reason as the menu: inside a scrolling table a positioned element is clipped.
+     A tooltip only repeats or expands what is already on screen — never put
+     information there that exists nowhere else.
+     Surface: the inverse of the page (--foreground / --background), not the brand
+     (shadcn uses bg-primary). A tooltip is the system speaking, not a brand
+     moment, and it appears over data — see decision 59.
+  */
+  .tooltip {
+    @apply pointer-events-none fixed inset-auto m-0 max-w-sm rounded-md border-0 bg-foreground px-2.5 py-2
+           text-xs text-background shadow-md;
+  }
+  .tooltip-title { @apply mb-1.5 font-semibold; }
+  /* structured body: label / value pairs, one per line */
+  .tooltip-rows  { @apply grid grid-cols-[auto_1fr] gap-x-3 gap-y-1; }
+  .tooltip-rows dt { @apply whitespace-nowrap text-background/60; }
+  .tooltip-rows dd { @apply m-0 break-all; }
+  [data-tooltip], [data-tooltip-rows] { @apply cursor-default; }
 
   /* ----------------------------------------------------------------- Table
      shadcn: table.tsx                    Spartan: hlmTable / hlm-table (brn-table)
      Markup: <div class="table-wrap"><table class="table">…</table></div>
-     Deviation from shadcn: cell padding px-3 (shadcn p-2) and px-4 on the outer cells so text aligns with card/toolbar edges.
+     Deviation from shadcn: cell padding px-3 (shadcn p-2).
+     No wrapper border and no radius — the table lies on the page instead of
+     sitting on a card above it (decision 50). What is left to structure it: the
+     tinted header band closed by a rule above and below it, a rule under every
+     row including the last, and the row hover.
+     Row edges (decision 55): every row is padded 3 (12px) left and right, the
+     same unit the columns are spaced with, so the band under a hovered row is
+     wider than its text on both sides. The wrapper bleeds the same 3 outwards
+     (-mx-3), which puts the text back on the page's own left and right edges —
+     the first column lines up with the search field above and the count below,
+     while the row band and the rules run 12px past them. Controls with padding
+     of their own pull back into that edge: .table-sort -ml-2, actions -mr-2.
   */
-  .table-wrap { @apply relative w-full overflow-x-auto rounded-lg border; }
+  .table-wrap { @apply relative -mx-3 overflow-x-auto; }
   .table      { @apply w-full caption-bottom text-sm; }
   .table caption { @apply mt-4 text-sm text-muted-foreground; }
-  .table thead tr { @apply border-b bg-muted/40; }
+  .table thead tr { @apply border-y bg-muted/40; }
   .table th {
-    @apply h-10 whitespace-nowrap px-3 text-left align-middle font-medium text-foreground
-           first:pl-4 last:pr-4;
+    @apply h-10 whitespace-nowrap px-3 text-left align-middle text-xs font-semibold
+           text-muted-foreground first:pl-3 last:pr-3;
   }
-  .table td { @apply whitespace-nowrap px-3 py-2 align-middle first:pl-4 last:pr-4; }
-  .table tbody tr { @apply border-b transition-colors hover:bg-muted/50 last:border-0; }
+  /* a sortable header cell gives its padding to the button, so the button is the
+     whole cell and its hover band fills the column edge to edge */
+  .table th:has(.table-sort) { @apply p-0; }
+  .table td { @apply whitespace-nowrap px-3 py-2 align-middle first:pl-3 last:pr-3; }
+  .table tbody tr { @apply border-b transition-colors hover:bg-muted/50; }
   .table tbody tr[aria-selected="true"] { @apply bg-muted; }
+  /* a row that is no longer in use recedes: its values drop to the secondary
+     grey and its colour accents lose weight. The status badge keeps its full
+     strength — it is the one thing that explains why the row is quiet. */
+  .table tbody tr[data-inactive] { @apply text-muted-foreground; }
+  .table tbody tr[data-inactive] .flag,
+  .table tbody tr[data-inactive] .check-static { @apply opacity-60; }
   /* cell modifiers */
   .table .num   { @apply text-right tabular-nums; }        /* numbers: right-aligned, equal-width digits */
   .table .check { @apply w-10 pr-0; }                      /* checkbox column */
   .table .check .checkbox { @apply block; }
-  .table .actions { @apply w-px text-right; }              /* row actions: shrink to content */
+  .table .actions { @apply w-px text-right; }              /* row actions: shrink to content, scrolls with the table */
+  .table .actions .btn-icon { @apply -mr-2; }              /* icon optically on the row's right padding edge */
+
+  /* Pinned first column. Opt in with data-pin-first on the .table-wrap. On a
+     table wider than the screen the identity of the row is the one thing that
+     must never scroll away: without it the prices and dates in view belong to
+     nobody. The price of pinning is that the cell paints its own background, so
+     every row state is repeated here as the exact colour the row would have —
+     add a row state above and you add it here too.
+     The shadow on its inner edge is state, not decoration: it says the table is
+     scrolled and there is content hidden behind this column. app.js sets the
+     flag. */
+  .table-wrap[data-pin-first] .table tr > :first-child {
+    @apply sticky left-0 z-10; background: var(--background);
+  }
+  .table-wrap[data-pin-first] .table thead tr > :first-child {
+    background: color-mix(in oklch, var(--muted) 40%, var(--background));
+  }
+  .table-wrap[data-pin-first] .table tbody tr:hover > :first-child {
+    background: color-mix(in oklch, var(--muted) 50%, var(--background));
+  }
+  .table-wrap[data-pin-first] .table tbody tr[aria-selected="true"] > :first-child {
+    background: var(--muted);
+  }
+  .table-wrap[data-pin-first][data-scrolled-start] .table tr > :first-child::after {
+    @apply pointer-events-none absolute inset-y-0 -right-2 w-2 content-[''];
+    background: linear-gradient(to left, transparent, rgb(0 0 0 / 0.07));
+  }
   .table .muted { @apply text-muted-foreground; }
   .table .bool  { @apply text-center; }                  /* yes/no column: icon or dash, label in sr-only */
   .table .bool i { @apply text-base leading-none; }
+  /* two-level cell: a primary value with a related second value under it
+     (name + identifiers, price + source, date + time). Header cells use the same
+     structure, so the column label explains what the second line holds. */
+  .cell      { @apply flex min-w-0 flex-col gap-0.5 leading-tight; }
+  .cell-sub  { @apply truncate text-xs font-normal text-muted-foreground; }
+  .table .num .cell   { @apply items-end; }
+  .table td:has(.cell) { @apply py-2; }
+  /* country flag after the instrument name: a square 16px SVG tile, so it stays
+     crisp at any zoom and reads as an icon rather than a small picture. The inset
+     ring keeps flags with a white field (Japan) from bleeding into the row. */
+  .flag { @apply inline-block size-4 shrink-0 rounded-[2px] object-cover ring-1 ring-inset ring-foreground/15; }
+  .flag-empty { @apply inline-block size-4 shrink-0; }
   /* sortable header:  <th><button class="table-sort" aria-sort="ascending">Name <i class="ri-arrow-up-line"></i></button></th> */
   .table-sort {
-    @apply -ml-2 inline-flex h-8 items-center gap-1 rounded-md px-2 font-medium
+    @apply flex h-10 w-full items-center gap-1 px-3 text-left text-xs font-semibold
            hover:bg-accent hover:text-accent-foreground [&>i]:text-sm [&>i]:text-muted-foreground;
   }
+  .table .num .table-sort { @apply justify-end; }
   .table-sort[aria-sort="ascending"] > i, .table-sort[aria-sort="descending"] > i { @apply text-foreground; }
   /* toolbar above the table and footer below it */
+  /* a fetch that failed: the Updated cell says so instead of showing a date.
+     Destructive, not muted — the point of the marker is that it is findable by
+     scanning the column. The price column keeps whatever value it had, greyed:
+     one failure is reported once, in the column that is about freshness. */
+  .cell-error   { @apply flex items-center gap-1.5 text-destructive-ink; }
+  .cell-error i { @apply text-sm leading-none; }
+  /* a row that has just been created, so the eye finds it without a toast */
+  .table tbody tr[data-new] { animation: row-in 3s ease-out forwards; }
   .table-toolbar { @apply flex items-center justify-between gap-3 pb-4; }
   .table-footer  { @apply flex items-center justify-between gap-3 pt-4 text-sm text-muted-foreground; }
+
+  /* --------------------------------------------------------------- Sidebar
+     shadcn: sidebar.tsx                  Spartan: hlm-sidebar (brn-sidebar)
+     The app shell's primary navigation: one item per top-level area, always on
+     screen, never scrolled away with the page. Colours come from the --sidebar-*
+     tokens, so the sidebar can be re-shaded without touching the page tokens.
+     Icons are 20px and switch line -> fill on the active item (decision 10).
+     Markup:
+       <aside class="sidebar">
+         <div class="sidebar-header"> <span class="sidebar-brand">Back Office</span> … </div>
+         <nav class="sidebar-content">
+           <ul class="sidebar-menu">
+             <li><a class="sidebar-item" href="#" aria-current="page"><i class="ri-line-chart-fill"></i><span>Instruments</span></a></li>
+           </ul>
+         </nav>
+         <div class="sidebar-footer"> … </div>
+       </aside>
+     Collapsed rail: add data-collapsed to .sidebar (toggle in app.js).
+  */
+  .sidebar {
+    @apply flex h-full w-64 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground
+           transition-[width] duration-150;
+  }
+  /* No rule under the header and none over the footer (decision 76). The three
+     zones are held apart by space: 24px over the wordmark, 16px under it, and
+     16px over the footer. The 24/16 pair is also what keeps the two halves of
+     the screen in step: the wordmark sits on the same optical line as the page
+     title, and the first nav item starts at 80px, level with the page's tabs. */
+  .sidebar-header  { @apply flex shrink-0 items-center justify-between gap-2 px-3 pb-4 pt-6; }
+  .sidebar-brand   { @apply truncate px-1 text-base font-semibold tracking-tight text-sidebar-primary; }
+  .sidebar-content { @apply flex-1 overflow-y-auto overflow-x-hidden p-2; }
+  .sidebar-group   { @apply grid gap-1; }
+  .sidebar-group + .sidebar-group { @apply mt-4; }
+  .sidebar-group-label { @apply flex h-8 items-center px-2 text-xs font-semibold text-muted-foreground; }
+  .sidebar-menu    { @apply grid gap-1; }
+  .sidebar-item {
+    @apply flex h-9 w-full items-center gap-3 overflow-hidden rounded-md px-2 text-left text-sm
+           transition-colors outline-none
+           hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+           focus-visible:ring-[3px] focus-visible:ring-sidebar-ring/50
+           aria-disabled:pointer-events-none aria-disabled:opacity-50
+           [&>i]:shrink-0 [&>i]:text-xl [&>i]:leading-none [&>i]:text-muted-foreground;
+  }
+  .sidebar-item > span { @apply truncate; }
+  /* Active item, marked with aria-current="page". Three cues, not one: brand tint,
+     brand text, filled icon — so it reads in greyscale and after a white-label swap. */
+  .sidebar-item[aria-current="page"] {
+    @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground
+           [&>i]:text-sidebar-accent-foreground;
+  }
+  .sidebar-count     { @apply ml-auto shrink-0 text-xs tabular-nums text-muted-foreground; }
+  .sidebar-separator { @apply -mx-2 my-2 h-px bg-sidebar-border; }
+  .sidebar-footer    { @apply grid gap-1 p-2 pt-4; }
+  /* Signed-in user, bottom of the footer. Placeholder until auth is in scope. */
+  .sidebar-user {
+    @apply flex h-12 w-full items-center gap-2 overflow-hidden rounded-md px-2 text-left outline-none
+           transition-colors hover:bg-sidebar-accent
+           focus-visible:ring-[3px] focus-visible:ring-sidebar-ring/50
+           [&>i]:shrink-0 [&>i]:text-base [&>i]:leading-none [&>i]:text-muted-foreground;
+  }
+  .sidebar-avatar {
+    @apply flex size-8 shrink-0 items-center justify-center rounded-md bg-primary
+           text-xs font-medium text-primary-foreground;
+  }
+  .sidebar-user-text { @apply grid min-w-0 flex-1 text-sm leading-tight; }
+  .sidebar-user-text > span        { @apply truncate font-medium; }
+  .sidebar-user-text > span + span { @apply truncate text-xs font-normal text-muted-foreground; }
+
+  /* Collapsed rail: icons only, 48px wide. Every item keeps a title attribute,
+     which is the tooltip while the label is hidden. The account row keeps the
+     avatar alone — its More chevron is dropped, not squeezed: the avatar is 32px
+     and the rail has 36px of usable width, and the chevron is a hint about a menu
+     that the whole row already opens.
+
+     The items are square in the rail: `size-9`, 36×36. The item is 36px tall (h-9)
+     in both states, so the width is matched to the height rather than the other way
+     round — nothing moves vertically when the rail closes and the hit area keeps the
+     36px it had. The square is set on the item and the item is centred with an auto
+     margin, not left to fall out of the container's padding: the rail is 48px
+     including its 1px border, so padding would have to split 11px and the item
+     would end up 35 wide against 36 tall. */
+  .sidebar[data-collapsed] { @apply w-12; }
+  .sidebar[data-collapsed] .sidebar-header { @apply justify-center px-0; }
+  .sidebar[data-collapsed] .sidebar-content,
+  .sidebar[data-collapsed] .sidebar-footer { @apply px-0; }
+  .sidebar[data-collapsed] .sidebar-brand,
+  .sidebar[data-collapsed] .sidebar-group-label,
+  .sidebar[data-collapsed] .sidebar-count,
+  .sidebar[data-collapsed] .sidebar-item > span,
+  .sidebar[data-collapsed] .sidebar-user-text,
+  .sidebar[data-collapsed] .sidebar-user > i { @apply hidden; }
+  .sidebar[data-collapsed] .sidebar-item,
+  .sidebar[data-collapsed] .sidebar-user { @apply mx-auto size-9 justify-center gap-0 px-0; }
+
+  /* ---------------------------------------------------------------- Dialog
+     shadcn: dialog.tsx (Radix)           Spartan: hlm-dialog (brn-dialog)
+     Native <dialog> + showModal(), so the focus trap, the inert background,
+     Escape and the top layer come from the browser (decision 8).
+
+     Sizes: .dialog is shadcn's default 512px; .dialog-lg is 768px, which is what
+     a record with four field groups needs before two columns stop fitting.
+     Height is capped at 85vh and only .dialog-body scrolls — the title of the
+     record and the buttons that act on it are never scrolled away, the same
+     discipline the app shell uses.
+
+     Markup:
+       <button data-dialog-open="instrument">New instrument</button>
+       <dialog class="dialog dialog-lg" id="instrument" aria-labelledby="…">
+         <div class="dialog-header"> … <button data-dialog-close>…</button> </div>
+         <div class="dialog-body"> … </div>
+         <div class="dialog-footer"> … </div>
+       </dialog>
+  */
+  .dialog {
+    @apply m-auto max-h-[85vh] w-[min(92vw,32rem)] flex-col overflow-hidden rounded-lg border
+           bg-background p-0 text-foreground shadow-lg;
+  }
+  .dialog[open], .dialog:popover-open { @apply flex; }
+  .dialog-lg      { @apply w-[min(92vw,48rem)]; }
+  .dialog::backdrop { background-color: rgb(0 0 0 / 0.5); }
+  /* A confirmation that opens over an open dialog is a popover, not a second
+     <dialog>: one Escape closes every native dialog in the stack at once, which
+     would dismiss the question and the form together. popover="manual" also
+     ignores Escape, so the only way out of a confirmation is to answer it.
+     In Spartan this is hlm-alert-dialog on a CDK overlay and the constraint
+     does not exist. */
+  .dialog[popover] { @apply fixed inset-0; }
+
+  .dialog-header  { @apply flex shrink-0 items-start gap-3 border-b px-6 py-4; }
+  .dialog-heading { @apply min-w-0 flex-1; }
+  .dialog-title   { @apply flex items-center gap-3 text-2xl font-semibold tracking-tight; }
+  .dialog-title > span:first-child { @apply truncate; }
+  .dialog-description { @apply mt-1 text-sm text-muted-foreground; }
+  .dialog-actions { @apply flex shrink-0 items-center gap-1; }
+  .dialog-body    { @apply min-h-0 flex-1 overflow-y-auto p-6; }
+  .dialog-footer  { @apply flex shrink-0 items-center justify-end gap-3 border-t px-6 py-4; }
+  .dialog-footer-start { @apply mr-auto; }
+
+  /* Tabs inside a dialog: the same underline strip as a page's (see Tabs), but
+     it sits between the header and the body and does NOT scroll with it — the
+     way out of a tab has to stay on screen wherever the panel has got to.
+     It carries the dialog's own 24px inset, so the labels line up with the
+     title above them and the fields below. */
+  .dialog-tabs { @apply shrink-0 px-6; }
+  /* With a strip under it the header needs no rule of its own: two parallel
+     lines 37px apart are one separation drawn twice, and the strip's own
+     baseline already closes the block. In create the strip is hidden, so the
+     header keeps its rule. */
+  .dialog-header:has(+ .dialog-tabs:not(.hidden)) { @apply border-b-0; }
+
+  /* Open and close: fade with a small scale. allow-discrete lets the native
+     display switch take part in the transition, so the dialog animates out too. */
+  .dialog, .dialog::backdrop {
+    transition: opacity 0.15s ease, scale 0.15s ease, overlay 0.15s allow-discrete, display 0.15s allow-discrete;
+  }
+  .dialog { opacity: 1; scale: 1; }
+  .dialog:not([open]):not(:popover-open) { opacity: 0; scale: 0.98; }
+  @starting-style { .dialog[open], .dialog:popover-open { opacity: 0; scale: 0.98; } }
+  .dialog::backdrop { opacity: 1; }
+  .dialog:not([open]):not(:popover-open)::backdrop { opacity: 0; }
+  @starting-style { .dialog[open]::backdrop, .dialog:popover-open::backdrop { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .dialog, .dialog::backdrop { transition: none; }
+  }
+
+  /* ----------------------------------------------------------------- Alert
+     shadcn: alert.tsx                    Spartan: hlm-alert
+     A message about the thing on screen, in the flow of the page — not a toast
+     and not a tooltip. Used for the result of a fetch and for a failed save.
+     Variants use the status tokens: the -ink shade for text on the 10% tint
+     (decision 24), so every variant clears 4.5:1 on its own background.
+  */
+  .alert       { @apply grid grid-cols-[auto_1fr] items-start gap-x-3 rounded-lg border px-4 py-3 text-sm; }
+  .alert > i   { @apply mt-px text-base leading-5; }
+  .alert-title { @apply font-semibold leading-5; }
+  .alert-description { @apply col-start-2 mt-1 text-muted-foreground; }
+  .alert:not(:has(> i)) { @apply grid-cols-1; }
+  .alert:not(:has(> i)) .alert-description { @apply col-start-1; }
+  .alert-destructive { @apply border-destructive/30 bg-destructive/5 text-destructive-ink; }
+  .alert-success     { @apply border-success/30 bg-success/5 text-success-ink; }
+  .alert-warning     { @apply border-warning/30 bg-warning/5 text-warning-ink; }
+  .alert-info        { @apply border-info/30 bg-info/5 text-info-ink; }
+  .alert-destructive .alert-description,
+  .alert-success .alert-description,
+  .alert-warning .alert-description,
+  .alert-info .alert-description { @apply text-current opacity-80; }
+
+  /* ---------------------------------------------------------- Form section
+     A group of fields inside a dialog or a page form. Deliberately NOT a card:
+     a card inside a dialog is a frame drawn inside a frame, and it would indent
+     its contents away from the dialog's own edges. Same rule as the table in
+     decision 50 — the container frames the content, the group only separates it.
+  */
+  .form-sections     { @apply grid divide-y; }
+  .form-section      { @apply py-6 first:pt-0 last:pb-0; }
+  .form-section-header { @apply mb-4 flex items-start justify-between gap-4; }
+  .form-section-title  { @apply text-lg font-semibold; }
+  .form-section-note   { @apply mt-1 text-xs text-muted-foreground; }
+  .form-section-body   { @apply grid gap-4; }
+  /* a rule that belongs to the group, not to one field (e.g. "at least one
+     identifier"): same look as .field-error, placed under the section title */
+  .form-section-error  { @apply mt-1 flex items-center gap-1.5 text-xs text-destructive; }
+  .form-section-error i { @apply text-sm leading-none; }
+
+  /* ------------------------------------------------------ Read-only values
+     The view mode of a record: label above, value below, two columns. Values
+     are text, never disabled inputs — a disabled control says "editable, but
+     not now" and drops to 50% opacity, which is the wrong message and the wrong
+     contrast for data that is simply being read (same reasoning as decision 49).
+  */
+  .props       { @apply grid grid-cols-2 gap-x-6 gap-y-4; }
+  .prop        { @apply grid min-w-0 gap-1; }
+  .prop-full   { @apply col-span-2; }
+  .prop-label  { @apply text-xs text-muted-foreground; }
+  .prop-value  { @apply break-words text-sm; }
+  .prop-value.empty { @apply text-muted-foreground; }
+
+  /* ------------------------------------------------------------ Statistics
+     A row of small numbers that are read across, not down: the percent changes
+     over six periods. One hairline grid, so the row reads as one object.
+     Values keep the precision the source sent (decision 33).
+  */
+  .stats       { @apply grid gap-px overflow-hidden rounded-md border bg-border; }
+  .stat        { @apply bg-background px-3 py-2; }
+  .stat-label  { @apply text-xs text-muted-foreground; }
+  .stat-value  { @apply mt-0.5 text-sm tabular-nums; }
+  .stat-up     { @apply text-success-ink; }
+  .stat-down   { @apply text-destructive-ink; }
+
+  /* ---------------------------------------------------------------- Range
+     52-week low/high with the current price marked on it. Two numbers and a
+     position between them say more than two numbers alone.
+  */
+  .range       { @apply grid gap-2; }
+  .range-track { @apply relative h-1.5 rounded-full bg-muted; }
+  .range-mark  { @apply absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-primary; }
+  .range-ends  { @apply flex items-center justify-between text-xs tabular-nums text-muted-foreground; }
+
+  /* ----------------------------------------------------------------- Chart
+     shadcn: chart.tsx (Recharts)         Spartan: no chart primitive — the
+     Angular app draws this with a charting library and these tokens.
+
+     One series of closing prices against time, drawn as a line. The rules that
+     make it part of this product rather than a widget dropped into it:
+
+     - The line is --chart-1, which is the brand (decision 92). One series needs
+       no legend and no second colour.
+     - Grid lines are --border and horizontal only: a price is read off the y
+       axis, and vertical rules would fence the line into boxes it does not have.
+     - No area fill under the line. A filled area says "how much", and a price
+       is not a quantity that accumulates.
+     - The numbers are NOT in the drawing. The session under the cursor is
+       printed as text under the chart (decision 94), so the values are readable
+       and reachable without a mouse — a tooltip that only appears on hover
+       would hide the data this panel exists to show.
+     - The plot is focusable and the arrow keys move the cursor, so the series
+       can be read from the keyboard.
+
+     Markup:
+       <div class="chart">
+         <div class="chart-header"> <p class="chart-title">…</p> …toggle group… </div>
+         <div class="chart-plot" tabindex="0" role="group" aria-label="…">
+           <svg class="chart-svg" viewBox="0 0 720 240">…</svg>
+         </div>
+         <div class="stats grid-cols-5">…the session readout…</div>
+  */
+  .chart        { @apply grid gap-3; }
+  .chart-header { @apply flex items-center justify-between gap-4; }
+  .chart-title  { @apply text-xs text-muted-foreground; }
+  .chart-plot {
+    @apply relative cursor-crosshair rounded-md outline-none
+           focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+  .chart-svg    { @apply block w-full select-none; }
+  .chart-grid   { stroke: var(--border); stroke-width: 1; }
+  .chart-axis   { fill: var(--muted-foreground); font-size: 11px; }
+  .chart-axis-y { text-anchor: end; }
+  .chart-axis-x { text-anchor: middle; }
+  /* the year, where the months of a long window turn over: the one label in the
+     strip that is a different fact, so it is the one label with weight */
+  .chart-axis-year { fill: var(--foreground); font-weight: 500; }
+  .chart-line   { fill: none; stroke: var(--chart-1); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+  .chart-cursor { stroke: var(--muted-foreground); stroke-width: 1; stroke-dasharray: 3 3; }
+  .chart-dot    { fill: var(--chart-1); stroke: var(--background); stroke-width: 2; }
+  /* no history yet: the block keeps the height the chart would have had, so the
+     panel does not jump when the first update fills it */
+  .chart-empty  { @apply grid h-[240px] place-content-center justify-items-center rounded-md border border-dashed px-6 text-center text-muted-foreground; }
+  .chart-empty > i { @apply text-3xl; }
+
+  /* ----------------------------------------------------------- Disclosure
+     Native <details>, for a group that is genuinely rare — not for one that is
+     merely long. It was written for the ten secondary identifiers and decision 82
+     took them back out into the open: they were filled on almost every create, so
+     the disclosure cost a click before any work could start. No screen uses this
+     now; it stays because the recipe is right for the case it was meant for.
+     If the summary has to say how much it is hiding, it is hiding too much.
+  */
+  .disclosure > summary {
+    @apply inline-flex cursor-pointer select-none items-center gap-1.5 rounded-sm text-sm font-medium
+           outline-none hover:text-primary focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+  .disclosure > summary::-webkit-details-marker { display: none; }
+  .disclosure > summary::marker { content: ""; }
+  .disclosure > summary > i { @apply text-base leading-none text-muted-foreground transition-transform; }
+  .disclosure[open] > summary > i { @apply rotate-180; }
+  .disclosure-content { @apply mt-4 grid gap-4; }
+
+  /* ---------------------------------------------------------------- Skeleton
+     shadcn: skeleton.tsx                 Spartan: hlmSkeleton
+     A value that is being fetched. Used while a fetch runs, never as a page
+     loader — it stands exactly where the value will be.
+  */
+  .skeleton { @apply block h-4 w-full animate-pulse rounded-sm bg-muted; }
+
+  /* ------------------------------------------------------------- App shell
+     The frame every screen sits in: the sidebar on the left, the page on the
+     right with its own scroll. Desktop only (decision 3).
+     The page has no header bar of its own — the title is the first block inside
+     the scrolling body (see Page header, decision 60).
+  */
+  .shell        { @apply flex h-screen w-full overflow-hidden bg-background; }
+  .shell-main   { @apply flex min-w-0 flex-1 flex-col overflow-hidden; }
+  .shell-body   { @apply flex-1 overflow-y-auto px-6 py-6; }
+
+  /* ------------------------------------------------------------ Page header
+     The first block of every screen: what this page is, and the one action that
+     creates something on it. It is content, not chrome — it sits inside
+     .shell-body and scrolls with the page, and it is closed by space, not by a
+     rule (decision 60).
+     Markup:
+       <div class="shell-body">
+         <header class="page-header">
+           <div class="page-heading">
+             <h1 class="page-title">Instruments</h1>
+             <p class="page-description">optional, one line</p>
+           </div>
+           <div class="page-actions"> … </div>
+         </header>
+         …
+     One h1 per screen, and it is this one. The title is 36px against the page's
+     14px body — by a wide margin the largest text on the screen, so the eye
+     starts here and the tabs below read as a level under it. It is the only
+     place in the product that uses h1's size; a dialog's own title is 24 (h2),
+     because a dialog is a block of the screen and not a screen of its own.
+  */
+  /* items-center, not items-start: at 36px the title's line box is 45px tall and a
+     32px button pinned to its top sat visibly high next to it. The description is
+     one line by contract (above), so centring the action against the whole heading
+     block keeps the two on one optical line. If a description ever wraps to two
+     lines, this goes back to items-start and the action gets a mt to match. */
+  .page-header      { @apply mb-6 flex items-center justify-between gap-4; }
+  .page-heading     { @apply grid min-w-0 gap-1; }
+  .page-title       { @apply truncate text-4xl font-semibold leading-tight tracking-tight; }
+  .page-description { @apply text-muted-foreground; }
+  .page-actions     { @apply flex shrink-0 items-center gap-2; }
+
+  /* ----------------------------------------------------------- Page metrics
+     A row of counts between the page title and the list: what the set is made
+     of, and what in it needs someone (decision 72). Four cells at most, and
+     every one of them has to earn the ~90px it takes off the top of the table.
+     Markup:
+       <div class="metrics">
+         <div class="metric">
+           <span class="metric-label"><i class="ri-stack-line"></i> Total instruments</span>
+           <span class="metric-value">248</span>
+         </div>
+         <button type="button" class="metric metric-alert" aria-pressed="false"> … </button>
+       </div>
+     A cell is a <div> when it is only a number, a <button> when the number is a
+     filter into the list below, and an <a> when it leads somewhere else — the
+     record header's Products card (97). The three look the same at rest on purpose:
+     the cursor and the pressed state say which is which, and a border that
+     shouted "clickable" on one cell in four would make the other three look
+     broken.
+     The value is 24px — the h2 step of the ladder (78) — but it is a number,
+     not a heading: no .section-title here, and nothing in this row is an
+     <h2>, so the page keeps one h1 and no headings under it that name nothing.
+  */
+  .metrics      { @apply mb-6 grid grid-cols-4 gap-3; }
+  .metric       { @apply grid content-start gap-1.5 rounded-lg border bg-card px-4 py-3 text-left; }
+  .metric-label { @apply flex items-center gap-1.5 text-xs font-medium text-muted-foreground; }
+  .metric-label i { @apply text-sm leading-none; }
+  .metric-value { @apply flex items-baseline gap-1.5 text-2xl font-semibold leading-none tabular-nums; }
+  /* the second number in a cell: a share of the first, or the window it counts
+     over. 12px next to 24px, so it is read after the number and never instead
+     of it. */
+  .metric-sub   { @apply text-xs font-normal text-muted-foreground; }
+
+  /* small: the same cell inside a dialog header, where it sits next to a 24px
+     title and must not tie with it. Padding down a step, the value down to 20px
+     — still the largest thing in the header after the name. */
+  .metric-sm                { @apply gap-1 px-3 py-2; }
+  .metric-sm .metric-value  { @apply text-xl; }
+
+  /* alert: the count of things that are wrong. Destructive is the status
+     colour, not an accent — the cell is tinted at 5% and the text takes the
+     -ink shade, the same recipe as a soft badge, so a strip of four cells has
+     one loud one and it is loud for a reason. */
+  .metric-alert                 { @apply border-destructive/30 bg-destructive/5; }
+  .metric-alert .metric-label,
+  .metric-alert .metric-value   { @apply text-destructive-ink; }
+
+  button.metric, a.metric {
+    @apply cursor-pointer outline-none transition-colors
+           focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+  button.metric:hover, a.metric:hover  { @apply bg-accent; }
+  button.metric-alert:hover            { @apply bg-destructive/10; }
+  button.metric[aria-pressed="true"]   { @apply border-destructive bg-destructive/10; }
+
+  /* zero: nothing is wrong, so nothing is red and there is nothing to click.
+     The cell stays in place rather than disappearing — a strip that changes
+     shape when the news is good cannot be read at a glance, and "0 failed" is
+     information the admin came for. */
+  .metric[data-zero] { @apply cursor-default border-border bg-card; }
+  .metric[data-zero] .metric-label,
+  .metric[data-zero] .metric-value { @apply text-muted-foreground; }
+  .metric[data-zero]:hover { @apply bg-card; }
+}
+
+@keyframes row-in {
+  from { background-color: var(--accent); }
+  to   { background-color: transparent; }
+}
+
+@keyframes column-lift {
+  from { transform: none;            }
+  to   { transform: scale(1.02);     }
 }

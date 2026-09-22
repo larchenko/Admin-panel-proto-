@@ -1,0 +1,1311 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instruments · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+
+  <!-- =================================================================
+       App shell. Sidebar + page, both full height; only shell-body scrolls,
+       and the page title scrolls with it.
+       Recipes: assets/components.css (Sidebar, App shell) · kit/navigation.html
+  ================================================================== -->
+  <div class="shell">
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <!-- Prototype: the wordmark goes back to the index. In the app it is the home link. -->
+        <a class="sidebar-brand" href="../index.html">Admin Panel</a>
+        <button type="button" class="btn btn-ghost btn-icon btn-sm" data-sidebar-toggle
+                aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <i class="ri-menu-fold-line"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-content" aria-label="Main">
+        <ul class="sidebar-menu">
+          <li><a class="sidebar-item" href="./instruments.html" aria-current="page" title="Instruments"><i class="ri-line-chart-fill"></i><span>Instruments</span></a></li>
+          <li><a class="sidebar-item" href="#" title="Products"><i class="ri-box-3-line"></i><span>Products</span></a></li>
+          <li><a class="sidebar-item" href="#" title="Users &amp; Organizations"><i class="ri-group-line"></i><span>Users &amp; Organizations</span></a></li>
+          <li><a class="sidebar-item" href="#" title="Custodians"><i class="ri-safe-2-line"></i><span>Custodians</span></a></li>
+          <li><a class="sidebar-item" href="#" title="Issuers"><i class="ri-bank-line"></i><span>Issuers</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a class="sidebar-item" href="#" title="Settings"><i class="ri-settings-3-line"></i><span>Settings</span></a>
+        <button type="button" class="sidebar-user" title="Andriy Larchenko · Master Admin">
+          <span class="sidebar-avatar" aria-hidden="true">AL</span>
+          <span class="sidebar-user-text"><span>Andriy Larchenko</span><span>Master Admin</span></span>
+          <i class="ri-more-2-line"></i>
+        </button>
+      </div>
+    </aside>
+
+    <div class="shell-main">
+
+      <div class="shell-body" data-list>
+        <!-- Page header. First block of the page, inside the scroll area: the
+             title is content, not a header bar, so nothing is ruled off above
+             the list. Title left, primary action right (decision 60). -->
+        <header class="page-header">
+          <div class="page-heading">
+            <h1 class="page-title">Instruments</h1>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-default btn-sm" data-new-instrument><i class="ri-add-line"></i> New instrument</button>
+          </div>
+        </header>
+
+        <!-- ========================================================= Summary
+             Four counts, read left to right: how big the set is, how much of it
+             is live, how much of it the pricer offers, and what is broken right
+             now (decision 72). Only the last one is a control — it filters the
+             list to the instruments whose last update failed, which is the one
+             question the toolbar cannot answer.
+             Prototype: total, inactive and pricer are demo numbers that move
+             with the footer count; Failed updates is counted from the rows, so
+             clicking it always lands on exactly the number it shows. -->
+        <div class="metrics" data-metrics>
+          <div class="metric">
+            <span class="metric-label"><i class="ri-stack-line"></i> Total instruments</span>
+            <span class="metric-value"><span data-metric="total">248</span></span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label"><i class="ri-checkbox-circle-line"></i> Active</span>
+            <span class="metric-value"><span data-metric="active">231</span> <span class="metric-sub" data-metric="inactive">17 inactive</span></span>
+          </div>
+
+          <div class="metric">
+            <span class="metric-label"><i class="ri-price-tag-3-line"></i> Pricer enabled</span>
+            <span class="metric-value"><span data-metric="pricer">156</span> <span class="metric-sub" data-metric="pricer-of">of 231 active</span></span>
+          </div>
+
+          <!-- The one cell that acts. Pressed = the list is filtered to it; pressing
+               again clears. Destructive is the status colour here, not an accent. -->
+          <button type="button" class="metric metric-alert" data-metric-failed aria-pressed="false">
+            <span class="metric-label"><i class="ri-error-warning-line"></i> Failed updates</span>
+            <span class="metric-value"><span data-metric="failed">0</span> <span class="metric-sub" data-metric="failed-note">last 24h</span></span>
+          </button>
+
+          <!-- Composed with the toolbar filters by the same rule as every select:
+               a value filters, an empty value does not (assets/app.js). -->
+          <input type="hidden" name="health" value="" data-filter="health">
+        </div>
+
+        <!-- ============================================== Type navigation -->
+        <div class="tabs-list" role="tablist" aria-label="Instrument type">
+          <button type="button" class="tab" role="tab" aria-selected="true"  aria-controls="instrument-list" data-filter="type" data-value="all">All</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="bond">Bond</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="commodity">Commodity</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="corporate-action">Corporate action</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="credit">Credit</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="credit-index">Credit index</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="currency">Currency</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="equity">Equity</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="etf">ETF</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="fund">Fund</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="index">Index</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="rate">Rate</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="instrument-list" data-filter="type" data-value="structured-product">Structured product</button>
+        </div>
+
+        <!-- ======================================================== Toolbar
+             Search, one Filters button and Export. Ten filters do not fit in a
+             row and none of them is used often enough to earn the width, so they
+             all live in the panel behind the button and the chip row below says
+             what they left on (decision 89). -->
+        <div class="pt-4 table-toolbar">
+          <div class="flex items-center gap-3">
+            <div class="input-icon w-64">
+              <i class="ri-search-line"></i>
+              <input class="input input-sm" type="search" placeholder="Search by name or identifier" aria-label="Search instruments" data-search="name">
+            </div>
+
+            <button type="button" class="btn btn-outline btn-sm" popovertarget="filters" aria-haspopup="dialog">
+              <i class="ri-equalizer-line"></i> Filters
+              <span class="btn-count" data-filter-count hidden>0</span>
+            </button>
+          </div>
+
+          <!-- Export. Right end of the toolbar, on purpose: it acts on the query,
+               so it stands with the controls that decide what goes in the file —
+               the rows the filters leave and the columns you have on (decision 86).
+               Secondary to New instrument, which is why it is outlined and why it
+               is not in the page header. -->
+          <button type="button" class="btn btn-outline btn-sm" data-export>
+            <i class="ri-file-excel-2-line"></i> Export to Excel
+          </button>
+        </div>
+
+        <!-- ================================================== Filters panel
+             Six plain filters two across, then the identifier row, which is one
+             filter for all twelve identifiers rather than twelve controls
+             (decision 90). Every change applies at once — there is no Apply —
+             so the footer count and the chips move while the panel is open. -->
+        <div class="menu filter-panel" id="filters" popover data-align="start" aria-label="Filters">
+          <div class="filter-panel-header">
+            <span class="overline">Filters</span>
+            <button type="button" class="btn btn-link btn-sm" data-clear-all>Clear all</button>
+          </div>
+
+          <div class="filter-panel-body">
+            <div class="field-row">
+              <div class="field">
+                <span class="label" id="f-status-l">Status</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="f-status" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-status-l f-status" data-autofocus><span>All</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="f-status-l" hidden>
+                    <div class="select-item" role="option" data-value="All" tabindex="-1" aria-selected="true">All</div>
+                    <div class="select-item" role="option" data-value="Active" tabindex="-1">Active</div>
+                    <div class="select-item" role="option" data-value="Inactive" tabindex="-1">Inactive</div>
+                  </div>
+                  <input type="hidden" name="status" value="All" data-filter="status" data-filter-label="Status">
+                </div>
+              </div>
+
+              <div class="field">
+                <span class="label" id="f-pricer-l">Pricer</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="f-pricer" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-pricer-l f-pricer"><span>All</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="f-pricer-l" hidden>
+                    <div class="select-item" role="option" data-value="All" tabindex="-1" aria-selected="true">All</div>
+                    <div class="select-item" role="option" data-value="Yes" tabindex="-1">Yes — offered in the pricer</div>
+                    <div class="select-item" role="option" data-value="No" tabindex="-1">No</div>
+                  </div>
+                  <input type="hidden" name="pricer" value="All" data-filter="pricer" data-filter-label="Pricer">
+                </div>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <span class="label" id="f-ccy-l">Currency</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="f-ccy" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-ccy-l f-ccy"><span>All</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="f-ccy-l" hidden>
+                    <div class="select-item" role="option" data-value="All" tabindex="-1" aria-selected="true">All</div>
+                    <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                    <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                    <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                    <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+                    <div class="select-item" role="option" data-value="GBp" tabindex="-1">GBp — pence</div>
+                    <div class="select-item" role="option" data-value="%" tabindex="-1">%</div>
+                    <div class="select-item" role="option" data-value="TBD" tabindex="-1">TBD</div>
+                  </div>
+                  <input type="hidden" name="currency" value="All" data-filter="currency" data-filter-label="Currency">
+                </div>
+              </div>
+
+              <div class="field">
+                <span class="label" id="f-source-l">Source</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="f-source" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-source-l f-source"><span>All</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="f-source-l" hidden>
+                    <div class="select-item" role="option" data-value="All" tabindex="-1" aria-selected="true">All</div>
+                    <div class="select-item" role="option" data-value="SIX" tabindex="-1">SIX</div>
+                    <div class="select-item" role="option" data-value="Yahoo" tabindex="-1">Yahoo</div>
+                    <div class="select-item" role="option" data-value="Bloomberg" tabindex="-1">Bloomberg</div>
+                    <div class="select-item" role="option" data-value="Email" tabindex="-1">Email</div>
+                    <div class="select-item" role="option" data-value="Excel" tabindex="-1">Excel</div>
+                    <div class="select-item" role="option" data-value="Web scraping" tabindex="-1">Web scraping</div>
+                  </div>
+                  <input type="hidden" name="source" value="All" data-filter="source" data-filter-label="Source">
+                </div>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <span class="label" id="f-sector-l">Financial sector</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="f-sector" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-sector-l f-sector"><span>All</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="f-sector-l" hidden>
+                    <div class="select-item" role="option" data-value="All" tabindex="-1" aria-selected="true">All</div>
+                    <div class="select-item" role="option" data-value="Information Technology" tabindex="-1">Information Technology</div>
+                    <div class="select-item" role="option" data-value="Health Care" tabindex="-1">Health Care</div>
+                    <div class="select-item" role="option" data-value="Financials" tabindex="-1">Financials</div>
+                    <div class="select-item" role="option" data-value="Consumer Staples" tabindex="-1">Consumer Staples</div>
+                    <div class="select-item" role="option" data-value="Energy" tabindex="-1">Energy</div>
+                    <div class="select-item" role="option" data-value="Industrials" tabindex="-1">Industrials</div>
+                  </div>
+                  <input type="hidden" name="sector" value="All" data-filter="sector" data-filter-label="Financial sector">
+                </div>
+              </div>
+
+              <div class="field">
+                <span class="label" id="f-country-l">Country</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="f-country" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-country-l f-country"><span>All</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="f-country-l" hidden>
+                    <div class="select-item" role="option" data-value="All" tabindex="-1" aria-selected="true">All</div>
+                    <div class="select-item" role="option" data-value="Switzerland" tabindex="-1">Switzerland</div>
+                    <div class="select-item" role="option" data-value="United States" tabindex="-1">United States</div>
+                    <div class="select-item" role="option" data-value="United Kingdom" tabindex="-1">United Kingdom</div>
+                    <div class="select-item" role="option" data-value="Ireland" tabindex="-1">Ireland</div>
+                    <div class="select-item" role="option" data-value="Germany" tabindex="-1">Germany</div>
+                  </div>
+                  <input type="hidden" name="country" value="All" data-filter="country" data-filter-label="Country">
+                </div>
+              </div>
+            </div>
+
+            <!-- The identifier row. One filter, not twelve: pick the field, then
+                 Empty or Filled. That is the data-quality question the old back
+                 office asked with three fixed toggles — here it reaches every
+                 identifier, VALOR and ISIN included (decision 90). Value matching
+                 is the search box's job (44), not this row's. -->
+            <div class="filter-panel-group">
+              <span class="overline">Identifier</span>
+              <div class="field-row">
+                <div class="field">
+                  <span class="label" id="f-id-l">Field</span>
+                  <div class="select select-sm">
+                    <button type="button" class="select-trigger" id="f-id" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-id-l f-id" data-placeholder><span>Pick a field</span><i class="ri-arrow-down-s-line"></i></button>
+                    <div class="select-content" role="listbox" aria-labelledby="f-id-l" hidden>
+                      <div class="select-item" role="option" data-value="bbg" tabindex="-1">Bloomberg code</div>
+                      <div class="select-item" role="option" data-value="isin" tabindex="-1">ISIN</div>
+                      <div class="select-item" role="option" data-value="cusip" tabindex="-1">CUSIP</div>
+                      <div class="select-item" role="option" data-value="figi" tabindex="-1">FIGI</div>
+                      <div class="select-item" role="option" data-value="sedol" tabindex="-1">SEDOL</div>
+                      <div class="select-item" role="option" data-value="valor" tabindex="-1">VALOR</div>
+                      <div class="select-item" role="option" data-value="wkn" tabindex="-1">WKN</div>
+                      <div class="select-item" role="option" data-value="ric" tabindex="-1">RIC — Refinitiv ticker</div>
+                      <div class="select-item" role="option" data-value="yahoo" tabindex="-1">Yahoo code</div>
+                      <div class="select-item" role="option" data-value="six-code" tabindex="-1">SIX Code</div>
+                      <div class="select-item" role="option" data-value="six-schema" tabindex="-1">SIX Schema</div>
+                      <div class="select-item" role="option" data-value="six-bc" tabindex="-1">SIX Bc</div>
+                    </div>
+                    <input type="hidden" name="id-field" value="" data-id-field>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <span class="label" id="f-id-state-l">Condition</span>
+                  <div class="select select-sm">
+                    <button type="button" class="select-trigger" id="f-id-state" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="f-id-state-l f-id-state" data-placeholder disabled><span>Pick a condition</span><i class="ri-arrow-down-s-line"></i></button>
+                    <div class="select-content" role="listbox" aria-labelledby="f-id-state-l" hidden>
+                      <div class="select-item" role="option" data-value="empty" tabindex="-1">Empty</div>
+                      <div class="select-item" role="option" data-value="filled" tabindex="-1">Filled</div>
+                    </div>
+                    <input type="hidden" name="id-state" value="" data-id-state>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The query, with the panel shut. One chip per filter the panel holds;
+             the search box, the type tab and the Failed updates cell show their
+             own state, so they get none. -->
+        <div class="filter-chips" data-chips hidden></div>
+
+        <!-- ========================================================== Table -->
+        <div class="table-wrap" data-pin-first id="instrument-list" role="tabpanel" tabindex="0">
+          <table class="table">
+      <thead>
+        <tr>
+          <th data-col="instrument"><button type="button" class="table-sort" aria-sort="ascending">Instrument <i class="ri-arrow-up-line"></i></button></th>
+          <th data-col="type">Type</th>
+          <th data-col="sector">Financial sector</th>
+          <th data-col="country" hidden>Country</th>
+          <th class="num" data-col="products"><button type="button" class="table-sort" aria-sort="none">Products <i class="ri-expand-up-down-line"></i></button></th>
+          <th class="bool" data-col="pricer">Pricer</th>
+          <th data-col="currency">Currency</th>
+          <th class="num" data-col="price"><button type="button" class="table-sort" aria-sort="none">Last price <i class="ri-expand-up-down-line"></i></button></th>
+          <th class="num" data-col="close" hidden><button type="button" class="table-sort" aria-sort="none">Last close <i class="ri-expand-up-down-line"></i></button></th>
+          <th class="num" data-col="chg-ytd" hidden><button type="button" class="table-sort" aria-sort="none">Chg YTD <i class="ri-expand-up-down-line"></i></button></th>
+          <th class="num" data-col="vol90" hidden><button type="button" class="table-sort" aria-sort="none">Volatility 90D <i class="ri-expand-up-down-line"></i></button></th>
+          <th data-col="updated"><button type="button" class="table-sort" aria-sort="none">Updated <i class="ri-expand-up-down-line"></i></button></th>
+          <th data-col="status">Status</th>
+          <th data-col="created" hidden><button type="button" class="table-sort" aria-sort="none">Created <i class="ri-expand-up-down-line"></i></button></th>
+          <th data-col="modified" hidden><button type="button" class="table-sort" aria-sort="none">Modified <i class="ri-expand-up-down-line"></i></button></th>
+          <th class="actions" data-col="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="columns-menu" aria-haspopup="dialog" aria-label="Choose and reorder columns" data-tooltip="Choose and reorder columns"><i class="ri-layout-column-line"></i></button></th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr data-name="apple inc. us0378331005 037833100 bbg000b9xry4 aapl.o aapl aapl us equity" data-type="equity" data-currency="USD" data-sector="Information Technology" data-country="United States" data-status="Active" data-pricer="Yes" data-source="SIX" data-ids="bbg=AAPL US Equity;isin=US0378331005;cusip=037833100;figi=BBG000B9XRY4;sedol=2046251;valor=908440;wkn=865985;ric=AAPL.O;yahoo=AAPL;six-code=AAPL;six-schema=TICKER_BC;six-bc=67">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Apple Inc.</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/us.svg" alt="United States" data-tooltip="United States"></span>
+              <span class="cell-sub">AAPL US Equity</span>
+            </div>
+          </td>
+          <td class="muted">Equity</td>
+          <td><div class="cell max-w-[220px]"><span class="truncate">Information Technology</span><span class="cell-sub">Technology Hardware &amp; Equipment</span></div></td>
+          <td class="muted" hidden>United States</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">293</a></td>
+          <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
+          <td>USD</td>
+          <td class="num"><div class="cell"><span>227.86</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num" hidden>226.514</td>
+          <td class="num" hidden>+12.47%</td>
+          <td class="num" hidden>24.13%</td>
+          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>23 Sep 2025</span><span class="cell-sub">07:57:03</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Apple Inc." title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="nestlé sa ch0038863350 3886335 nesn.s nesn nesn sw equity" data-type="equity" data-currency="CHF" data-sector="Consumer Staples" data-country="Switzerland" data-status="Active" data-pricer="Yes" data-source="SIX" data-ids="bbg=NESN SW Equity;isin=CH0038863350;sedol=3886335;valor=3886335;ric=NESN.S;yahoo=NESN.SW;six-code=NESN;six-schema=TICKER_BC;six-bc=4">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Nestlé SA</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
+              <span class="cell-sub">NESN SW Equity</span>
+            </div>
+          </td>
+          <td class="muted">Equity</td>
+          <td><div class="cell max-w-[220px]"><span class="truncate">Consumer Staples</span><span class="cell-sub">Food, Beverage &amp; Tobacco</span></div></td>
+          <td class="muted" hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">34</a></td>
+          <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
+          <td>CHF</td>
+          <td class="num"><div class="cell"><span>336.85</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num" hidden>334.20</td>
+          <td class="num" hidden>-4.18%</td>
+          <td class="num" hidden>16.402%</td>
+          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:14:22</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Nestlé SA" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="astrazeneca plc gb0009895292 0989529 azn.l azn ln equity" data-type="equity" data-currency="GBp" data-sector="Health Care" data-country="United Kingdom" data-status="Active" data-pricer="Yes" data-source="Yahoo" data-ids="bbg=AZN LN Equity;isin=GB0009895292;sedol=0989529;ric=AZN.L;yahoo=AZN.L">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">AstraZeneca PLC</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/gb.svg" alt="United Kingdom" data-tooltip="United Kingdom"></span>
+              <span class="cell-sub">AZN LN Equity</span>
+            </div>
+          </td>
+          <td class="muted">Equity</td>
+          <td><div class="cell max-w-[220px]"><span class="truncate">Health Care</span><span class="cell-sub">Pharmaceuticals &amp; Biotechnology</span></div></td>
+          <td class="muted" hidden>United Kingdom</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">12</a></td>
+          <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
+          <td>GBp</td>
+          <td class="num"><div class="cell"><span>11'842.00</span><span class="cell-sub">Yahoo</span></div></td>
+          <td class="num" hidden>11'795.00</td>
+          <td class="num" hidden>+8.93%</td>
+          <td class="num" hidden>21.7%</td>
+          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>04 Mar 2025</span><span class="cell-sub">11:03:47</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for AstraZeneca PLC" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="roche holding ag ch0012032048 1203204 rog.s 855167 rog sw equity" data-type="equity" data-currency="CHF" data-sector="Health Care" data-country="Switzerland" data-status="Inactive" data-inactive data-pricer="No" data-source="SIX" data-ids="bbg=ROG SW Equity;isin=CH0012032048;sedol=1203204;valor=1203204;wkn=855167;ric=ROG.S;six-code=ROG;six-schema=TICKER_BC;six-bc=4">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Roche Holding AG</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
+              <span class="cell-sub">ROG SW Equity</span>
+            </div>
+          </td>
+          <td class="muted">Equity</td>
+          <td><div class="cell max-w-[220px]"><span class="truncate">Health Care</span><span class="cell-sub">Pharmaceuticals &amp; Biotechnology</span></div></td>
+          <td class="muted" hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">41</a></td>
+          <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
+          <td>CHF</td>
+          <td class="num"><div class="cell"><span>268.40</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num" hidden>268.40</td>
+          <td class="num" hidden>-1.245%</td>
+          <td class="num" hidden>18.06%</td>
+          <td><div class="cell"><span>12 Sep 2026</span><span class="cell-sub">17:30:00</span></div></td>
+          <td><span class="badge badge-secondary" tabindex="0" data-tooltip="Deactivated" data-tooltip-rows="Date=12 Sep 2026;Time=17:30:11;By=aurelien.decoeyere@vizibility.ch">Inactive</span></td>
+          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:14:58</span></div></td>
+          <td hidden><div class="cell"><span>12 Sep 2026</span><span class="cell-sub">17:30:00</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Roche Holding AG" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="swiss market index .ssmi smi index" data-type="index" data-currency="CHF" data-sector="" data-country="Switzerland" data-status="Active" data-pricer="Yes" data-source="SIX" data-ids="bbg=SMI Index;ric=.SSMI;six-code=SMI;six-schema=TICKER_BC;six-bc=4">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Swiss Market Index</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
+              <span class="cell-sub">SMI Index</span>
+            </div>
+          </td>
+          <td class="muted">Index</td>
+          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
+          <td class="muted" hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">58</a></td>
+          <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
+          <td>CHF</td>
+          <td class="num"><div class="cell"><span>12'104.55</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num" hidden>12'088.13</td>
+          <td class="num" hidden>+6.72%</td>
+          <td class="num" hidden>12.884%</td>
+          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:15:10</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Swiss Market Index" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="euro stoxx 50 eu0009658145 .stoxx50e sx5e index" data-type="index" data-currency="EUR" data-sector="" data-country="" data-status="Active" data-pricer="Yes" data-source="SIX" data-ids="bbg=SX5E Index;isin=EU0009658145;ric=.STOXX50E;six-code=SX5E;six-schema=TICKER_BC;six-bc=67">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">EURO STOXX 50</a></span>
+              <span class="cell-sub">SX5E Index</span>
+            </div>
+          </td>
+          <td class="muted">Index</td>
+          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">37</a></td>
+          <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
+          <td>EUR</td>
+          <td class="num"><div class="cell"><span>5'412.77</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num" hidden>5'398.22</td>
+          <td class="num" hidden>+9.04%</td>
+          <td class="num" hidden>14.21%</td>
+          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:15:24</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for EURO STOXX 50" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="ishares core msci world ucits etf ie00b4l5y983 b4l5y98 a0rpwh iwda.as iwda na equity" data-type="etf" data-currency="USD" data-sector="" data-country="Ireland" data-status="Active" data-pricer="Yes" data-source="Yahoo" data-ids="bbg=IWDA NA Equity;isin=IE00B4L5Y983;sedol=B4L5Y98;wkn=A0RPWH;ric=IWDA.AS;yahoo=IWDA.AS">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">iShares Core MSCI World UCITS ETF</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ie.svg" alt="Ireland" data-tooltip="Ireland"></span>
+              <span class="cell-sub">IWDA NA Equity</span>
+            </div>
+          </td>
+          <td class="muted">ETF</td>
+          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
+          <td class="muted" hidden>Ireland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">9</a></td>
+          <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
+          <td>USD</td>
+          <td class="num"><div class="cell"><span>102.44</span><span class="cell-sub">Yahoo</span></div></td>
+          <td class="num" hidden>102.07</td>
+          <td class="num" hidden>+11.36%</td>
+          <td class="num" hidden>13.95%</td>
+          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>28 Apr 2025</span><span class="cell-sub">14:22:05</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for iShares Core MSCI World UCITS ETF" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="nestlé 1.5% 2029 ch0419041205 41904120 nesnvx 1.5 04/29 corp" data-type="bond" data-currency="CHF" data-sector="Consumer Staples" data-country="Switzerland" data-status="Active" data-pricer="No" data-source="SIX" data-ids="bbg=NESNVX 1.5 04/29 Corp;isin=CH0419041205;valor=41904120">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Nestlé 1.5% 2029</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
+              <span class="cell-sub">NESNVX 1.5 04/29 Corp</span>
+            </div>
+          </td>
+          <td class="muted">Bond</td>
+          <td><div class="cell max-w-[220px]"><span class="truncate">Consumer Staples</span><span class="cell-sub">Food, Beverage &amp; Tobacco</span></div></td>
+          <td class="muted" hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">6</a></td>
+          <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
+          <td>CHF</td>
+          <td class="num"><div class="cell"><span>101.24</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num" hidden>101.19</td>
+          <td class="num" hidden>+0.842%</td>
+          <td class="num" hidden>3.16%</td>
+          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>19 Feb 2025</span><span class="cell-sub">16:41:33</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Nestlé 1.5% 2029" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="saron 3m saron3md= ssaron3 index" data-type="rate" data-currency="%" data-sector="" data-country="Switzerland" data-status="Active" data-pricer="No" data-source="SIX" data-ids="bbg=SSARON3 Index;ric=SARON3MD=;six-code=SARON3M;six-schema=TICKER_BC;six-bc=4">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">SARON 3M</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
+              <span class="cell-sub">SSARON3 Index</span>
+            </div>
+          </td>
+          <td class="muted">Rate</td>
+          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
+          <td class="muted" hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">16</a></td>
+          <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
+          <td>%</td>
+          <td class="num"><div class="cell"><span>1.25</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num" hidden>1.2477</td>
+          <td class="num muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num muted" hidden><span aria-hidden="true">—</span></td>
+          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:16:02</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for SARON 3M" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="gold spot xau= gc=f xau curncy" data-type="commodity" data-currency="USD" data-sector="" data-country="" data-status="Active" data-health="failed" data-pricer="Yes" data-source="Yahoo" data-ids="bbg=XAU Curncy;ric=XAU=;yahoo=GC=F">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Gold Spot</a></span>
+              <span class="cell-sub">XAU Curncy</span>
+            </div>
+          </td>
+          <td class="muted">Commodity</td>
+          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">7</a></td>
+          <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
+          <td>USD</td>
+          <td class="num"><div class="cell"><span class="text-muted-foreground">2'684.30</span><span class="cell-sub">Yahoo</span></div></td>
+          <td class="num" hidden>2'678.15</td>
+          <td class="num" hidden>+27.41%</td>
+          <td class="num" hidden>15.62%</td>
+          <td><div class="cell"><span class="cell-error" tabindex="0" data-tooltip="Last update failed" data-tooltip-rows="Attempt=21 Sep 2026, 06:00:11;Source=Yahoo;Error=Symbol XAU= not found (404)"><i class="ri-error-warning-line"></i> Failed</span><span class="cell-sub">Showing 18 Sep 2026</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>03 Jun 2025</span><span class="cell-sub">10:08:19</span></div></td>
+          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Gold Spot" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="itraxx europe main s42 " data-type="credit-index" data-currency="EUR" data-sector="" data-country="" data-status="Active" data-pricer="No" data-source="Excel" data-ids="">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">iTraxx Europe Main S42</a></span>
+              <span class="cell-sub">—</span>
+            </div>
+          </td>
+          <td class="muted">Credit index</td>
+          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">4</a></td>
+          <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
+          <td>EUR</td>
+          <td class="num"><div class="cell"><span>58.42</span><span class="cell-sub">Excel</span></div></td>
+          <td class="num" hidden>58.42</td>
+          <td class="num muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num muted" hidden><span aria-hidden="true">—</span></td>
+          <td><div class="cell"><span>17 Sep 2026</span><span class="cell-sub">15:43:41</span></div></td>
+          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
+          <td hidden><div class="cell"><span>23 Sep 2025</span><span class="cell-sub">09:16:40</span></div></td>
+          <td hidden><div class="cell"><span>17 Sep 2026</span><span class="cell-sub">15:43:41</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for iTraxx Europe Main S42" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <tr data-name="credit suisse group ag ch0012138530 1213853 csgn.s csgn sw equity" data-type="equity" data-currency="CHF" data-sector="Financials" data-country="Switzerland" data-status="Inactive" data-inactive data-pricer="No" data-source="SIX" data-ids="bbg=CSGN SW Equity;isin=CH0012138530;sedol=1213853;valor=1213853;ric=CSGN.S;six-code=CSGN;six-schema=TICKER_BC;six-bc=4">
+          <td>
+            <div class="cell max-w-[360px]">
+              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Credit Suisse Group AG</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
+              <span class="cell-sub">CSGN SW Equity</span>
+            </div>
+          </td>
+          <td class="muted">Equity</td>
+          <td><div class="cell max-w-[220px]"><span class="truncate">Financials</span><span class="cell-sub">Banks</span></div></td>
+          <td class="muted" hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">2</a></td>
+          <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
+          <td>CHF</td>
+          <td class="num"><div class="cell"><span class="text-muted-foreground">—</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num muted" hidden><span aria-hidden="true">—</span></td>
+          <td><div class="cell"><span>05 Jun 2026</span><span class="cell-sub">17:30:00</span></div></td>
+          <td><span class="badge badge-secondary" tabindex="0" data-tooltip="Deactivated" data-tooltip-rows="Date=05 Jun 2026;Time=17:30:02;By=system@capital-viz.com">Inactive</span></td>
+          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:14:30</span></div></td>
+          <td hidden><div class="cell"><span>05 Jun 2026</span><span class="cell-sub">17:30:00</span></div></td>
+          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Credit Suisse Group AG" title="More actions"><i class="ri-more-2-line"></i></button></td>
+        </tr>
+
+        <!-- No results. Placeholder for the real empty-state component (not designed yet). -->
+        <tr data-empty hidden>
+          <td colspan="16" class="py-12 text-center text-muted-foreground">
+            <i class="ri-search-line block text-3xl" aria-hidden="true"></i>
+            <p class="card-title mt-3">No instruments match these filters</p>
+            <p class="mt-1">Clear all filters, or pick another type above.</p>
+            <button type="button" class="btn btn-outline btn-sm mt-4" data-clear-all>Clear all filters</button>
+          </td>
+        </tr>
+
+      </tbody>
+      </table>
+        </div>
+
+        <div class="table-footer">
+          <span data-count data-total="248">1–12 of 248</span>
+          <div class="flex items-center gap-2">
+            <span class="mr-2">Rows per page</span>
+            <div class="select select-sm w-20">
+              <button type="button" class="select-trigger" id="f-rows" aria-haspopup="listbox" aria-expanded="false"><span>25</span><i class="ri-arrow-down-s-line"></i></button>
+              <!-- A page footer is the bottom of the screen, so this one opens upward
+                   by default; it still flips back down if it ever has no room above
+                   (decision 80). -->
+              <div class="select-content" role="listbox" aria-labelledby="f-rows" data-prefer="top" hidden>
+                <div class="select-item" role="option" data-value="25" tabindex="-1" aria-selected="true">25</div>
+                <div class="select-item" role="option" data-value="50" tabindex="-1">50</div>
+                <div class="select-item" role="option" data-value="100" tabindex="-1">100</div>
+              </div>
+              <input type="hidden" name="rows" value="25">
+            </div>
+            <button type="button" class="btn btn-outline btn-icon btn-sm" aria-label="Previous page" title="Previous page" disabled><i class="ri-arrow-left-s-line"></i></button>
+            <button type="button" class="btn btn-outline btn-icon btn-sm" aria-label="Next page" title="Next page"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+
+
+        <!-- Column chooser. Which columns are shown and in what order; both are a
+             per-user setting. The list is the display order, top to bottom. -->
+        <div class="menu column-menu" id="columns-menu" popover aria-label="Columns"
+             data-columns data-columns-for="instrument-list">
+          <div class="column-menu-header">
+            <span class="text-sm font-medium">Columns</span>
+            <button type="button" class="btn btn-link btn-sm" data-columns-reset>Reset</button>
+          </div>
+          <ul class="column-list">
+            <li class="column-item" data-col="instrument" data-locked>
+              <span class="column-handle" aria-hidden="true"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked disabled aria-label="Instrument is always shown"> <span>Instrument</span></label>
+              <span class="column-lock">Always first</span>
+            </li>
+            <li class="column-item" data-col="type">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Type" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Type</span></label>
+            </li>
+            <li class="column-item" data-col="sector">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Financial sector" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Financial sector</span></label>
+            </li>
+            <li class="column-item" data-col="country">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Country" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Country</span></label>
+            </li>
+            <li class="column-item" data-col="products">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Products" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Products</span></label>
+            </li>
+            <li class="column-item" data-col="pricer">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Pricer" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Pricer</span></label>
+            </li>
+            <li class="column-item" data-col="currency">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Currency" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Currency</span></label>
+            </li>
+            <li class="column-item" data-col="price">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Last price" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Last price</span></label>
+            </li>
+            <li class="column-item" data-col="close">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Last close" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Last close</span></label>
+            </li>
+            <li class="column-item" data-col="chg-ytd">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Chg YTD" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Chg YTD</span></label>
+            </li>
+            <li class="column-item" data-col="vol90">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Volatility 90D" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Volatility 90D</span></label>
+            </li>
+            <li class="column-item" data-col="updated">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Updated" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Updated</span></label>
+            </li>
+            <li class="column-item" data-col="status">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Status" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Status</span></label>
+            </li>
+            <li class="column-item" data-col="created">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Created" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Created</span></label>
+            </li>
+            <li class="column-item" data-col="modified">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Modified" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Modified</span></label>
+            </li>
+          </ul>
+        </div>
+
+        <!-- One menu shared by every row: the prototype has static data, so the row
+             is identified by whichever button opened it. In Angular this is one
+             hlm-menu instance per row inside the *ngFor. -->
+        <div class="menu" id="row-menu" popover role="menu">
+          <button type="button" class="menu-item" role="menuitem" data-row-act="view"><i class="ri-file-list-line"></i> View details</button>
+          <button type="button" class="menu-item" role="menuitem" data-row-act="refresh"><i class="ri-refresh-line"></i> Refresh data</button>
+          <div class="menu-separator" role="separator"></div>
+          <button type="button" class="menu-item menu-item-destructive" role="menuitem" data-row-act="delete"><i class="ri-delete-bin-line"></i> Delete instrument</button>
+        </div>
+
+        <!-- Deleting an instrument, asked from the list (decision 95).
+
+             Two answers in one component, decided by ProductCount:
+
+               0 products  a plain destructive confirmation
+               1+ products refused, with the number of products that would lose
+                           their price source, and Edit instrument offered in its
+                           place — the thing the admin almost always wanted
+
+             This one is a modal <dialog> rather than a popover: nothing is open
+             behind it, so the stacking constraint that makes the in-record
+             confirmations popovers (see below) does not apply here, and a modal
+             gives the focus trap and the inert list for free. In Spartan both are
+             hlm-alert-dialog. -->
+        <dialog class="dialog" id="confirm-delete" role="alertdialog" aria-labelledby="confirm-delete-title">
+          <div class="dialog-header">
+            <div class="dialog-heading">
+              <h2 class="dialog-title" id="confirm-delete-title"><span data-del="title">Delete instrument?</span></h2>
+              <p class="dialog-description" data-del="desc"></p>
+            </div>
+          </div>
+          <div class="dialog-body" data-del="linked" hidden>
+            <div class="alert alert-warning">
+              <i class="ri-alert-line"></i>
+              <p class="alert-title" data-del="count">Products use this instrument</p>
+              <p class="alert-description">
+                Their prices, performance and history are read from it, so deleting it would leave them
+                without a source. Correct the instrument instead, or move those products to another one first.
+              </p>
+            </div>
+          </div>
+          <div class="dialog-footer">
+            <button type="button" class="btn btn-outline" data-del-btn="free" data-dialog-close>Cancel</button>
+            <button type="button" class="btn btn-destructive" data-del-btn="free" data-del-confirm>Delete instrument</button>
+            <button type="button" class="btn btn-outline" data-del-btn="linked" data-dialog-close>Cancel</button>
+            <button type="button" class="btn btn-default" data-del-btn="linked" data-del-edit>Edit instrument</button>
+          </div>
+        </dialog>
+
+
+        <!-- =================================================================
+             Instrument dialog — one component, two modes.
+
+             create : empty form, primary action Create instrument
+             record : the instrument itself — every editable value is a live
+                      field, everything calculated or fetched is a value beside
+                      them, primary action Save changes
+
+             There is no separate read-only mode. Opening a record and editing
+             it are the same act (decision 91): the admin reads the instrument
+             in the form that edits it, and Save changes is the only thing that
+             writes. The record is never a page of its own either — the list
+             stays behind the dialog, so closing it puts the admin back exactly
+             where they were (decision 75). Mode is on the dialog as data-mode
+             and every element that belongs to one mode carries data-only.
+        ================================================================== -->
+        <dialog class="dialog dialog-lg" id="instrument" data-mode="create" aria-labelledby="instrument-title">
+
+          <div class="dialog-header">
+            <div class="dialog-heading">
+              <h2 class="dialog-title" id="instrument-title">
+                <span data-v="title">New instrument</span>
+                <span class="badge badge-success hidden" data-only="record"><span class="badge-dot"></span> Active</span>
+                <!-- The badge reads the state, the switch changes it — "a badge plus
+                     a switch", which is what the record header owed Active all along
+                     (domain.md). It sits outside the form on purpose (100): the status
+                     is an act with its own confirmation, not a field waiting for Save
+                     changes. -->
+                <input class="switch hidden" data-only="record" type="checkbox" role="switch" id="i-active"
+                       aria-label="Instrument active" data-tooltip="Deactivate"
+                       data-tooltip-rows="Off=market-data updates stop">
+              </h2>
+              <p class="dialog-description truncate hidden" data-only="record"><span data-v="subtitle"></span></p>
+            </div>
+
+            <!-- Products is calculated, and it is the number that decides what may
+                 be done to the instrument (95), so it is read in the header beside
+                 the name rather than found down the form (decision 97). It is the
+                 list's own metric cell at its small size, and a link, because the
+                 count is never the end of the question — ProductCount always leads
+                 to the products it counts (domain.md). -->
+            <a class="metric metric-sm hidden" data-only="record" href="#" data-products-card>
+              <span class="metric-label">Products</span>
+              <span class="metric-value" data-v="products">—</span>
+            </a>
+
+            <div class="dialog-actions">
+              <button type="button" class="btn btn-ghost btn-icon btn-sm" data-dialog-close aria-label="Close" data-tooltip="Close"><i class="ri-close-line"></i></button>
+            </div>
+          </div>
+
+          <!-- Two tabs, and only on a record (decision 93). What the admin owns
+               is on the first, what the provider sends is on the second. create
+               has no strip at all: a new instrument has no history yet. The
+               strip sits between the header and the body and does not scroll
+               with the panel, so the way out of a tab stays on screen. -->
+          <div class="tabs-list dialog-tabs hidden" role="tablist" aria-label="Instrument" data-only="record">
+            <button type="button" class="tab" role="tab" id="tab-details" data-tab-btn="details"
+                    aria-selected="true" aria-controls="panel-details">Instrument details</button>
+            <button type="button" class="tab" role="tab" id="tab-performance" data-tab-btn="performance"
+                    aria-selected="false" aria-controls="panel-performance" tabindex="-1">Instrument performance</button>
+          </div>
+
+          <div class="dialog-body">
+
+            <div data-panel id="panel-details" data-tab="details" role="tabpanel" aria-labelledby="tab-details">
+
+            <!-- One form for both modes. What create does not have — the
+                 fetched numbers, the record's own id and dates — is not a
+                 second panel but the same sections carrying read-only values
+                 next to the fields, shown only in record mode. -->
+            <form data-guard id="instrument-form" novalidate>
+              <div class="form-sections">
+
+                <section class="form-section">
+                  <div class="form-section-header"><h3 class="form-section-title">General details</h3></div>
+                  <div class="form-section-body">
+                    <!-- Name and type are the two answers that make an instrument
+                         nameable at all, so they sit on one row (96). The note
+                         that used to hang under the type is gone: the fields it
+                         warned about appear the moment a type is picked, which
+                         says it better than a sentence. -->
+                    <div class="field-row">
+                      <div class="field" data-field="name">
+                        <label class="label" for="i-name">Instrument name</label>
+                        <input class="input" id="i-name" name="name" placeholder="e.g. Apple Inc." data-autofocus>
+                      </div>
+                      <div class="field max-w-40" data-field="type">
+                        <label class="label" for="i-type">Instrument type</label>
+                        <div class="select ">
+                          <button type="button" class="select-trigger" id="i-type" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Select type</span><i class="ri-arrow-down-s-line"></i></button>
+                          <div class="select-content" role="listbox" aria-labelledby="i-type" hidden>
+                            <div class="select-item" role="option" data-value="Equity" tabindex="-1">Equity</div>
+                            <div class="select-item" role="option" data-value="Bond" tabindex="-1">Bond</div>
+                            <div class="select-item" role="option" data-value="Index" tabindex="-1">Index</div>
+                            <div class="select-item" role="option" data-value="Fund" tabindex="-1">Fund</div>
+                            <div class="select-item" role="option" data-value="ETF" tabindex="-1">ETF</div>
+                            <div class="select-item" role="option" data-value="Commodity" tabindex="-1">Commodity</div>
+                            <div class="select-item" role="option" data-value="Corporate action" tabindex="-1">Corporate action</div>
+                            <div class="select-item" role="option" data-value="Currency" tabindex="-1">Currency</div>
+                            <div class="select-item" role="option" data-value="Rate" tabindex="-1">Rate</div>
+                            <div class="select-item" role="option" data-value="Credit" tabindex="-1">Credit</div>
+                            <div class="select-item" role="option" data-value="Credit index" tabindex="-1">Credit index</div>
+                            <div class="select-item" role="option" data-value="Structured product" tabindex="-1">Structured product</div>
+                          </div>
+                          <input type="hidden" name="type" data-value="type" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- The row is the section's own two columns, so Country lines
+                         up with Instrument name above it. The short answers —
+                         Instrument type, Currency — are capped at 10rem inside
+                         their column and sit at its left edge (98): a half-width
+                         control holding "CHF" reads as a field that is missing
+                         something, and capping it inside the column keeps the two
+                         columns where every other row has them. -->
+                    <div class="field-row">
+                      <div class="field" data-field="country">
+                        <label class="label" for="i-country">Country</label>
+                        <div class="select ">
+                          <button type="button" class="select-trigger" id="i-country" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Select country</span><i class="ri-arrow-down-s-line"></i></button>
+                          <div class="select-content" role="listbox" aria-labelledby="i-country" hidden>
+                            <div class="select-item" role="option" data-value="Switzerland" tabindex="-1">Switzerland</div>
+                            <div class="select-item" role="option" data-value="United States" tabindex="-1">United States</div>
+                            <div class="select-item" role="option" data-value="United Kingdom" tabindex="-1">United Kingdom</div>
+                            <div class="select-item" role="option" data-value="Ireland" tabindex="-1">Ireland</div>
+                            <div class="select-item" role="option" data-value="Germany" tabindex="-1">Germany</div>
+                            <div class="select-item" role="option" data-value="France" tabindex="-1">France</div>
+                            <div class="select-item" role="option" data-value="Japan" tabindex="-1">Japan</div>
+                          </div>
+                          <input type="hidden" name="country" data-value="country" value="">
+                        </div>
+                      </div>
+                      <div class="field max-w-40" data-field="currency">
+                        <label class="label" for="i-currency">Currency</label>
+                        <div class="select ">
+                          <button type="button" class="select-trigger" id="i-currency" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Currency</span><i class="ri-arrow-down-s-line"></i></button>
+                          <div class="select-content" role="listbox" aria-labelledby="i-currency" hidden>
+                            <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                            <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                            <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                            <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+                            <div class="select-item" role="option" data-value="GBp" tabindex="-1">GBp</div>
+                            <div class="select-item" role="option" data-value="JPY" tabindex="-1">JPY</div>
+                            <div class="select-item" role="option" data-value="%" tabindex="-1">%</div>
+                            <div class="select-item" role="option" data-value="TBD" tabindex="-1">TBD</div>
+                          </div>
+                          <input type="hidden" name="currency" data-value="currency" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- The sector decides which industry groups exist, so the
+                         second select is filtered by the first and is disabled
+                         until it has something to hold (96). data-sector on each
+                         option is the mapping; in production the list arrives
+                         from the server for the sector that was chosen. -->
+                    <div class="field-row">
+                      <div class="field" data-field="sector">
+                        <label class="label" for="i-sector">Financial sector</label>
+                        <div class="select ">
+                          <button type="button" class="select-trigger" id="i-sector" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Select financial sector</span><i class="ri-arrow-down-s-line"></i></button>
+                          <div class="select-content" role="listbox" aria-labelledby="i-sector" hidden>
+                            <div class="select-item" role="option" data-value="Information Technology" tabindex="-1">Information Technology</div>
+                            <div class="select-item" role="option" data-value="Health Care" tabindex="-1">Health Care</div>
+                            <div class="select-item" role="option" data-value="Financials" tabindex="-1">Financials</div>
+                            <div class="select-item" role="option" data-value="Consumer Staples" tabindex="-1">Consumer Staples</div>
+                            <div class="select-item" role="option" data-value="Energy" tabindex="-1">Energy</div>
+                            <div class="select-item" role="option" data-value="Industrials" tabindex="-1">Industrials</div>
+                            <div class="select-item" role="option" data-value="Materials" tabindex="-1">Materials</div>
+                          </div>
+                          <input type="hidden" name="sector" data-value="sector" value="">
+                        </div>
+                      </div>
+                      <div class="field" data-field="industry">
+                        <label class="label" for="i-industry">Industry group</label>
+                        <div class="select ">
+                          <button type="button" class="select-trigger" id="i-industry" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Select industry group</span><i class="ri-arrow-down-s-line"></i></button>
+                          <div class="select-content" role="listbox" aria-labelledby="i-industry" hidden>
+                            <div class="select-item" role="option" data-sector="Information Technology" data-value="Software &amp; Services" tabindex="-1">Software &amp; Services</div>
+                            <div class="select-item" role="option" data-sector="Information Technology" data-value="Technology Hardware &amp; Equipment" tabindex="-1">Technology Hardware &amp; Equipment</div>
+                            <div class="select-item" role="option" data-sector="Information Technology" data-value="Semiconductors &amp; Semiconductor Equipment" tabindex="-1">Semiconductors &amp; Semiconductor Equipment</div>
+                            <div class="select-item" role="option" data-sector="Health Care" data-value="Health Care Equipment &amp; Services" tabindex="-1">Health Care Equipment &amp; Services</div>
+                            <div class="select-item" role="option" data-sector="Health Care" data-value="Pharmaceuticals &amp; Biotechnology" tabindex="-1">Pharmaceuticals &amp; Biotechnology</div>
+                            <div class="select-item" role="option" data-sector="Financials" data-value="Banks" tabindex="-1">Banks</div>
+                            <div class="select-item" role="option" data-sector="Financials" data-value="Financial Services" tabindex="-1">Financial Services</div>
+                            <div class="select-item" role="option" data-sector="Financials" data-value="Insurance" tabindex="-1">Insurance</div>
+                            <div class="select-item" role="option" data-sector="Consumer Staples" data-value="Food, Beverage &amp; Tobacco" tabindex="-1">Food, Beverage &amp; Tobacco</div>
+                            <div class="select-item" role="option" data-sector="Consumer Staples" data-value="Household &amp; Personal Products" tabindex="-1">Household &amp; Personal Products</div>
+                            <div class="select-item" role="option" data-sector="Consumer Staples" data-value="Consumer Staples Distribution &amp; Retail" tabindex="-1">Consumer Staples Distribution &amp; Retail</div>
+                            <div class="select-item" role="option" data-sector="Energy" data-value="Energy" tabindex="-1">Energy</div>
+                            <div class="select-item" role="option" data-sector="Industrials" data-value="Capital Goods" tabindex="-1">Capital Goods</div>
+                            <div class="select-item" role="option" data-sector="Industrials" data-value="Commercial &amp; Professional Services" tabindex="-1">Commercial &amp; Professional Services</div>
+                            <div class="select-item" role="option" data-sector="Industrials" data-value="Transportation" tabindex="-1">Transportation</div>
+                            <div class="select-item" role="option" data-sector="Materials" data-value="Materials" tabindex="-1">Materials</div>
+                          </div>
+                          <input type="hidden" name="industry" data-value="industry" value="">
+                        </div>
+                        <p class="field-description" data-industry-hint>Pick a financial sector first.</p>
+                      </div>
+                    </div>
+                    <div class="field-row hidden" data-for-type="credit index">
+                      <div class="field" data-field="entities">
+              <label class="label" for="i-entities">Total entities</label>
+              <input class="input" id="i-entities" name="entities" placeholder="125">
+            </div>
+                    </div>
+                    <label class="choice">
+                      <input class="checkbox" type="checkbox" id="i-pricer" name="pricer">
+                      <span>
+                        <span class="font-medium">Offer in the pricer</span>
+                        <span class="field-description block">Clients can build products on this instrument.</span>
+                      </span>
+                    </label>
+
+                  </div>
+                </section>
+
+                <section class="form-section">
+                  <div class="form-section-header">
+                    <div>
+                      <h3 class="form-section-title">Financial identifiers</h3>
+                    </div>
+                  </div>
+                  <div class="form-section-body">
+                    <!-- Identifiers run three to a row, not two: they are short codes,
+                         and twelve of them in pairs is six rows of half-empty boxes.
+                         Twelve divides by three, so no row is left short — and the last
+                         row is the SIX trio, which decision 85 wanted on one row anyway.
+                         The placeholder is a sample of the code, marked "e.g." so it is
+                         never read as a value already in the field. -->
+                    <div class="field-row-3">
+                      <div class="field" data-field="bbg">
+                        <label class="label" for="i-bbg">Bloomberg code</label>
+                        <input class="input font-mono" id="i-bbg" name="bbg" placeholder="e.g. AAPL US Equity">
+                      </div>
+                      <div class="field" data-field="isin">
+                        <label class="label" for="i-isin">ISIN</label>
+                        <input class="input font-mono" id="i-isin" name="isin" placeholder="e.g. US0378331005">
+                      </div>
+                      <div class="field" data-field="cusip">
+                        <label class="label" for="i-cusip">CUSIP</label>
+                        <input class="input font-mono" id="i-cusip" name="cusip" placeholder="e.g. 037833100">
+                      </div>
+                    </div>
+                    <div class="field-row-3">
+                      <div class="field" data-field="figi">
+                        <label class="label" for="i-figi">FIGI</label>
+                        <input class="input font-mono" id="i-figi" name="figi" placeholder="e.g. BBG000B9Y5X2">
+                      </div>
+                      <div class="field" data-field="sedol">
+                        <label class="label" for="i-sedol">SEDOL</label>
+                        <input class="input font-mono" id="i-sedol" name="sedol" placeholder="e.g. 2046251">
+                      </div>
+                      <div class="field" data-field="valor">
+                        <label class="label" for="i-valor">VALOR</label>
+                        <input class="input font-mono" id="i-valor" name="valor" placeholder="e.g. 908440">
+                      </div>
+                    </div>
+                    <div class="field-row-3">
+                      <div class="field" data-field="wkn">
+                        <label class="label" for="i-wkn">WKN</label>
+                        <input class="input font-mono" id="i-wkn" name="wkn" placeholder="e.g. 865985">
+                      </div>
+                      <div class="field" data-field="ric">
+                        <label class="label" for="i-ric">RIC</label>
+                        <input class="input font-mono" id="i-ric" name="ric" placeholder="e.g. AAPL.O">
+                      </div>
+                      <div class="field" data-field="yahoo">
+                        <label class="label" for="i-yahoo">Yahoo code</label>
+                        <input class="input font-mono" id="i-yahoo" name="yahoo" placeholder="e.g. AAPL">
+                      </div>
+                    </div>
+                    <div class="field-row-3">
+                      <div class="field" data-field="six-code">
+                        <label class="label" for="i-six-code">SIX Code</label>
+                        <input class="input font-mono" id="i-six-code" name="six-code" placeholder="e.g. AAPL">
+                      </div>
+                      <div class="field" data-field="six-schema">
+                        <label class="label" for="i-six-schema">SIX Schema</label>
+                        <input class="input font-mono" id="i-six-schema" name="six-schema" placeholder="e.g. TICKER_BC">
+                      </div>
+                      <div class="field" data-field="six-bc">
+                        <label class="label" for="i-six-bc">SIX Bc</label>
+                        <input class="input font-mono" id="i-six-bc" name="six-bc" placeholder="e.g. 67">
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="form-section">
+                  <div class="form-section-header">
+                    <div>
+                      <h3 class="form-section-title">Data source</h3>
+                    </div>
+                  </div>
+                  <div class="form-section-body">
+                    <div class="field-row">
+                      <div class="field" data-field="source">
+              <label class="label" for="i-source">Source</label>
+              <div class="select ">
+                <button type="button" class="select-trigger" id="i-source" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Select source</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="i-source" hidden>
+                  <div class="select-item" role="option" data-value="SIX" tabindex="-1">SIX</div>
+                  <div class="select-item" role="option" data-value="Yahoo" tabindex="-1">Yahoo</div>
+                  <div class="select-item" role="option" data-value="Bloomberg" tabindex="-1">Bloomberg</div>
+                  <div class="select-item" role="option" data-value="Email" tabindex="-1">Email</div>
+                  <div class="select-item" role="option" data-value="Excel" tabindex="-1">Excel</div>
+                  <div class="select-item" role="option" data-value="Web scraping" tabindex="-1">Web scraping</div>
+                </div>
+                <input type="hidden" name="source" data-value="source" value="">
+              </div>
+            </div>
+                      <div class="field" data-field="basedon">
+              <label class="label" for="i-basedon">Based on</label>
+              <div class="select ">
+                <button type="button" class="select-trigger" id="i-basedon" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>None</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="i-basedon" hidden>
+                  <div class="select-item" role="option" data-value="None" tabindex="-1">None</div>
+                  <div class="select-item" role="option" data-value="Apple Inc." tabindex="-1">Apple Inc.</div>
+                  <div class="select-item" role="option" data-value="Nestlé SA" tabindex="-1">Nestlé SA</div>
+                  <div class="select-item" role="option" data-value="SARON 3M" tabindex="-1">SARON 3M</div>
+                  <div class="select-item" role="option" data-value="Gold Spot" tabindex="-1">Gold Spot</div>
+                </div>
+                <input type="hidden" name="basedon" data-value="basedon" value="">
+              </div>
+              <p class="field-description">Another instrument this one derives its data from.</p>
+            </div>
+                    </div>
+
+                  </div>
+                </section>
+
+                <section class="form-section hidden" data-only="record">
+                  <div class="form-section-header"><h3 class="form-section-title">Record info</h3></div>
+                  <div class="props text-xs">
+                    <div class="prop prop-full">
+                      <span class="prop-label">Id</span>
+                      <span class="flex items-center gap-1.5">
+                        <span class="prop-value font-mono" id="instrument-id" data-v="id">—</span>
+                        <button type="button" class="btn btn-ghost btn-icon btn-sm" data-copy-from="instrument-id" data-copy=""
+                                aria-label="Copy Id" data-tooltip="Copy Id"><i class="ri-file-copy-line"></i></button>
+                      </span>
+                    </div>
+                    <div class="prop"><span class="prop-label">Created by</span><span class="prop-value" data-v="createdby">—</span></div>
+                    <div class="prop"><span class="prop-label">Created on</span><span class="prop-value" data-v="createdon">—</span></div>
+                    <div class="prop"><span class="prop-label">Modified by</span><span class="prop-value" data-v="modifiedby">—</span></div>
+                    <div class="prop"><span class="prop-label">Modified on</span><span class="prop-value" data-v="modifiedon">—</span></div>
+                  </div>
+                  <p class="form-section-note mt-4">
+                    Automatic updates write to Modified as well, so this is not a record of who last edited the instrument by hand.
+                  </p>
+                </section>
+
+              </div>
+            </form>
+
+            </div>
+
+            <!-- ----------------------------------------------- PERFORMANCE -->
+            <!-- Everything the provider sends, and nothing that is typed
+                 (decision 32 keeps it one section with one header and one
+                 Refresh). The chart is the same numbers as the row above it:
+                 the last session of the line is Last close, and each percent
+                 change lands on its own session. -->
+            <div data-panel id="panel-performance" class="hidden" data-only="record" data-tab="performance"
+                 role="tabpanel" aria-labelledby="tab-performance">
+              <div class="form-sections">
+
+                <section class="form-section">
+                  <div class="form-section-header">
+                    <div>
+                      <h3 class="form-section-title">Market data &amp; performance</h3>
+                      <p class="form-section-note">
+                        Updated <span data-v="updated">—</span> · data dated <span data-v="datadate">—</span>
+                      </p>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-sm" data-act="refresh"><i class="ri-refresh-line"></i> Refresh data</button>
+                  </div>
+
+                  <div class="grid gap-6">
+                    <div class="props">
+                      <div class="prop"><span class="prop-label">Last price</span><span class="prop-value tabular-nums" data-v="price">—</span></div>
+                      <div class="prop"><span class="prop-label">Last close</span><span class="prop-value tabular-nums" data-v="close">—</span></div>
+                    </div>
+
+                    <!-- The history, and the one session the cursor is on. The
+                         values are printed under the chart rather than floated
+                         over it in a tooltip (decision 94): a number that exists
+                         only while the mouse is held still cannot be checked
+                         against the field above it and cannot be read without a
+                         mouse. LastOpen / LastHigh / LastLow are the latest
+                         session's three values, so they are here, once, as that
+                         session — not again as a second row of props. -->
+                    <div class="chart">
+                      <div class="chart-header">
+                        <p class="chart-title">Closing price<span data-chart-unit></span></p>
+                        <div class="toggle-group" role="group" aria-label="Chart period" data-chart-controls>
+                          <button type="button" class="toggle-item" data-period="21" aria-pressed="false">1M</button>
+                          <button type="button" class="toggle-item" data-period="63" aria-pressed="false">3M</button>
+                          <button type="button" class="toggle-item" data-period="126" aria-pressed="false">6M</button>
+                          <button type="button" class="toggle-item" data-period="ytd" aria-pressed="false">YTD</button>
+                          <button type="button" class="toggle-item" data-period="252" aria-pressed="true">1Y</button>
+                          <button type="button" class="toggle-item" data-period="max" aria-pressed="false">3Y</button>
+                        </div>
+                      </div>
+
+                      <div class="chart-plot" data-chart-plot tabindex="0" role="group"
+                           aria-label="Closing price by session. Left and right arrow keys read one session at a time; the values are printed under the chart.">
+                        <svg class="chart-svg" data-chart-svg viewBox="0 0 720 240" aria-hidden="true"></svg>
+                      </div>
+
+                      <!-- A record whose first update has not run yet. The block
+                           keeps the height the chart would have had, so nothing
+                           below it moves when the history arrives. -->
+                      <div class="chart-empty hidden" data-chart-empty>
+                        <i class="ri-line-chart-line" aria-hidden="true"></i>
+                        <p class="card-title mt-3">No price history yet</p>
+                        <p class="mt-1">The first scheduled update writes it, on the rule the system keeps for this source.</p>
+                      </div>
+
+                      <div class="stats grid-cols-5" data-session aria-live="polite">
+                        <div class="stat"><div class="stat-label">Session date</div><div class="stat-value" data-v="s-date">—</div></div>
+                        <div class="stat"><div class="stat-label">Open</div><div class="stat-value" data-v="s-open">—</div></div>
+                        <div class="stat"><div class="stat-label">Close</div><div class="stat-value" data-v="s-close">—</div></div>
+                        <div class="stat"><div class="stat-label">High</div><div class="stat-value" data-v="s-high">—</div></div>
+                        <div class="stat"><div class="stat-label">Low</div><div class="stat-value" data-v="s-low">—</div></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p class="prop-label mb-2">Price change</p>
+                      <div class="stats grid-cols-6">
+                        <div class="stat"><div class="stat-label">5D</div><div class="stat-value" data-v="chg5d">—</div></div>
+                        <div class="stat"><div class="stat-label">1M</div><div class="stat-value" data-v="chg1m">—</div></div>
+                        <div class="stat"><div class="stat-label">3M</div><div class="stat-value" data-v="chg3m">—</div></div>
+                        <div class="stat"><div class="stat-label">6M</div><div class="stat-value" data-v="chg6m">—</div></div>
+                        <div class="stat"><div class="stat-label">1YR</div><div class="stat-value" data-v="chg1y">—</div></div>
+                        <div class="stat"><div class="stat-label">YTD</div><div class="stat-value" data-v="chgytd">—</div></div>
+                      </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                      <div class="range">
+                        <p class="prop-label">52-week range</p>
+                        <div class="range-track"><span class="range-mark" data-v="range-mark" style="left:50%"></span></div>
+                        <div class="range-ends"><span data-v="low52">—</span><span data-v="high52">—</span></div>
+                      </div>
+                      <div class="prop"><span class="prop-label">Volatility 90D</span><span class="prop-value tabular-nums" data-v="vol90">—</span></div>
+                    </div>
+                  </div>
+                </section>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirmations live INSIDE the dialog on purpose: a modal <dialog>
+               makes everything outside it inert, so a popover that is not its
+               descendant cannot be clicked. They are popovers rather than a
+               second <dialog> because one Escape closes a whole stack of native
+               dialogs, which would dismiss the question together with the form.
+               In Spartan both are hlm-alert-dialog on a CDK overlay. -->
+          <!-- Leaving a form with unsaved changes. Shared by every guarded form. -->
+          <div class="dialog" id="confirm-discard" popover="manual" role="alertdialog" aria-labelledby="confirm-discard-title">
+            <div class="dialog-header">
+              <div class="dialog-heading">
+                <h2 class="dialog-title" id="confirm-discard-title">Discard changes?</h2>
+                <p class="dialog-description">Everything entered in this form will be lost.</p>
+              </div>
+            </div>
+            <div class="dialog-footer">
+              <button type="button" class="btn btn-outline" data-dialog-close>Keep editing</button>
+              <button type="button" class="btn btn-destructive" data-discard-confirm>Discard changes</button>
+            </div>
+          </div>
+
+          <!-- The record's own confirmation, for the two things that act on the
+               whole instrument rather than on a field: Deactivate and Delete
+               (decision 100). One element, filled by instruments.js, because both
+               questions have the same shape — what it does, how many products feel
+               it, and one answer that cannot be taken back. A popover inside the
+               dialog for the reason above (68). -->
+          <div class="dialog" id="confirm-record" popover="manual" role="alertdialog" aria-labelledby="confirm-record-title">
+            <div class="dialog-header">
+              <div class="dialog-heading">
+                <h2 class="dialog-title" id="confirm-record-title"><span data-rec="title">—</span></h2>
+                <p class="dialog-description" data-rec="desc"></p>
+              </div>
+            </div>
+            <div class="dialog-body" data-rec="linked" hidden>
+              <div class="alert alert-warning">
+                <i class="ri-alert-line"></i>
+                <p class="alert-title" data-rec="count">Products read this instrument</p>
+                <p class="alert-description" data-rec="consequence"></p>
+              </div>
+            </div>
+            <div class="dialog-footer">
+              <button type="button" class="btn btn-outline" data-rec-btn="ask" data-dialog-close>Cancel</button>
+              <button type="button" class="btn btn-destructive" data-rec-btn="ask" data-rec-confirm>Confirm</button>
+              <button type="button" class="btn btn-default" data-rec-btn="refused" data-dialog-close>Back to the instrument</button>
+            </div>
+          </div>
+
+          <!-- Record mode closes rather than cancels, and Save changes stays
+               disabled until something is actually different: an admin who only
+               came to read never has a primary action waiting to be pressed. -->
+          <div class="dialog-footer">
+            <!-- Left end, and not red: the red answer belongs to the confirmation
+                 this opens, never to the button that asks (100). -->
+            <button type="button" class="btn btn-outline dialog-footer-start hidden" data-only="record" data-act="delete"><i class="ri-delete-bin-line"></i> Delete instrument</button>
+            <button type="button" class="btn btn-outline hidden" data-only="create" data-dialog-close>Cancel</button>
+            <button type="button" class="btn btn-outline hidden" data-only="record" data-dialog-close>Close</button>
+            <button type="button" class="btn btn-default hidden" data-only="create" data-act="create">Create instrument</button>
+            <button type="button" class="btn btn-default hidden" data-only="record" data-act="save" disabled>Save changes</button>
+          </div>
+        </dialog>
+
+      </div><!-- /shell-body -->
+    </div><!-- /shell-main -->
+  </div><!-- /shell -->
+
+  <script src="../assets/app.js"></script>
+  <script src="../assets/instruments.js"></script>
+  <script src="../assets/instruments-performance.js"></script>
+</body>
+</html>

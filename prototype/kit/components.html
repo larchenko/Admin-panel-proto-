@@ -19,13 +19,14 @@
       <nav class="flex gap-6 text-muted-foreground">
         <a href="./foundations.html" class="hover:text-foreground">Foundations</a>
         <span class="text-foreground">Components</span>
+        <a href="./navigation.html" class="hover:text-foreground">Navigation</a>
       </nav>
     </div>
   </header>
 
   <main class="mx-auto max-w-5xl px-6 py-12">
     <p class="text-muted-foreground">Phase 3</p>
-    <h1 class="mt-1 text-3xl font-semibold tracking-tight">Components</h1>
+    <h1 class="mt-1 page-title">Components</h1>
     <p class="mt-3 max-w-2xl text-muted-foreground">
       The building blocks screens are assembled from. Each component lists its variants, sizes and
       states, the recipe classes to use, and the Spartan Helm equivalent. Recipes live in
@@ -43,14 +44,18 @@
       <a href="#switch" class="hover:text-foreground">Switch</a>
       <a href="#form-example" class="hover:text-foreground">Form example</a>
       <a href="#card" class="hover:text-foreground">Card</a>
+      <a href="#metrics" class="hover:text-foreground">Metrics</a>
       <a href="#badge" class="hover:text-foreground">Badge</a>
+      <a href="#alert" class="hover:text-foreground">Alert</a>
+      <a href="#dialog" class="hover:text-foreground">Dialog</a>
+      <a href="#filters" class="hover:text-foreground">Filters</a>
       <a href="#table" class="hover:text-foreground">Table</a>
     </nav>
 
     <!-- ============================================================ BUTTON -->
     <section id="button" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Button</h2>
+        <h2 class="section-title">Button</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlmBtn</code> · shadcn: <code>button.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">
@@ -143,7 +148,7 @@
     <!-- ======================================================== FORM FIELD -->
     <section id="field" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Form field</h2>
+        <h2 class="section-title">Form field</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlm-form-field</code>, <code>hlmLabel</code>, <code>hlm-hint</code>, <code>hlm-error</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">
@@ -178,6 +183,7 @@
         <li>Error replaces the description, names the problem and, where possible, the fix.</li>
         <li>Validate on blur and on submit, never on every keystroke.</li>
         <li>Two fields side by side only when they are short and related (<code class="text-foreground">field-row</code>): currency and amount, first and last name.</li>
+        <li>Three across (<code class="text-foreground">field-row-3</code>, decision 85) only for values that are one thing in parts — SIX Code, SIX Schema and SIX Bc are one identifier, and over two rows they read as two unrelated pairs. It is not a way to fit more in; a row of three unrelated fields is three fields nobody reads as a group.</li>
       </ul>
 
       <h3 class="mt-8 font-medium">Markup</h3>
@@ -198,7 +204,7 @@
     <!-- ============================================================= INPUT -->
     <section id="input" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Input</h2>
+        <h2 class="section-title">Input</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlmInput</code> · shadcn: <code>input.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">Single-line text. 36px high like the default button, so they align in toolbars. <code class="rounded-sm bg-muted px-1 py-0.5">input-sm</code> is 32px for dense table toolbars.</p>
@@ -233,7 +239,7 @@
     <!-- ========================================================== TEXTAREA -->
     <section id="textarea" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Textarea</h2>
+        <h2 class="section-title">Textarea</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlmInput</code> on <code>&lt;textarea&gt;</code> · shadcn: <code>textarea.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">Multi-line text. Grows with content (<code class="rounded-sm bg-muted px-1 py-0.5">field-sizing: content</code>), minimum 64px.</p>
@@ -255,7 +261,7 @@
     <!-- ============================================================ SELECT -->
     <section id="select" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Select</h2>
+        <h2 class="section-title">Select</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlm-select</code> · shadcn: <code>select.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">
@@ -263,6 +269,21 @@
         that opens below it. Fully custom, so it is identical in every browser. Behaviour is in
         <code class="rounded-sm bg-muted px-1 py-0.5">app.js</code>: click or Space/Enter/arrows to open, arrows to move,
         Enter to choose, Escape to close. For long lists use a searchable combobox (later).
+      </p>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        <strong class="font-medium text-foreground">Where it opens (decision 80).</strong>
+        Below the trigger, and above it when it does not fit below and there is more room above — so a
+        select near the bottom of the screen opens upward and one near the top opens downward. The side
+        is decided every time it opens, and again while it is open if the page scrolls or the window
+        resizes. The list is then capped to the room that side has, so a long one scrolls inside itself
+        instead of running off the edge; 288px stays the ceiling. Same 4px gap and 8px screen gutter as
+        the row-action menu, which has always flipped this way.
+      </p>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        <code class="rounded-sm bg-muted px-1 py-0.5">data-prefer="top"</code> on the list asks it to start
+        upward — for a select that sits in a page footer, where the screen edge is the whole point, like
+        <em>Rows per page</em> in the table footer. It is a preference, not a lock: with no room above it
+        opens downward like everything else.
       </p>
       <div class="mt-6 rounded-lg border p-6">
         <div class="grid gap-6 sm:grid-cols-3">
@@ -342,7 +363,7 @@
   &lt;button type="button" class="select-trigger" id="ccy" data-placeholder aria-haspopup="listbox" aria-expanded="false"&gt;
     &lt;span&gt;Select currency&lt;/span&gt;&lt;i class="ri-arrow-down-s-line"&gt;&lt;/i&gt;
   &lt;/button&gt;
-  &lt;div class="select-content" role="listbox" aria-labelledby="ccy" hidden&gt;
+  &lt;div class="select-content" role="listbox" aria-labelledby="ccy" hidden&gt;          &lt;!-- add data-prefer="top" in a page footer --&gt;
     &lt;div class="select-item" role="option" data-value="CHF" tabindex="-1"&gt;CHF&lt;/div&gt;
     &lt;div class="select-item" role="option" data-value="EUR" tabindex="-1"&gt;EUR&lt;/div&gt;
   &lt;/div&gt;
@@ -357,7 +378,7 @@
     <!-- ========================================================== CHECKBOX -->
     <section id="checkbox" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Checkbox</h2>
+        <h2 class="section-title">Checkbox</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlm-checkbox</code> · shadcn: <code>checkbox.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">Independent yes/no choices, or several from a list. Wrap control and text in a <code class="rounded-sm bg-muted px-1 py-0.5">label.choice</code> so the whole row is clickable.</p>
@@ -387,12 +408,45 @@
         </div>
       </div>
       <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;label class="choice"&gt;&lt;input class="checkbox" type="checkbox"&gt; Distributors&lt;/label&gt;</code></pre>
+
+      <h3 class="mt-8 font-medium">Read-only, in a table</h3>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A boolean a row reports but nobody edits there — <em>Pricer</em> on the instruments list.
+        It is a <code class="rounded-sm bg-muted px-1 py-0.5">span</code>, not an input: no tab stop,
+        no cursor, nothing announced as a control. The value reaches a screen reader through the
+        <code class="rounded-sm bg-muted px-1 py-0.5">sr-only</code> label beside it.
+      </p>
+      <div class="mt-4 grid items-start gap-6 rounded-lg border p-6 sm:grid-cols-[14rem_1fr]">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Instrument</th><th class="bool">Pricer</th></tr></thead>
+            <tbody>
+              <tr><td class="font-medium">Apple Inc.</td><td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td></tr>
+              <tr><td class="font-medium">Nestl&eacute; 1.5% 2029</td><td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td></tr>
+              <tr><td class="font-medium">SARON 3M</td><td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td></tr>
+              <tr><td class="font-medium">Gold Spot</td><td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="grid content-start gap-3 text-muted-foreground">
+          <div><dt class="font-medium text-foreground">Why not a tick and a dash</dt>
+            <dd>Both are thin marks of about the same size, so a column of them reads as texture rather than as two states. A filled square against an empty square differs in shape, weight and colour at once — and still differs with the colour taken away.</dd></div>
+          <div><dt class="font-medium text-foreground">Why not a real disabled checkbox</dt>
+            <dd>Disabled means "you could change this, but not now". Nothing here is ever editable in the list, and the 50% opacity would undo the contrast we just bought.</dd></div>
+          <div><dt class="font-medium text-foreground">The one difference from the control</dt>
+            <dd>No <code>shadow-xs</code>. Same size, radius, border and fill; the missing lift is the cue that it does nothing.</dd></div>
+          <div><dt class="font-medium text-foreground">For the developer</dt>
+            <dd>Not a Spartan component — plain markup. Do not reach for <code>hlm-checkbox</code> with <code>[disabled]</code> here.</dd></div>
+        </dl>
+      </div>
+      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;span class="check-static" data-on&gt;&lt;/span&gt;&lt;span class="sr-only"&gt;In pricer&lt;/span&gt;
+&lt;span class="check-static"&gt;&lt;/span&gt;&lt;span class="sr-only"&gt;Not in pricer&lt;/span&gt;</code></pre>
     </section>
 
     <!-- ============================================================= RADIO -->
     <section id="radio" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Radio</h2>
+        <h2 class="section-title">Radio</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlm-radio-group</code>, <code>hlm-radio</code> · shadcn: <code>radio-group.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">Exactly one of 2–5 options, all visible at once. More than five: use a select. Group with a <code class="rounded-sm bg-muted px-1 py-0.5">fieldset</code> so the group has a name.</p>
@@ -423,11 +477,17 @@
     <!-- ============================================================ SWITCH -->
     <section id="switch" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Switch</h2>
+        <h2 class="section-title">Switch</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlm-switch</code> · shadcn: <code>switch.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">
         On/off that takes effect immediately, typically in Settings. Inside a form that has a Save button use a checkbox instead.
+      </p>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A switch that lives <em>beside</em> a form rather than in it — the instrument record's status, in the dialog header
+        next to its badge — still acts immediately, and that is the point: the state is an act, not a field waiting for Save
+        (decision 100). When the direction that costs something needs confirming, ask it and put the switch straight back,
+        so it never shows a state the record does not have; the harmless direction answers itself.
       </p>
       <div class="mt-6 rounded-lg border p-6">
         <div class="grid gap-6 sm:grid-cols-2">
@@ -458,7 +518,7 @@
 
     <!-- ====================================================== FORM EXAMPLE -->
     <section id="form-example" class="mt-16">
-      <h2 class="text-xl font-semibold tracking-tight">Form example</h2>
+      <h2 class="section-title">Form example</h2>
       <p class="mt-2 max-w-2xl text-muted-foreground">
         Everything above composed the way a create/edit screen will use it. Field names are illustrative,
         not the final Instrument model. Section = card with a title, fields stacked in one column,
@@ -533,7 +593,7 @@
     <!-- ============================================================== CARD -->
     <section id="card" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Card</h2>
+        <h2 class="section-title">Card</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlmCard</code> + <code>hlmCardHeader/Title/Description/Content/Footer</code> · shadcn: <code>card.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">
@@ -611,10 +671,109 @@
 &lt;/div&gt;</code></pre>
     </section>
 
+    <!-- =========================================================== METRICS -->
+    <section id="metrics" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="section-title">Metrics</h2>
+        <p class="text-xs text-muted-foreground">Ours — no shadcn or Spartan equivalent</p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A row of counts between a page title and the list below it: what the set is made of, and what in
+        it needs someone. Four cells at most, all the same width. A cell is a
+        <code class="rounded-sm bg-muted px-1 py-0.5">div</code> when it is only a number and a
+        <code class="rounded-sm bg-muted px-1 py-0.5">button</code> when the number filters the list —
+        both look the same at rest, and the cursor and the pressed state say which is which.
+      </p>
+
+      <div class="metrics mt-6">
+        <div class="metric">
+          <span class="metric-label"><i class="ri-stack-line"></i> Total instruments</span>
+          <span class="metric-value">248</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label"><i class="ri-checkbox-circle-line"></i> Active</span>
+          <span class="metric-value">231 <span class="metric-sub">17 inactive</span></span>
+        </div>
+        <button type="button" class="metric metric-alert" aria-pressed="false">
+          <span class="metric-label"><i class="ri-error-warning-line"></i> Failed updates</span>
+          <span class="metric-value">3 <span class="metric-sub">last 24h</span></span>
+        </button>
+        <button type="button" class="metric metric-alert" aria-pressed="true">
+          <span class="metric-label"><i class="ri-error-warning-line"></i> Failed updates</span>
+          <span class="metric-value">3 <span class="metric-sub">showing only these</span></span>
+        </button>
+      </div>
+
+      <p class="mt-6 max-w-2xl text-muted-foreground">
+        Zero is a state, not an empty cell. The count stays where it was, the colour goes, and there is
+        nothing left to filter to — so the cell stops being a button. A strip that changes shape when
+        the news is good cannot be read at a glance.
+      </p>
+
+      <div class="metrics mt-4">
+        <button type="button" class="metric metric-alert" data-zero disabled>
+          <span class="metric-label"><i class="ri-error-warning-line"></i> Failed updates</span>
+          <span class="metric-value">0 <span class="metric-sub">none in the last 24h</span></span>
+        </button>
+      </div>
+
+      <p class="mt-6 max-w-2xl text-muted-foreground">
+        <span class="font-medium text-foreground">Small, and on its own.</span> One cell, in a dialog header,
+        where it must not tie with the 24px title beside it: <code class="rounded-sm bg-muted px-1 py-0.5">metric-sm</code>
+        takes the padding down a step and the value to 20px. An <code class="rounded-sm bg-muted px-1 py-0.5">&lt;a&gt;</code>
+        rather than a button when the number leads somewhere else — it gets the same hover and focus ring as a
+        clickable cell. The instrument record's Products count is the built example (decision 97).
+      </p>
+
+      <div class="mt-4 flex">
+        <a class="metric metric-sm" href="#metrics">
+          <span class="metric-label">Products</span>
+          <span class="metric-value">293</span>
+        </a>
+      </div>
+
+      <h3 class="mt-8 font-medium">Rules</h3>
+      <ul class="mt-2 grid max-w-2xl gap-2 text-muted-foreground">
+        <li>Four cells at most. Every one has to earn the 90px it takes off the top of the list; a fifth
+          number that nobody acts on turns the row into decoration.</li>
+        <li>The last cell is the one that is wrong. Left to right the row goes from what the set is to
+          what needs doing, so the eye lands on the alert last and stays there.</li>
+        <li>A count only becomes a button when clicking it lands on exactly that number. Where the
+          screen shows one page of a longer set, only a count computed over the rows can promise that.</li>
+        <li>Destructive here is the status colour, not an accent: a 5% tint with text in the
+          <code class="rounded-sm bg-muted px-1 py-0.5">-ink</code> shade, the same recipe as a soft badge.
+          One loud cell in four, and it is loud for a reason.</li>
+        <li>The value is 24px, the h2 step of the type ladder, but it is a number and not a heading —
+          no <code class="rounded-sm bg-muted px-1 py-0.5">h2</code> in this row.</li>
+      </ul>
+
+      <h3 class="mt-8 font-medium">Markup</h3>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="metrics"&gt;
+  &lt;div class="metric"&gt;
+    &lt;span class="metric-label"&gt;&lt;i class="ri-stack-line"&gt;&lt;/i&gt; Total instruments&lt;/span&gt;
+    &lt;span class="metric-value"&gt;248&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;!-- a count that filters the list: a button, with the state in aria-pressed --&gt;
+  &lt;button type="button" class="metric metric-alert" aria-pressed="false"&gt;
+    &lt;span class="metric-label"&gt;&lt;i class="ri-error-warning-line"&gt;&lt;/i&gt; Failed updates&lt;/span&gt;
+    &lt;span class="metric-value"&gt;3 &lt;span class="metric-sub"&gt;last 24h&lt;/span&gt;&lt;/span&gt;
+  &lt;/button&gt;
+
+  &lt;!-- nothing wrong: data-zero + disabled --&gt;
+&lt;/div&gt;
+
+&lt;!-- one cell in a dialog header, and it leads to what it counts --&gt;
+&lt;a class="metric metric-sm" href="/products?instrument=…"&gt;
+  &lt;span class="metric-label"&gt;Products&lt;/span&gt;
+  &lt;span class="metric-value"&gt;293&lt;/span&gt;
+&lt;/a&gt;</code></pre>
+    </section>
+
     <!-- ============================================================= BADGE -->
     <section id="badge" class="mt-16">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Badge</h2>
+        <h2 class="section-title">Badge</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlmBadge</code> · shadcn: <code>badge.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">
@@ -662,15 +821,384 @@
     </section>
 
     <!-- ============================================================= TABLE -->
+    <section id="alert" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="section-title">Alert</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-alert</code> · shadcn: <code>alert.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A message about the thing on screen, in the flow of the page. Not a toast (it does not disappear)
+        and not a tooltip (it is not an expansion of something else). Used for the result of a data fetch
+        and for a save that failed. Variants use the status tokens with the <code class="rounded-sm bg-muted px-1 py-0.5">-ink</code>
+        text shade, so each one clears 4.5:1 on its own tint (decision 24).
+      </p>
+
+      <div class="mt-6 grid gap-4">
+        <div class="alert">
+          <i class="ri-information-line"></i>
+          <div class="alert-title">Neutral, for something the user should notice</div>
+          <div class="alert-description">Everything below the title is the description. It wraps.</div>
+        </div>
+        <div class="alert alert-success">
+          <i class="ri-check-line"></i>
+          <div class="alert-title">Apple Inc. found at SIX</div>
+          <div class="alert-description">Last price <span class="font-medium tabular-nums">227.858 USD</span>, data date <span class="font-medium tabular-nums">19 Sep 2026, 22:00:00</span>.</div>
+        </div>
+        <div class="alert alert-destructive">
+          <i class="ri-error-warning-line"></i>
+          <div class="alert-title">SIX returned an error</div>
+          <div class="alert-description">No instrument found for SIX Code ZZZZ (404). The instrument can still be created.</div>
+        </div>
+        <div class="alert alert-warning">
+          <i class="ri-alert-line"></i>
+          <div class="alert-title">Showing data from 18 Sep 2026</div>
+          <div class="alert-description">The last refresh failed, so these values are two days old.</div>
+        </div>
+      </div>
+
+      <h3 class="mt-8 font-medium">Rules</h3>
+      <ul class="mt-2 max-w-2xl list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>Title is one line and says what happened; the description carries the detail and the way out.</li>
+        <li>Destructive for something that failed, warning for something that is stale or risky, success only
+            as the answer to an action the user just took. Never as decoration.</li>
+        <li>An alert that reports a failure never removes the action that caused it — the user has to be able to retry.</li>
+      </ul>
+    </section>
+
+    <section id="dialog" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="section-title">Dialog</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-dialog</code> · shadcn: <code>dialog.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A record, opened over the screen it belongs to. Built on the native <code class="rounded-sm bg-muted px-1 py-0.5">&lt;dialog&gt;</code>
+        with <code class="rounded-sm bg-muted px-1 py-0.5">showModal()</code>, so the focus trap, the inert background, Escape and the
+        top layer are the browser's (decision 8). Two sizes: 512px, and <code class="rounded-sm bg-muted px-1 py-0.5">dialog-lg</code>
+        at 768px for a record with field groups. Height caps at 85vh and only the body scrolls — the title of
+        the record and the buttons that act on it are never scrolled away.
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <button type="button" class="btn btn-outline" data-dialog-open="kit-dialog">Record dialog (768)</button>
+        <button type="button" class="btn btn-outline" data-dialog-open="kit-dialog-sm">Small dialog (512)</button>
+      </div>
+      <p class="mt-3 max-w-2xl text-xs text-muted-foreground">
+        The small one is the shape both of the record's confirmations take: what the act does, how many products feel it,
+        one answer. Built on the Instruments screen as <code class="rounded-sm bg-muted px-1 py-0.5">#confirm-record</code>
+        — <em>Deactivate</em> from the switch in the record header, <em>Delete instrument</em> from the button in its footer
+        (decision 100) — and as <code class="rounded-sm bg-muted px-1 py-0.5">#confirm-delete</code> on the list itself (95).
+      </p>
+
+      <h3 class="mt-8 font-medium">Anatomy</h3>
+      <pre class="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-xs"><code>&lt;dialog class="dialog dialog-lg" id="instrument" aria-labelledby="t"&gt;
+  &lt;div class="dialog-header"&gt;   title + status (+ switch?) · a metric cell? · close   ← fixed
+  &lt;!-- footer may carry one destructive verb at its left end: .dialog-footer-start --&gt;
+  &lt;div class="dialog-body"&gt;     .form-sections            ← scrolls
+  &lt;div class="dialog-footer"&gt;   secondary + primary       ← fixed
+&lt;/dialog&gt;</code></pre>
+
+      <h3 class="mt-8 font-medium">Rules</h3>
+      <ul class="mt-2 max-w-2xl list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>Field groups inside are <code class="rounded-sm bg-muted px-1 py-0.5">.form-section</code> — a heading and a rule.
+            Never cards: a card in a dialog is a frame inside a frame and indents its content away from the dialog's edges.</li>
+        <li>Read-only values are <code class="rounded-sm bg-muted px-1 py-0.5">.props</code> text, never disabled inputs.
+            Disabled says "editable, but not now" and drops to 50% opacity — the wrong message and the wrong
+            contrast for data that is being read.</li>
+        <li>A form that can lose work carries <code class="rounded-sm bg-muted px-1 py-0.5">data-guard</code>: closing it while
+            it is dirty asks first, whether the user clicked Cancel, the backdrop, the X, or pressed Escape.</li>
+        <li>The confirmation is a <code class="rounded-sm bg-muted px-1 py-0.5">popover="manual"</code> element
+            <em>inside</em> the dialog. Two native constraints, both found by testing: one Escape closes every
+            native dialog in the stack at once, and a modal dialog makes everything outside itself inert, so a
+            popover that is not its descendant renders but cannot be clicked. In Spartan this is
+            <code class="rounded-sm bg-muted px-1 py-0.5">hlm-alert-dialog</code> on a CDK overlay and neither applies.</li>
+        <li>One primary action, bottom right. The destructive answer in a confirmation is the primary-looking
+            one only when destroying is what the user asked for.</li>
+        <li>A confirmation that the data can refuse has two answers in one component: the plain destructive
+            question, and — when something depends on the record — the number that refuses it plus the action
+            that was almost always wanted instead. The buttons of the case that does not apply are removed,
+            never disabled. Instruments · <em>Delete instrument</em> is the built example (decision 95).</li>
+      </ul>
+
+      <!-- ============================================== the demo dialogs -->
+      <dialog class="dialog dialog-lg" id="kit-dialog" aria-labelledby="kit-dialog-title">
+        <div class="dialog-header">
+          <div class="dialog-heading">
+            <h2 class="dialog-title" id="kit-dialog-title">
+              <span>Apple Inc.</span>
+              <span class="badge badge-success"><span class="badge-dot"></span> Active</span>
+            </h2>
+            <p class="dialog-description truncate">Equity · AAPL US Equity</p>
+          </div>
+          <div class="dialog-actions">
+            <button type="button" class="btn btn-ghost btn-icon btn-sm" data-dialog-close aria-label="Close" data-tooltip="Close"><i class="ri-close-line"></i></button>
+          </div>
+        </div>
+
+        <div class="dialog-body">
+          <div class="form-sections">
+            <section class="form-section">
+              <div class="form-section-header"><h3 class="form-section-title">Read-only values</h3></div>
+              <div class="props">
+                <div class="prop"><span class="prop-label">Instrument type</span><span class="prop-value">Equity</span></div>
+                <div class="prop"><span class="prop-label">Currency</span><span class="prop-value">USD</span></div>
+                <div class="prop"><span class="prop-label">ISIN</span><span class="prop-value font-mono">US0378331005</span></div>
+                <div class="prop"><span class="prop-label">SEDOL</span><span class="prop-value empty">—</span></div>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <div class="form-section-header">
+                <div>
+                  <h3 class="form-section-title">Numbers that are read across</h3>
+                  <p class="form-section-note">One hairline grid, so the row is one object. Values keep the precision the source sent.</p>
+                </div>
+              </div>
+              <div class="grid gap-6">
+                <div class="stats grid-cols-6">
+                  <div class="stat"><div class="stat-label">5D</div><div class="stat-value stat-up">+1.842%</div></div>
+                  <div class="stat"><div class="stat-label">1M</div><div class="stat-value stat-up">+4.117%</div></div>
+                  <div class="stat"><div class="stat-label">3M</div><div class="stat-value stat-up">+9.628%</div></div>
+                  <div class="stat"><div class="stat-label">6M</div><div class="stat-value stat-down">-2.41%</div></div>
+                  <div class="stat"><div class="stat-label">1YR</div><div class="stat-value stat-up">+18.226%</div></div>
+                  <div class="stat"><div class="stat-label">YTD</div><div class="stat-value stat-up">+12.47%</div></div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                  <div class="range">
+                    <p class="prop-label">52-week range</p>
+                    <div class="range-track"><span class="range-mark" style="left:87%"></span></div>
+                    <div class="range-ends"><span>164.075</span><span>237.49</span></div>
+                  </div>
+                  <div class="prop"><span class="prop-label">Volatility 90D</span><span class="prop-value tabular-nums">24.13%</span></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <div class="form-section-header">
+                <div>
+                  <h3 class="form-section-title">A group with a rule of its own</h3>
+                  <p class="form-section-note">The rule belongs to the group, not to one field.</p>
+                  <p class="form-section-error"><i class="ri-error-warning-line"></i> Pick at least one contact method.</p>
+                </div>
+              </div>
+              <form class="form-section-body" data-guard>
+                <div class="field-row">
+                  <div class="field">
+                    <label class="label" for="kit-bbg">Bloomberg code <span class="label-optional">Optional</span></label>
+                    <input class="input font-mono" id="kit-bbg" placeholder="e.g. AAPL US Equity">
+                  </div>
+                  <div class="field">
+                    <label class="label" for="kit-isin">ISIN <span class="label-optional">Optional</span></label>
+                    <input class="input font-mono" id="kit-isin" placeholder="e.g. US0378331005">
+                  </div>
+                </div>
+                <details class="disclosure">
+                  <summary>Advanced settings <i class="ri-arrow-down-s-line"></i></summary>
+                  <div class="disclosure-content">
+                    <p class="text-muted-foreground">
+                      For a group that is genuinely rare, not one that is merely long — the instrument
+                      identifiers were tried behind one and came back out (decision 82). No screen uses
+                      it at the moment.
+                    </p>
+                  </div>
+                </details>
+                <p class="field-description">Type here, then press Cancel: the form is guarded, so it asks first.</p>
+              </form>
+            </section>
+
+            <section class="form-section">
+              <div class="form-section-header"><h3 class="form-section-title">While a value is being fetched</h3></div>
+              <div class="props">
+                <div class="prop"><span class="prop-label">Last price</span><span class="skeleton w-24"></span></div>
+                <div class="prop"><span class="prop-label">Data date</span><span class="skeleton w-40"></span></div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- The confirmation lives inside the dialog: see the rules above. -->
+        <div class="dialog" id="confirm-discard" popover="manual" role="alertdialog" aria-labelledby="kit-confirm-title">
+          <div class="dialog-header">
+            <div class="dialog-heading">
+              <h2 class="dialog-title" id="kit-confirm-title">Discard changes?</h2>
+              <p class="dialog-description">Everything entered in this form will be lost.</p>
+            </div>
+          </div>
+          <div class="dialog-footer">
+            <button type="button" class="btn btn-outline" data-dialog-close>Keep editing</button>
+            <button type="button" class="btn btn-destructive" data-discard-confirm>Discard changes</button>
+          </div>
+        </div>
+
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline" data-dialog-close>Cancel</button>
+          <button type="button" class="btn btn-default">Save changes</button>
+        </div>
+      </dialog>
+
+      <dialog class="dialog" id="kit-dialog-sm" aria-labelledby="kit-dialog-sm-title">
+        <div class="dialog-header">
+          <div class="dialog-heading">
+            <h2 class="dialog-title" id="kit-dialog-sm-title">Deactivate Apple Inc.?</h2>
+            <p class="dialog-description">293 products use this instrument. Its market data stops updating, and the price on screen freezes at today's.</p>
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline" data-dialog-close>Cancel</button>
+          <button type="button" class="btn btn-destructive" data-dialog-close>Deactivate</button>
+        </div>
+      </dialog>
+    </section>
+
+    <section id="filters" class="mt-16">
+      <div class="flex items-baseline justify-between gap-6">
+        <h2 class="section-title">Filters</h2>
+        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-popover</code> · shadcn: <code>popover.tsx</code></p>
+      </div>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A list with more than about four filters does not put them in the toolbar: past that they eat the
+        width the search box and the primary action need, and none of them is used often enough to earn a
+        permanent slot. They go in one panel behind a <strong>Filters</strong> button, and the button carries
+        the number of them that are on (decision 89). Because a shut panel hides the query, a
+        <strong>chip row</strong> sits under the toolbar: one chip per filter the panel holds, each clearing
+        itself, so the list is never narrowed by something invisible. A filter whose own control is on screen
+        — the search box, a type tab, a summary cell that filters — gets no chip; two copies of one state is
+        one too many. Nothing is applied by a button: every change filters at once, so the footer count moves
+        while the panel is open. <strong>Clear all</strong> means all — the panel, the search box and any
+        filter parked in a control elsewhere.
+      </p>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Fields are laid out two across, which is what keeps the panel short enough to open downward under the
+        toolbar. A pair of fields that is one filter — pick a field, then <em>Empty</em> or <em>Filled</em> —
+        is ruled off as its own group with an overline: the Instruments list asks that of all twelve
+        identifiers that way instead of carrying twelve controls (decision 90). Until both halves are set the
+        filter does nothing, and the second select stays disabled so that half a filter never looks like a
+        whole one.
+      </p>
+
+      <div class="mt-6 flex items-center gap-3">
+        <button type="button" class="btn btn-outline btn-sm" popovertarget="kit-filters" aria-haspopup="dialog">
+          <i class="ri-equalizer-line"></i> Filters <span class="btn-count">2</span>
+        </button>
+        <span class="text-xs text-muted-foreground">the panel opens under the button</span>
+      </div>
+
+      <div class="menu filter-panel" id="kit-filters" popover data-align="start" aria-label="Filters">
+        <div class="filter-panel-header">
+          <span class="overline">Filters</span>
+          <button type="button" class="btn btn-link btn-sm">Clear all</button>
+        </div>
+        <div class="filter-panel-body">
+          <div class="field-row">
+            <div class="field">
+              <span class="label" id="k-status-l">Status</span>
+              <div class="select select-sm">
+                <button type="button" class="select-trigger" id="k-status" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="k-status-l k-status" data-autofocus><span>Active</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="k-status-l" hidden>
+                  <div class="select-item" role="option" data-value="All" tabindex="-1">All</div>
+                  <div class="select-item" role="option" data-value="Active" tabindex="-1" aria-selected="true">Active</div>
+                  <div class="select-item" role="option" data-value="Inactive" tabindex="-1">Inactive</div>
+                </div>
+                <input type="hidden" name="k-status" value="Active">
+              </div>
+            </div>
+            <div class="field">
+              <span class="label" id="k-ccy-l">Currency</span>
+              <div class="select select-sm">
+                <button type="button" class="select-trigger" id="k-ccy" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="k-ccy-l k-ccy"><span>CHF</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="k-ccy-l" hidden>
+                  <div class="select-item" role="option" data-value="All" tabindex="-1">All</div>
+                  <div class="select-item" role="option" data-value="CHF" tabindex="-1" aria-selected="true">CHF</div>
+                  <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                  <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                </div>
+                <input type="hidden" name="k-ccy" value="CHF">
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-panel-group">
+            <span class="overline">Identifier</span>
+            <div class="field-row">
+              <div class="field">
+                <span class="label" id="k-id-l">Field</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="k-id" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="k-id-l k-id" data-placeholder><span>Pick a field</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="k-id-l" hidden>
+                    <div class="select-item" role="option" data-value="isin" tabindex="-1">ISIN</div>
+                    <div class="select-item" role="option" data-value="valor" tabindex="-1">VALOR</div>
+                    <div class="select-item" role="option" data-value="six-bc" tabindex="-1">SIX Bc</div>
+                  </div>
+                  <input type="hidden" name="k-id" value="">
+                </div>
+              </div>
+              <div class="field">
+                <span class="label" id="k-id-state-l">Condition</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="k-id-state" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="k-id-state-l k-id-state" data-placeholder disabled><span>Pick a condition</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="k-id-state-l" hidden>
+                    <div class="select-item" role="option" data-value="empty" tabindex="-1">Empty</div>
+                    <div class="select-item" role="option" data-value="filled" tabindex="-1">Filled</div>
+                  </div>
+                  <input type="hidden" name="k-id-state" value="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-6 text-xs text-muted-foreground">The chip row, as it looks under the toolbar</p>
+      <div class="mt-2 filter-chips">
+        <span class="chip"><span class="chip-label">Status:</span><span>Active</span><button type="button" class="chip-clear" aria-label="Clear filter: Status Active"><i class="ri-close-line" aria-hidden="true"></i></button></span>
+        <span class="chip"><span class="chip-label">Currency:</span><span>CHF</span><button type="button" class="chip-clear" aria-label="Clear filter: Currency CHF"><i class="ri-close-line" aria-hidden="true"></i></button></span>
+        <span class="chip"><span class="chip-label">SIX Bc is empty</span><button type="button" class="chip-clear" aria-label="Clear filter: SIX Bc is empty"><i class="ri-close-line" aria-hidden="true"></i></button></span>
+      </div>
+
+      <pre class="mt-6 overflow-x-auto rounded-md border bg-muted/40 p-4 text-xs"><code>&lt;button type="button" class="btn btn-outline btn-sm" popovertarget="filters" aria-haspopup="dialog"&gt;
+  &lt;i class="ri-equalizer-line"&gt;&lt;/i&gt; Filters &lt;span class="btn-count" data-filter-count hidden&gt;0&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;div class="menu filter-panel" id="filters" popover data-align="start" aria-label="Filters"&gt;   &lt;!-- data-align="start": left edges, not right --&gt;
+  &lt;div class="filter-panel-header"&gt;
+    &lt;span class="overline"&gt;Filters&lt;/span&gt;
+    &lt;button type="button" class="btn btn-link btn-sm" data-clear-all&gt;Clear all&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="filter-panel-body"&gt;
+    &lt;div class="field-row"&gt;…two fields…&lt;/div&gt;
+    &lt;div class="filter-panel-group"&gt;&lt;span class="overline"&gt;Identifier&lt;/span&gt; …&lt;/div&gt;   &lt;!-- a pair that is one filter --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="filter-chips" data-chips hidden&gt;&lt;/div&gt;   &lt;!-- written by app.js from the filters --&gt;
+
+&lt;!-- each filter carries the value the row is matched on and the word its chip uses --&gt;
+&lt;input type="hidden" name="currency" value="All" data-filter="currency" data-filter-label="Currency"&gt;
+&lt;tr data-currency="CHF" data-ids="isin=CH0038863350;six-bc=4"&gt;</code></pre>
+    </section>
+
     <section id="table" class="mt-16 mb-24">
       <div class="flex items-baseline justify-between gap-6">
-        <h2 class="text-xl font-semibold tracking-tight">Table</h2>
+        <h2 class="section-title">Table</h2>
         <p class="text-xs text-muted-foreground">Spartan: <code>hlm-table</code> · shadcn: <code>table.tsx</code></p>
       </div>
       <p class="mt-2 max-w-2xl text-muted-foreground">
-        The list view of every entity. Toolbar above (search, filters, primary action), the table in a bordered
-        wrapper, footer below (count, pagination). Rows are 40px high; hover highlights, a checked row stays highlighted.
-        Data below is illustrative.
+        The list view of every entity. Toolbar above (search, filters, primary action), the table itself,
+        footer below (count, pagination). The toolbar in this demo keeps its filters inline, which works up
+        to about four; past that they move into the <a href="#filters" class="underline underline-offset-4">Filters</a>
+        panel and the toolbar keeps only the search box and the button (89). No wrapper border and no radius: on a screen whose whole job is
+        one list, a card frame draws a box around the only thing on the page. What structures it instead is
+        the header band — tinted, closed by a rule above and below, and set in the overline role (12/600,
+        secondary grey) so it differs from the data by size, weight and colour and not by its tint alone —
+        a rule under every row, and the row hover. A sortable header is a button that fills its cell, so its hover band is the whole
+        column, edge to edge, and lines up with the row band under it. A row that is out of use carries
+        <code class="rounded-sm bg-muted px-1 py-0.5">data-inactive</code> (the last row below): its values
+        drop to the secondary grey and its colour accents lose weight, while the status badge keeps full
+        strength — it is the one thing that explains why the row is quiet. Every row is padded
+        <strong>3 (12px)</strong> left and right — the same unit the columns are spaced with — so the band
+        under a hovered row is wider than its text on both sides; the wrapper bleeds the same 12px outwards,
+        which puts the first column back on the page edge, in line with the search field above it and the
+        count below it. Rows are 40px high; a checked row stays highlighted. Data below is illustrative.
       </p>
 
       <div class="mt-6">
@@ -765,7 +1293,7 @@
               <td class="muted">—</td>
               <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
             </tr>
-            <tr>
+            <tr data-inactive>
               <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
               <td class="font-medium">Barrier Reverse Convertible Roche</td>
               <td class="muted font-mono">CH0545678901</td>
@@ -807,7 +1335,10 @@
         <li>Status is always a badge, always in its own column, never coloured text.</li>
         <li>Row actions live in the last column behind one <em>More</em> button. Max one inline action besides it.</li>
         <li>Sortable headers are buttons; <code class="text-foreground">aria-sort</code> tells the icon which way to point.</li>
-        <li>Empty, loading and error states of the table are separate components (next).</li>
+        <li>The last row keeps its rule — flat on the page there is no card edge to close the table.</li>
+        <li>The table never carries a frame of its own. If one is needed — a table inside a card or a dialog — the frame belongs to the container, and the table's cells sit flush against that container's padding.</li>
+        <li>A row that is out of use carries <code class="rounded-sm bg-muted px-1 py-0.5">data-inactive</code>: values in the secondary grey, colour accents at 60%, badge at full strength.</li>
+          <li>Empty, loading and error states of the table are separate components (next).</li>
       </ul>
 
       <h3 class="mt-8 font-medium">Markup</h3>
@@ -831,6 +1362,79 @@
     &lt;/tbody&gt;
   &lt;/table&gt;
 &lt;/div&gt;</code></pre>
+
+      <h3 class="mt-8 font-medium">Column chooser</h3>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A list view outgrows the screen long before it runs out of useful fields. One popover answers
+        both halves of that problem — <em>which</em> columns are shown and <em>in what order</em> — and
+        both are a per-user setting, not a layout constant. It opens from an icon at the top of the
+        row-actions column, directly above the row <em>More</em> buttons: the toolbar answers "which
+        rows", the table header answers "which columns". That column is not pinned, so on a table wider
+        than the screen the control scrolls away with it — the pinned column is the first one, the row's
+        identity (see below).
+        Live on the <a class="btn btn-link" href="../screens/instruments.html">Instruments screen</a>;
+        recipe in <code class="rounded-sm bg-muted px-1 py-0.5">components.css</code> under
+        <em>Column chooser</em>, behaviour in <code class="rounded-sm bg-muted px-1 py-0.5">app.js</code>.
+      </p>
+
+      <div class="mt-4 grid gap-6 sm:grid-cols-2">
+        <dl class="grid content-start gap-3 text-muted-foreground">
+          <div><dt class="font-medium text-foreground">What may be turned off</dt>
+            <dd>Everything except the entity name, which is the row's identity and the link to the detail page. The row-actions column is not in the menu at all. Anything else — status included — is the user's business.</dd></div>
+          <div><dt class="font-medium text-foreground">What may be offered at all</dt>
+            <dd>A field earns a column only if it is short enough to scan in one line, present on most rows, and worth comparing down the column. A UUID, a prose error, a field that only one instrument type has: detail page.</dd></div>
+          <div><dt class="font-medium text-foreground">Second lines are not columns</dt>
+            <dd>A second line belongs to its column — the source under a price, the time under a date. It is shown and hidden with that column and never appears in the menu on its own.</dd></div>
+          <div><dt class="font-medium text-foreground">Order</dt>
+            <dd>The list is the order, top to bottom. Drag the handle, or focus it and use <kbd>↑</kbd> / <kbd>↓</kbd> — the keyboard path is not optional. Hidden columns keep their place, so switching one back on returns it where the user left it.</dd></div>
+          <div><dt class="font-medium text-foreground">Lift, and the list opens a gap</dt>
+            <dd>Grabbing the handle lifts a floating copy of the row that follows the pointer. The row's own slot becomes an empty gap, and the rows in between slide one row over to carry that gap to where the drop will land — so what you read is the shape the list is about to take, not a marker describing it. The order changes on release, never under the pointer: the gap is drawn with transforms and the DOM is left alone until you let go, so the rows you are aiming at never move out from under you.</dd></div>
+          <div><dt class="font-medium text-foreground">Reset</dt>
+            <dd>One action, restoring the default set <em>and</em> the default order. There is no per-row "restore".</dd></div>
+          <div><dt class="font-medium text-foreground">Pinned column</dt>
+            <dd>Opt in with <code>data-pin-first</code> on the <code>.table-wrap</code>: the first column goes <code>sticky left-0</code>, because on a wide table the one thing that must never scroll away is which row you are looking at. Only one column is pinned — two would squeeze the data between them. A pinned cell paints its own background, so every row state (default, hover, selected) is repeated on it by hand as an exact colour mix; add a row state and you add it there too. The inner-edge shadow is state, not decoration: it appears only once the table is scrolled.</dd></div>
+          <div><dt class="font-medium text-foreground">Persistence</dt>
+            <dd>Per user, like the collapsed sidebar rail. A shared default that one user's change moves for everybody is the thing this component exists to avoid.</dd></div>
+        </dl>
+        <div>
+          <p class="overline">For the developer</p>
+          <div class="mt-3 grid gap-2 text-muted-foreground">
+            <p><code class="text-foreground">The header row is the map.</code> Only <code>&lt;th&gt;</code> carries <code>data-col</code>; body cells carry nothing and are reordered by the same permutation. Columns not listed in the menu are pinned where they are — a leading checkbox column stays left, <code>actions</code> stays right.</p>
+            <p><code class="text-foreground">Spartan</code> · the popover is <code>hlm-menu</code> with checkbox items; in Angular the column set is state, so bind <code>[hidden]</code> and the <code>*ngFor</code> order to it instead of moving DOM nodes as the prototype does.</p>
+            <p><code class="text-foreground">Drag</code> · pointer events, not HTML5 drag-and-drop: a native drag inside a popover in the top layer is unreliable and cannot be tested. Angular should use the CDK's <code>cdkDropList</code>, which is this same pattern out of the box — a drag preview, a placeholder, and neighbours that animate aside — plus the keyboard behaviour.</p>
+            <p><code class="text-foreground">The floating copy lives in the popover</code> · it is appended to the menu, not to <code>body</code>: the popover is in the top layer, and anything outside it paints underneath however high its <code>z-index</code>. Dragging to the list's edge scrolls it on a frame loop, because the pointer can sit still at the edge.</p>
+            <p><code class="text-foreground">Where the row will land is read off the resting layout</code> · measured once at the grab, in the list's own coordinates so it survives that scrolling. Reading it off where the rows are <em>now</em> lets a row that has slid aside change the answer, and the gap flickers between two places.</p>
+            <p><code class="text-foreground">Empty state</code> · the "no results" row's <code>colspan</code> has to follow the visible column count.</p>
+          </div>
+        </div>
+      </div>
+
+      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;th class="actions" data-col="actions"&gt;                               &lt;!-- pinned, last --&gt;
+  &lt;button class="btn btn-ghost btn-icon btn-sm" popovertarget="columns-menu"
+          aria-label="Choose and reorder columns"
+          data-tooltip="Choose and reorder columns"&gt;&lt;i class="ri-layout-column-line"&gt;&lt;/i&gt;&lt;/button&gt;
+&lt;/th&gt;
+
+&lt;div class="menu column-menu" id="columns-menu" popover aria-label="Columns"
+     data-columns data-columns-for="instrument-list"&gt;                 &lt;!-- id of the .table-wrap --&gt;
+  &lt;div class="column-menu-header"&gt;
+    &lt;span class="text-sm font-medium"&gt;Columns&lt;/span&gt;
+    &lt;button class="btn btn-link btn-sm" data-columns-reset&gt;Reset&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;ul class="column-list"&gt;
+    &lt;li class="column-item" data-col="instrument" data-locked&gt;       &lt;!-- never moves, never hides --&gt;
+      &lt;span class="column-handle" aria-hidden="true"&gt;&lt;i class="ri-draggable"&gt;&lt;/i&gt;&lt;/span&gt;
+      &lt;label&gt;&lt;input class="checkbox" type="checkbox" checked disabled&gt; &lt;span&gt;Instrument&lt;/span&gt;&lt;/label&gt;
+      &lt;span class="column-lock"&gt;Always first&lt;/span&gt;
+    &lt;/li&gt;
+    &lt;li class="column-item" data-col="type"&gt;
+      &lt;span class="column-handle" role="button" tabindex="0" aria-label="Move Type"&gt;&lt;i class="ri-draggable"&gt;&lt;/i&gt;&lt;/span&gt;
+      &lt;label&gt;&lt;input class="checkbox" type="checkbox" checked&gt; &lt;span&gt;Type&lt;/span&gt;&lt;/label&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;th data-col="type"&gt;Type&lt;/th&gt;                                        &lt;!-- add hidden for off by default --&gt;</code></pre>
     </section>
   </main>
   <script src="../assets/app.js"></script>

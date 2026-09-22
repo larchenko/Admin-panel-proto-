@@ -18,7 +18,7 @@ Four top-level areas, as confirmed by the product owner:
 
 | Area | What it holds | Notes / to confirm |
 |---|---|---|
-| Instruments | Financial instruments the products are built on | Types, identifiers (ISIN etc.) and lifecycle to be defined |
+| Instruments | Financial instruments the products are built on | Fields, groups and the list view are defined in `instruments.md` |
 | Users & Organizations | Who has access, and which organization they belong to | Relationship user ↔ organization to be defined (one or many) |
 | Products | Structured products | Product types, statuses and link to instruments to be defined |
 | Settings | System-wide configuration | Which settings are editable from the back office to be defined |
@@ -53,7 +53,8 @@ Written for a generic entity. Each area will get its own version later.
 
 ## Open questions
 
-- Instruments: which types and which identifiers do we show in lists?
+Instruments are answered in `instruments.md`; what follows is the rest.
+
 - Products: which statuses exist across the lifecycle?
 - Products ↔ Instruments: one product references one or many instruments?
 - Users ↔ Organizations: can a user belong to several organizations?

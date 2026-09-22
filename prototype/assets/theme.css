@@ -89,14 +89,30 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.550 0.150 281.533);     /* BRAND */
 
-  /* Charts (kept for parity with Spartan; unused until we have data views.
-     Still the shadcn defaults — rebuild from the brand hue when the first chart appears.
-     A series that encodes a status takes the status colour, not a chart colour.) */
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  /* --- BRAND: charts ---
+     Rebuilt from the brand hue when the first chart appeared — the price history
+     on the instrument record (decision 92). --chart-1 IS the brand: a back office
+     chart is almost always one series, and one series in the product's own colour
+     needs no legend.
+
+     2 to 5 are for the day a chart carries several series at once. They are hue
+     steps away from the brand that avoid the four status hues (18 red, 77 yellow,
+     152 green, 240 blue) — a series must never be mistaken for a state — and they
+     alternate light and dark so the set survives greyscale. Each clears 3:1 on the
+     page, which is what WCAG 1.4.11 asks of a line that carries meaning:
+       1  #200766  16.4:1   brand
+       2  #9E5598   5.0:1
+       3  #147175   5.8:1
+       4  #8183CD   3.5:1
+       5  #284E7D   8.5:1
+     Provisional above 1: a five-colour set chosen against no data is a guess, and
+     it is revisited when a chart with unrelated series actually exists.
+     A series that encodes a status takes the status colour, not a chart colour. */
+  --chart-1: oklch(0.260 0.145 281.533);     /* = --primary */
+  --chart-2: oklch(0.560 0.130 330);
+  --chart-3: oklch(0.500 0.080 200);
+  --chart-4: oklch(0.640 0.110 281.533);
+  --chart-5: oklch(0.420 0.090 255);
 }
 
 /* 2. Tailwind mapping ---------------------------------------------------- */
