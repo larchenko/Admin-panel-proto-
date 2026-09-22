@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Table · Organisms · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Organisms</p>
+      <h1 class="page-title">Table</h1>
+      <p class="kit-meta">Spartan: <code>hlm-table</code> · shadcn: <code>table.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        The list view of every entity. Toolbar above (search, filters, primary action), the table itself,
+        footer below (count, pagination). The toolbar in this demo keeps its filters inline, which works up
+        to about four; past that they move into the <a href="./filters.html" class="underline underline-offset-4">Filters</a>
+        panel and the toolbar keeps only the search box and the button (89). No wrapper border and no radius: on a screen whose whole job is
+        one list, a card frame draws a box around the only thing on the page. What structures it instead is
+        the header band — tinted, closed by a rule above and below, and set in the overline role (12/600,
+        secondary grey) so it differs from the data by size, weight and colour and not by its tint alone —
+        a rule under every row, and the row hover. A sortable header is a button that fills its cell, so its hover band is the whole
+        column, edge to edge, and lines up with the row band under it. A row that is out of use carries
+        <code class="rounded-sm bg-muted px-1 py-0.5">data-inactive</code> (the last row below): its values
+        drop to the secondary grey and its colour accents lose weight, while the status badge keeps full
+        strength — it is the one thing that explains why the row is quiet. Every row is padded
+        <strong>3 (12px)</strong> left and right — the same unit the columns are spaced with — so the band
+        under a hovered row is wider than its text on both sides; the wrapper bleeds the same 12px outwards,
+        which puts the first column back on the page edge, in line with the search field above it and the
+        count below it. Rows are 40px high; a checked row stays highlighted. Data below is illustrative.
+      </p>
+
+      <div class="mt-6">
+        <div class="table-toolbar">
+          <div class="flex items-center gap-3">
+            <div class="input-icon w-64"><i class="ri-search-line"></i><input class="input input-sm" type="search" placeholder="Search products"></div>
+            <div class="select select-sm w-40">
+                <button type="button" class="select-trigger" id="t-status" aria-haspopup="listbox" aria-expanded="false"><span>All statuses</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="t-status" hidden>
+                  <div class="select-item" role="option" data-value="All statuses" tabindex="-1" aria-selected="true">All statuses</div>
+                  <div class="select-item" role="option" data-value="Draft" tabindex="-1">Draft</div>
+                  <div class="select-item" role="option" data-value="Live" tabindex="-1">Live</div>
+                  <div class="select-item" role="option" data-value="Expiring" tabindex="-1">Expiring</div>
+                  <div class="select-item" role="option" data-value="Matured" tabindex="-1">Matured</div>
+                </div>
+                <input type="hidden" name="status" value="All statuses">
+              </div>
+            <div class="select select-sm w-40">
+                <button type="button" class="select-trigger" id="t-ccy" aria-haspopup="listbox" aria-expanded="false"><span>All currencies</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="t-ccy" hidden>
+                  <div class="select-item" role="option" data-value="All currencies" tabindex="-1" aria-selected="true">All currencies</div>
+                  <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                  <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                  <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                </div>
+                <input type="hidden" name="ccy" value="All currencies">
+              </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button" class="btn btn-outline btn-sm"><i class="ri-download-2-line"></i> Export</button>
+            <button type="button" class="btn btn-default btn-sm"><i class="ri-add-line"></i> New product</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="check"><input class="checkbox" type="checkbox" aria-label="Select all"></th>
+                <th><button type="button" class="table-sort" aria-sort="ascending">Name <i class="ri-arrow-up-line"></i></button></th>
+                <th>ISIN</th>
+                <th>Type</th>
+                <th>Currency</th>
+                <th class="num"><button type="button" class="table-sort" aria-sort="none">Notional <i class="ri-expand-up-down-line"></i></button></th>
+                <th>Status</th>
+                <th><button type="button" class="table-sort" aria-sort="none">Maturity <i class="ri-expand-up-down-line"></i></button></th>
+                <th class="actions"><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
+              <td class="font-medium">Autocallable on SMI</td>
+              <td class="muted font-mono">CH0598765432</td>
+              <td class="muted">Yield enhancement</td>
+              <td>CHF</td>
+              <td class="num">1'250'000</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Live</span></td>
+              <td class="muted">18 Dec 2026</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            <tr>
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
+              <td class="font-medium">Capital Protection Note EURO STOXX 50</td>
+              <td class="muted font-mono">CH0512345678</td>
+              <td class="muted">Capital protection</td>
+              <td>EUR</td>
+              <td class="num">5'000'000</td>
+              <td><span class="badge badge-success"><span class="badge-dot"></span> Live</span></td>
+              <td class="muted">30 Jun 2028</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            <tr aria-selected="true">
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row" checked></td>
+              <td class="font-medium">Reverse Convertible Nestlé</td>
+              <td class="muted font-mono">CH0523456789</td>
+              <td class="muted">Yield enhancement</td>
+              <td>CHF</td>
+              <td class="num">750'000</td>
+              <td><span class="badge badge-warning"><span class="badge-dot"></span> Expiring</span></td>
+              <td class="muted">02 Oct 2026</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            <tr>
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
+              <td class="font-medium">Tracker Certificate Swiss Tech</td>
+              <td class="muted font-mono">CH0534567890</td>
+              <td class="muted">Participation</td>
+              <td>CHF</td>
+              <td class="num">2'100'000</td>
+              <td><span class="badge badge-secondary">Draft</span></td>
+              <td class="muted">—</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            <tr data-inactive>
+              <td class="check"><input class="checkbox" type="checkbox" aria-label="Select row"></td>
+              <td class="font-medium">Barrier Reverse Convertible Roche</td>
+              <td class="muted font-mono">CH0545678901</td>
+              <td class="muted">Yield enhancement</td>
+              <td>USD</td>
+              <td class="num">3'300'000</td>
+              <td><span class="badge badge-outline">Matured</span></td>
+              <td class="muted">15 Mar 2026</td>
+              <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <span>1 selected · 1–5 of 42</span>
+          <div class="flex items-center gap-2">
+            <span class="mr-2">Rows per page</span>
+            <div class="select select-sm w-20">
+                <button type="button" class="select-trigger" id="t-rows" aria-haspopup="listbox" aria-expanded="false"><span>5</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="t-rows" hidden>
+                  <div class="select-item" role="option" data-value="5" tabindex="-1" aria-selected="true">5</div>
+                  <div class="select-item" role="option" data-value="10" tabindex="-1">10</div>
+                  <div class="select-item" role="option" data-value="25" tabindex="-1">25</div>
+                  <div class="select-item" role="option" data-value="50" tabindex="-1">50</div>
+                </div>
+                <input type="hidden" name="rows" value="5">
+              </div>
+            <button type="button" class="btn btn-outline btn-icon btn-sm" aria-label="Previous page" title="Previous page" disabled><i class="ri-arrow-left-s-line"></i></button>
+            <button type="button" class="btn btn-outline btn-icon btn-sm" aria-label="Next page" title="Next page"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="rules" class="section-title mt-14">Rules</h2>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>First text column is the entity name, medium weight, and is the link to the detail view.</li>
+        <li>Identifiers in <code class="text-foreground">font-mono</code>, numbers right-aligned with <code class="text-foreground">num</code>, secondary columns in <code class="text-foreground">muted</code>.</li>
+        <li>Status is always a badge, always in its own column, never coloured text.</li>
+        <li>Row actions live in the last column behind one <em>More</em> button. Max one inline action besides it.</li>
+        <li>Sortable headers are buttons; <code class="text-foreground">aria-sort</code> tells the icon which way to point.</li>
+        <li>The last row keeps its rule — flat on the page there is no card edge to close the table.</li>
+        <li>The table never carries a frame of its own. If one is needed — a table inside a card or a dialog — the frame belongs to the container, and the table's cells sit flush against that container's padding.</li>
+        <li>A row that is out of use carries <code class="rounded-sm bg-muted px-1 py-0.5">data-inactive</code>: values in the secondary grey, colour accents at 60%, badge at full strength.</li>
+          <li>Empty, loading and error states of the table are separate components (next).</li>
+      </ul>
+
+      <h2 id="markup" class="section-title mt-14">Markup</h2>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="table-wrap"&gt;
+  &lt;table class="table"&gt;
+    &lt;thead&gt;&lt;tr&gt;
+      &lt;th class="check"&gt;&lt;input class="checkbox" type="checkbox" aria-label="Select all"&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;button class="table-sort" aria-sort="ascending"&gt;Name &lt;i class="ri-arrow-up-line"&gt;&lt;/i&gt;&lt;/button&gt;&lt;/th&gt;
+      &lt;th class="num"&gt;Notional&lt;/th&gt;
+      &lt;th&gt;Status&lt;/th&gt;
+      &lt;th class="actions"&gt;&lt;span class="sr-only"&gt;Actions&lt;/span&gt;&lt;/th&gt;
+    &lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td class="check"&gt;&lt;input class="checkbox" type="checkbox" aria-label="Select row"&gt;&lt;/td&gt;
+        &lt;td class="font-medium"&gt;Autocallable on SMI&lt;/td&gt;
+        &lt;td class="num"&gt;1'250'000&lt;/td&gt;
+        &lt;td&gt;&lt;span class="badge badge-success"&gt;&lt;span class="badge-dot"&gt;&lt;/span&gt; Live&lt;/span&gt;&lt;/td&gt;
+        &lt;td class="actions"&gt;&lt;button class="btn btn-ghost btn-icon btn-sm" aria-label="More actions"&gt;&lt;i class="ri-more-2-line"&gt;&lt;/i&gt;&lt;/button&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+
+      <h2 id="column-chooser" class="section-title mt-14">Column chooser</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A list view outgrows the screen long before it runs out of useful fields. One popover answers
+        both halves of that problem — <em>which</em> columns are shown and <em>in what order</em> — and
+        both are a per-user setting, not a layout constant. It opens from an icon at the top of the
+        row-actions column, directly above the row <em>More</em> buttons: the toolbar answers "which
+        rows", the table header answers "which columns". That column is not pinned, so on a table wider
+        than the screen the control scrolls away with it — the pinned column is the first one, the row's
+        identity (see below).
+        Live on the <a class="btn btn-link" href="../../screens/instruments.html">Instruments screen</a>;
+        recipe in <code class="rounded-sm bg-muted px-1 py-0.5">components.css</code> under
+        <em>Column chooser</em>, behaviour in <code class="rounded-sm bg-muted px-1 py-0.5">app.js</code>.
+      </p>
+
+      <div class="mt-4 grid gap-6 sm:grid-cols-2">
+        <dl class="grid content-start gap-3 text-muted-foreground">
+          <div><dt class="font-medium text-foreground">What may be turned off</dt>
+            <dd>Everything except the entity name, which is the row's identity and the link to the detail page. The row-actions column is not in the menu at all. Anything else — status included — is the user's business.</dd></div>
+          <div><dt class="font-medium text-foreground">What may be offered at all</dt>
+            <dd>A field earns a column only if it is short enough to scan in one line, present on most rows, and worth comparing down the column. A UUID, a prose error, a field that only one instrument type has: detail page.</dd></div>
+          <div><dt class="font-medium text-foreground">Second lines are not columns</dt>
+            <dd>A second line belongs to its column — the source under a price, the time under a date. It is shown and hidden with that column and never appears in the menu on its own.</dd></div>
+          <div><dt class="font-medium text-foreground">Order</dt>
+            <dd>The list is the order, top to bottom. Drag the handle, or focus it and use <kbd>↑</kbd> / <kbd>↓</kbd> — the keyboard path is not optional. Hidden columns keep their place, so switching one back on returns it where the user left it.</dd></div>
+          <div><dt class="font-medium text-foreground">Lift, and the list opens a gap</dt>
+            <dd>Grabbing the handle lifts a floating copy of the row that follows the pointer. The row's own slot becomes an empty gap, and the rows in between slide one row over to carry that gap to where the drop will land — so what you read is the shape the list is about to take, not a marker describing it. The order changes on release, never under the pointer: the gap is drawn with transforms and the DOM is left alone until you let go, so the rows you are aiming at never move out from under you.</dd></div>
+          <div><dt class="font-medium text-foreground">Reset</dt>
+            <dd>One action, restoring the default set <em>and</em> the default order. There is no per-row "restore".</dd></div>
+          <div><dt class="font-medium text-foreground">Pinned column</dt>
+            <dd>Opt in with <code>data-pin-first</code> on the <code>.table-wrap</code>: the first column goes <code>sticky left-0</code>, because on a wide table the one thing that must never scroll away is which row you are looking at. Only one column is pinned — two would squeeze the data between them. A pinned cell paints its own background, so every row state (default, hover, selected) is repeated on it by hand as an exact colour mix; add a row state and you add it there too. The inner-edge shadow is state, not decoration: it appears only once the table is scrolled.</dd></div>
+          <div><dt class="font-medium text-foreground">Persistence</dt>
+            <dd>Per user, like the collapsed sidebar rail. A shared default that one user's change moves for everybody is the thing this component exists to avoid.</dd></div>
+        </dl>
+        <div>
+          <p class="overline">For the developer</p>
+          <div class="mt-3 grid gap-2 text-muted-foreground">
+            <p><code class="text-foreground">The header row is the map.</code> Only <code>&lt;th&gt;</code> carries <code>data-col</code>; body cells carry nothing and are reordered by the same permutation. Columns not listed in the menu are pinned where they are — a leading checkbox column stays left, <code>actions</code> stays right.</p>
+            <p><code class="text-foreground">Spartan</code> · the popover is <code>hlm-menu</code> with checkbox items; in Angular the column set is state, so bind <code>[hidden]</code> and the <code>*ngFor</code> order to it instead of moving DOM nodes as the prototype does.</p>
+            <p><code class="text-foreground">Drag</code> · pointer events, not HTML5 drag-and-drop: a native drag inside a popover in the top layer is unreliable and cannot be tested. Angular should use the CDK's <code>cdkDropList</code>, which is this same pattern out of the box — a drag preview, a placeholder, and neighbours that animate aside — plus the keyboard behaviour.</p>
+            <p><code class="text-foreground">The floating copy lives in the popover</code> · it is appended to the menu, not to <code>body</code>: the popover is in the top layer, and anything outside it paints underneath however high its <code>z-index</code>. Dragging to the list's edge scrolls it on a frame loop, because the pointer can sit still at the edge.</p>
+            <p><code class="text-foreground">Where the row will land is read off the resting layout</code> · measured once at the grab, in the list's own coordinates so it survives that scrolling. Reading it off where the rows are <em>now</em> lets a row that has slid aside change the answer, and the gap flickers between two places.</p>
+            <p><code class="text-foreground">Empty state</code> · the "no results" row's <code>colspan</code> has to follow the visible column count.</p>
+          </div>
+        </div>
+      </div>
+
+      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;th class="actions" data-col="actions"&gt;                               &lt;!-- pinned, last --&gt;
+  &lt;button class="btn btn-ghost btn-icon btn-sm" popovertarget="columns-menu"
+          aria-label="Choose and reorder columns"
+          data-tooltip="Choose and reorder columns"&gt;&lt;i class="ri-layout-column-line"&gt;&lt;/i&gt;&lt;/button&gt;
+&lt;/th&gt;
+
+&lt;div class="menu column-menu" id="columns-menu" popover aria-label="Columns"
+     data-columns data-columns-for="instrument-list"&gt;                 &lt;!-- id of the .table-wrap --&gt;
+  &lt;div class="column-menu-header"&gt;
+    &lt;span class="text-sm font-medium"&gt;Columns&lt;/span&gt;
+    &lt;button class="btn btn-link btn-sm" data-columns-reset&gt;Reset&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;ul class="column-list"&gt;
+    &lt;li class="column-item" data-col="instrument" data-locked&gt;       &lt;!-- never moves, never hides --&gt;
+      &lt;span class="column-handle" aria-hidden="true"&gt;&lt;i class="ri-draggable"&gt;&lt;/i&gt;&lt;/span&gt;
+      &lt;label&gt;&lt;input class="checkbox" type="checkbox" checked disabled&gt; &lt;span&gt;Instrument&lt;/span&gt;&lt;/label&gt;
+      &lt;span class="column-lock"&gt;Always first&lt;/span&gt;
+    &lt;/li&gt;
+    &lt;li class="column-item" data-col="type"&gt;
+      &lt;span class="column-handle" role="button" tabindex="0" aria-label="Move Type"&gt;&lt;i class="ri-draggable"&gt;&lt;/i&gt;&lt;/span&gt;
+      &lt;label&gt;&lt;input class="checkbox" type="checkbox" checked&gt; &lt;span&gt;Type&lt;/span&gt;&lt;/label&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;th data-col="type"&gt;Type&lt;/th&gt;                                        &lt;!-- add hidden for off by default --&gt;</code></pre>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

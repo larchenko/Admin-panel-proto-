@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Metrics · Molecules · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Molecules</p>
+      <h1 class="page-title">Metrics</h1>
+      <p class="kit-meta">Ours — no shadcn or Spartan equivalent</p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        A row of counts between a page title and the list below it: what the set is made of, and what in
+        it needs someone. Four cells at most, all the same width. A cell is a
+        <code class="rounded-sm bg-muted px-1 py-0.5">div</code> when it is only a number and a
+        <code class="rounded-sm bg-muted px-1 py-0.5">button</code> when the number filters the list —
+        both look the same at rest, and the cursor and the pressed state say which is which.
+      </p>
+
+      <div class="metrics mt-6">
+        <div class="metric">
+          <span class="metric-label"><i class="ri-stack-line"></i> Total instruments</span>
+          <span class="metric-value">248</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label"><i class="ri-checkbox-circle-line"></i> Active</span>
+          <span class="metric-value">231 <span class="metric-sub">17 inactive</span></span>
+        </div>
+        <button type="button" class="metric metric-alert" aria-pressed="false">
+          <span class="metric-label"><i class="ri-error-warning-line"></i> Failed updates</span>
+          <span class="metric-value">3 <span class="metric-sub">last 24h</span></span>
+        </button>
+        <button type="button" class="metric metric-alert" aria-pressed="true">
+          <span class="metric-label"><i class="ri-error-warning-line"></i> Failed updates</span>
+          <span class="metric-value">3 <span class="metric-sub">showing only these</span></span>
+        </button>
+      </div>
+
+      <p class="mt-6 max-w-2xl text-muted-foreground">
+        Zero is a state, not an empty cell. The count stays where it was, the colour goes, and there is
+        nothing left to filter to — so the cell stops being a button. A strip that changes shape when
+        the news is good cannot be read at a glance.
+      </p>
+
+      <div class="metrics mt-4">
+        <button type="button" class="metric metric-alert" data-zero disabled>
+          <span class="metric-label"><i class="ri-error-warning-line"></i> Failed updates</span>
+          <span class="metric-value">0 <span class="metric-sub">none in the last 24h</span></span>
+        </button>
+      </div>
+
+      <p class="mt-6 max-w-2xl text-muted-foreground">
+        <span class="font-medium text-foreground">Small, and on its own.</span> One cell, in a dialog header,
+        where it must not tie with the 24px title beside it: <code class="rounded-sm bg-muted px-1 py-0.5">metric-sm</code>
+        takes the padding down a step and the value to 20px. An <code class="rounded-sm bg-muted px-1 py-0.5">&lt;a&gt;</code>
+        rather than a button when the number leads somewhere else — it gets the same hover and focus ring as a
+        clickable cell. The instrument record's Products count is the built example (decision 97).
+      </p>
+
+      <div class="mt-4 flex">
+        <a class="metric metric-sm" href="#metrics">
+          <span class="metric-label">Products</span>
+          <span class="metric-value">293</span>
+        </a>
+      </div>
+
+      <h2 id="rules" class="section-title mt-14">Rules</h2>
+      <ul class="mt-2 grid max-w-2xl gap-2 text-muted-foreground">
+        <li>Four cells at most. Every one has to earn the 90px it takes off the top of the list; a fifth
+          number that nobody acts on turns the row into decoration.</li>
+        <li>The last cell is the one that is wrong. Left to right the row goes from what the set is to
+          what needs doing, so the eye lands on the alert last and stays there.</li>
+        <li>A count only becomes a button when clicking it lands on exactly that number. Where the
+          screen shows one page of a longer set, only a count computed over the rows can promise that.</li>
+        <li>Destructive here is the status colour, not an accent: a 5% tint with text in the
+          <code class="rounded-sm bg-muted px-1 py-0.5">-ink</code> shade, the same recipe as a soft badge.
+          One loud cell in four, and it is loud for a reason.</li>
+        <li>The value is 24px, the h2 step of the type ladder, but it is a number and not a heading —
+          no <code class="rounded-sm bg-muted px-1 py-0.5">h2</code> in this row.</li>
+      </ul>
+
+      <h2 id="markup" class="section-title mt-14">Markup</h2>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="metrics"&gt;
+  &lt;div class="metric"&gt;
+    &lt;span class="metric-label"&gt;&lt;i class="ri-stack-line"&gt;&lt;/i&gt; Total instruments&lt;/span&gt;
+    &lt;span class="metric-value"&gt;248&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;!-- a count that filters the list: a button, with the state in aria-pressed --&gt;
+  &lt;button type="button" class="metric metric-alert" aria-pressed="false"&gt;
+    &lt;span class="metric-label"&gt;&lt;i class="ri-error-warning-line"&gt;&lt;/i&gt; Failed updates&lt;/span&gt;
+    &lt;span class="metric-value"&gt;3 &lt;span class="metric-sub"&gt;last 24h&lt;/span&gt;&lt;/span&gt;
+  &lt;/button&gt;
+
+  &lt;!-- nothing wrong: data-zero + disabled --&gt;
+&lt;/div&gt;
+
+&lt;!-- one cell in a dialog header, and it leads to what it counts --&gt;
+&lt;a class="metric metric-sm" href="/products?instrument=…"&gt;
+  &lt;span class="metric-label"&gt;Products&lt;/span&gt;
+  &lt;span class="metric-value"&gt;293&lt;/span&gt;
+&lt;/a&gt;</code></pre>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

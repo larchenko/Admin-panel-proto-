@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card · Molecules · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Molecules</p>
+      <h1 class="page-title">Card</h1>
+      <p class="kit-meta">Spartan: <code>hlmCard</code> + <code>hlmCardHeader/Title/Description/Content/Footer</code> · shadcn: <code>card.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        Groups related content under a title. Header, content, footer, each optional. A form section, a
+        details panel and a settings group are all cards. Deviation from shadcn: no shadow, radius <code class="rounded-sm bg-muted px-1 py-0.5">lg</code>, per foundations.
+      </p>
+
+      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Basic card</h3>
+            <p class="card-description">Header with title and description, then content.</p>
+          </div>
+          <div class="card-content">
+            <p>Content is plain body text or any other components. Padding is 24px all round.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">With an action</h3>
+            <p class="card-description">The action sits top-right and stays there.</p>
+            <div class="card-action"><button type="button" class="btn btn-outline btn-sm"><i class="ri-pencil-line"></i> Edit</button></div>
+          </div>
+          <div class="card-content">
+            <dl class="grid grid-cols-[8rem_1fr] gap-y-2">
+              <dt class="text-muted-foreground">ISIN</dt><dd class="font-mono">CH0598765432</dd>
+              <dt class="text-muted-foreground">Currency</dt><dd>CHF</dd>
+              <dt class="text-muted-foreground">Status</dt><dd><span class="badge badge-success"><span class="badge-dot"></span> Live</span></dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header border-b">
+            <h3 class="card-title">Form section</h3>
+            <p class="card-description">Bordered header and footer. This is the shape the form example uses.</p>
+          </div>
+          <div class="card-content">
+            <div class="field">
+              <label class="label" for="c-name">Name</label>
+              <input class="input" id="c-name" placeholder="e.g. Nestlé SA">
+            </div>
+          </div>
+          <div class="card-footer border-t justify-end gap-3">
+            <button type="button" class="btn btn-outline">Cancel</button>
+            <button type="button" class="btn btn-default">Save</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Flush content</h3>
+            <p class="card-description">A list or table that touches the card edges.</p>
+          </div>
+          <div class="card-content flush">
+            <ul class="divide-y border-t">
+              <li class="flex items-center justify-between px-6 py-3"><span>Distributors</span><span class="text-muted-foreground">12</span></li>
+              <li class="flex items-center justify-between px-6 py-3"><span>Advisors</span><span class="text-muted-foreground">48</span></li>
+              <li class="flex items-center justify-between px-6 py-3"><span>End clients</span><span class="text-muted-foreground">1'204</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="markup" class="section-title mt-14">Markup</h2>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="card"&gt;
+  &lt;div class="card-header"&gt;
+    &lt;h3 class="card-title"&gt;Title&lt;/h3&gt;
+    &lt;p class="card-description"&gt;One sentence.&lt;/p&gt;
+    &lt;div class="card-action"&gt;&lt;button class="btn btn-outline btn-sm"&gt;Edit&lt;/button&gt;&lt;/div&gt;   &lt;!-- optional --&gt;
+  &lt;/div&gt;
+  &lt;div class="card-content"&gt;…&lt;/div&gt;
+  &lt;div class="card-footer"&gt;…&lt;/div&gt;                                                  &lt;!-- optional --&gt;
+&lt;/div&gt;</code></pre>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

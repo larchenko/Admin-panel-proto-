@@ -101,19 +101,49 @@
   .btn {
     @apply inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap
            rounded-md text-sm font-medium transition-all select-none
-           outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+           outline-none
            disabled:pointer-events-none disabled:opacity-50
            aria-disabled:pointer-events-none aria-disabled:opacity-50
            h-9 px-4 py-2 has-[>i]:px-3
            [&_i]:text-base [&_i]:leading-none [&_i]:pointer-events-none;
   }
-  /* variants */
-  .btn-default     { @apply bg-primary text-primary-foreground shadow-xs hover:bg-primary/90; }
-  .btn-secondary   { @apply bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80; }
-  .btn-outline     { @apply border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground; }
-  .btn-ghost       { @apply hover:bg-accent hover:text-accent-foreground; }
-  .btn-destructive { @apply bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20; }
-  .btn-link        { @apply text-primary underline-offset-4 hover:underline h-auto px-0 py-0; }
+
+  /* Hover and focus are written as rules of their own rather than as
+     `hover:` / `focus-visible:` prefixes inside the @apply above, so that each
+     one can also be reached by [data-demo~="…"]. That attribute is how the kit
+     shows a state without a pointer on the button: the demo is painted by the
+     SAME declaration the real state is painted by, so the two cannot drift.
+     Nothing in the product ever sets data-demo — it exists for the kit alone.
+     Disabled needs no hook: the demo carries the real `disabled` attribute. */
+  .btn:focus-visible,
+  .btn[data-demo~="focus"]          { @apply border-ring ring-[3px] ring-ring/50; }
+
+  /* variants — five, not shadcn's six. There is no .btn-secondary: its job, a
+     second action of equal weight beside the primary one, does not occur in
+     this product — every pair here is Cancel (outline) + Save (default), so
+     the variant went unused and only offered a second way to draw a Cancel
+     (decision 102). Spartan still ships variant="secondary"; we do not use it. */
+  .btn-default     { @apply bg-primary text-primary-foreground shadow-xs; }
+  .btn-default:hover,
+  .btn-default[data-demo~="hover"]  { @apply bg-primary/90; }
+
+  .btn-outline     { @apply border border-input bg-background shadow-xs; }
+  .btn-outline:hover,
+  .btn-outline[data-demo~="hover"]  { @apply bg-accent text-accent-foreground; }
+
+  .btn-ghost       { @apply bg-transparent; }
+  .btn-ghost:hover,
+  .btn-ghost[data-demo~="hover"]    { @apply bg-accent text-accent-foreground; }
+
+  .btn-destructive { @apply bg-destructive text-destructive-foreground shadow-xs; }
+  .btn-destructive:hover,
+  .btn-destructive[data-demo~="hover"] { @apply bg-destructive/90; }
+  .btn-destructive:focus-visible,
+  .btn-destructive[data-demo~="focus"] { @apply ring-destructive/20; }
+
+  .btn-link        { @apply text-primary underline-offset-4 h-auto px-0 py-0; }
+  .btn-link:hover,
+  .btn-link[data-demo~="hover"]     { @apply underline; }
   /* sizes */
   .btn-sm   { @apply h-8 gap-1.5 px-3 has-[>i]:px-2.5; }
   .btn-lg   { @apply h-10 px-6 has-[>i]:px-4; }

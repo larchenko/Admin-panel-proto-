@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Form field · Molecules · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Molecules</p>
+      <h1 class="page-title">Form field</h1>
+      <p class="kit-meta">Spartan: <code>hlm-form-field</code>, <code>hlmLabel</code>, <code>hlm-hint</code>, <code>hlm-error</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        The wrapper every control lives in. Label above, control, then an optional description or an error.
+        Label and control are linked with <code class="rounded-sm bg-muted px-1 py-0.5">for</code>/<code class="rounded-sm bg-muted px-1 py-0.5">id</code>;
+        description and error with <code class="rounded-sm bg-muted px-1 py-0.5">aria-describedby</code>.
+      </p>
+
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-8 sm:grid-cols-3">
+          <div class="field">
+            <label class="label" for="f1">Name</label>
+            <input class="input" id="f1" placeholder="e.g. Autocallable on SMI">
+            <p class="field-description">Shown to end users in the product list.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="f2">Internal code <span class="label-optional">Optional</span></label>
+            <input class="input" id="f2">
+          </div>
+          <div class="field">
+            <label class="label" for="f3">ISIN</label>
+            <input class="input" id="f3" value="CH00123" aria-invalid="true" aria-describedby="f3-err">
+            <p class="field-error" id="f3-err"><i class="ri-error-warning-line"></i> ISIN must be 12 characters.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="rules" class="section-title mt-14">Rules</h2>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>Fields are required by default. Mark the exceptions with <code class="text-foreground">label-optional</code>. No asterisks.</li>
+        <li>Description explains format or consequence in one sentence. Do not repeat the label.</li>
+        <li>Error replaces the description, names the problem and, where possible, the fix.</li>
+        <li>Validate on blur and on submit, never on every keystroke.</li>
+        <li>Two fields side by side only when they are short and related (<code class="text-foreground">field-row</code>): currency and amount, first and last name.</li>
+        <li>Three across (<code class="text-foreground">field-row-3</code>, decision 85) only for values that are one thing in parts — SIX Code, SIX Schema and SIX Bc are one identifier, and over two rows they read as two unrelated pairs. It is not a way to fit more in; a row of three unrelated fields is three fields nobody reads as a group.</li>
+      </ul>
+
+      <h2 id="markup" class="section-title mt-14">Markup</h2>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="field"&gt;
+  &lt;label class="label" for="isin"&gt;ISIN&lt;/label&gt;
+  &lt;input class="input" id="isin" aria-describedby="isin-help"&gt;
+  &lt;p class="field-description" id="isin-help"&gt;12 characters, letters and digits.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- invalid --&gt;
+&lt;div class="field"&gt;
+  &lt;label class="label" for="isin"&gt;ISIN&lt;/label&gt;
+  &lt;input class="input" id="isin" aria-invalid="true" aria-describedby="isin-err"&gt;
+  &lt;p class="field-error" id="isin-err"&gt;&lt;i class="ri-error-warning-line"&gt;&lt;/i&gt; ISIN must be 12 characters.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

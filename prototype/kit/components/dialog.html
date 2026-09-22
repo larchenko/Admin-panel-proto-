@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dialog · Organisms · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Organisms</p>
+      <h1 class="page-title">Dialog</h1>
+      <p class="kit-meta">Spartan: <code>hlm-dialog</code> · shadcn: <code>dialog.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        A record, opened over the screen it belongs to. Built on the native <code class="rounded-sm bg-muted px-1 py-0.5">&lt;dialog&gt;</code>
+        with <code class="rounded-sm bg-muted px-1 py-0.5">showModal()</code>, so the focus trap, the inert background, Escape and the
+        top layer are the browser's (decision 8). Two sizes: 512px, and <code class="rounded-sm bg-muted px-1 py-0.5">dialog-lg</code>
+        at 768px for a record with field groups. Height caps at 85vh and only the body scrolls — the title of
+        the record and the buttons that act on it are never scrolled away.
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <button type="button" class="btn btn-outline" data-dialog-open="kit-dialog">Record dialog (768)</button>
+        <button type="button" class="btn btn-outline" data-dialog-open="kit-dialog-sm">Small dialog (512)</button>
+      </div>
+      <p class="mt-3 max-w-2xl text-xs text-muted-foreground">
+        The small one is the shape both of the record's confirmations take: what the act does, how many products feel it,
+        one answer. Built on the Instruments screen as <code class="rounded-sm bg-muted px-1 py-0.5">#confirm-record</code>
+        — <em>Deactivate</em> from the switch in the record header, <em>Delete instrument</em> from the button in its footer
+        (decision 100) — and as <code class="rounded-sm bg-muted px-1 py-0.5">#confirm-delete</code> on the list itself (95).
+      </p>
+
+      <h2 id="anatomy" class="section-title mt-14">Anatomy</h2>
+      <pre class="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-xs"><code>&lt;dialog class="dialog dialog-lg" id="instrument" aria-labelledby="t"&gt;
+  &lt;div class="dialog-header"&gt;   title + status (+ switch?) · a metric cell? · close   ← fixed
+  &lt;!-- footer may carry one destructive verb at its left end: .dialog-footer-start --&gt;
+  &lt;div class="dialog-body"&gt;     .form-sections            ← scrolls
+  &lt;div class="dialog-footer"&gt;   cancel + primary          ← fixed
+&lt;/dialog&gt;</code></pre>
+
+      <h2 id="rules" class="section-title mt-14">Rules</h2>
+      <ul class="mt-2 max-w-2xl list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>Field groups inside are <code class="rounded-sm bg-muted px-1 py-0.5">.form-section</code> — a heading and a rule.
+            Never cards: a card in a dialog is a frame inside a frame and indents its content away from the dialog's edges.</li>
+        <li>Read-only values are <code class="rounded-sm bg-muted px-1 py-0.5">.props</code> text, never disabled inputs.
+            Disabled says "editable, but not now" and drops to 50% opacity — the wrong message and the wrong
+            contrast for data that is being read.</li>
+        <li>A form that can lose work carries <code class="rounded-sm bg-muted px-1 py-0.5">data-guard</code>: closing it while
+            it is dirty asks first, whether the user clicked Cancel, the backdrop, the X, or pressed Escape.</li>
+        <li>The confirmation is a <code class="rounded-sm bg-muted px-1 py-0.5">popover="manual"</code> element
+            <em>inside</em> the dialog. Two native constraints, both found by testing: one Escape closes every
+            native dialog in the stack at once, and a modal dialog makes everything outside itself inert, so a
+            popover that is not its descendant renders but cannot be clicked. In Spartan this is
+            <code class="rounded-sm bg-muted px-1 py-0.5">hlm-alert-dialog</code> on a CDK overlay and neither applies.</li>
+        <li>One primary action, bottom right. The destructive answer in a confirmation is the primary-looking
+            one only when destroying is what the user asked for.</li>
+        <li>A confirmation that the data can refuse has two answers in one component: the plain destructive
+            question, and — when something depends on the record — the number that refuses it plus the action
+            that was almost always wanted instead. The buttons of the case that does not apply are removed,
+            never disabled. Instruments · <em>Delete instrument</em> is the built example (decision 95).</li>
+      </ul>
+
+      <!-- ============================================== the demo dialogs -->
+      <dialog class="dialog dialog-lg" id="kit-dialog" aria-labelledby="kit-dialog-title">
+        <div class="dialog-header">
+          <div class="dialog-heading">
+            <h2 class="dialog-title" id="kit-dialog-title">
+              <span>Apple Inc.</span>
+              <span class="badge badge-success"><span class="badge-dot"></span> Active</span>
+            </h2>
+            <p class="dialog-description truncate">Equity · AAPL US Equity</p>
+          </div>
+          <div class="dialog-actions">
+            <button type="button" class="btn btn-ghost btn-icon btn-sm" data-dialog-close aria-label="Close" data-tooltip="Close"><i class="ri-close-line"></i></button>
+          </div>
+        </div>
+
+        <div class="dialog-body">
+          <div class="form-sections">
+            <section class="form-section">
+              <div class="form-section-header"><h3 class="form-section-title">Read-only values</h3></div>
+              <div class="props">
+                <div class="prop"><span class="prop-label">Instrument type</span><span class="prop-value">Equity</span></div>
+                <div class="prop"><span class="prop-label">Currency</span><span class="prop-value">USD</span></div>
+                <div class="prop"><span class="prop-label">ISIN</span><span class="prop-value font-mono">US0378331005</span></div>
+                <div class="prop"><span class="prop-label">SEDOL</span><span class="prop-value empty">—</span></div>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <div class="form-section-header">
+                <div>
+                  <h3 class="form-section-title">Numbers that are read across</h3>
+                  <p class="form-section-note">One hairline grid, so the row is one object. Values keep the precision the source sent.</p>
+                </div>
+              </div>
+              <div class="grid gap-6">
+                <div class="stats grid-cols-6">
+                  <div class="stat"><div class="stat-label">5D</div><div class="stat-value stat-up">+1.842%</div></div>
+                  <div class="stat"><div class="stat-label">1M</div><div class="stat-value stat-up">+4.117%</div></div>
+                  <div class="stat"><div class="stat-label">3M</div><div class="stat-value stat-up">+9.628%</div></div>
+                  <div class="stat"><div class="stat-label">6M</div><div class="stat-value stat-down">-2.41%</div></div>
+                  <div class="stat"><div class="stat-label">1YR</div><div class="stat-value stat-up">+18.226%</div></div>
+                  <div class="stat"><div class="stat-label">YTD</div><div class="stat-value stat-up">+12.47%</div></div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                  <div class="range">
+                    <p class="prop-label">52-week range</p>
+                    <div class="range-track"><span class="range-mark" style="left:87%"></span></div>
+                    <div class="range-ends"><span>164.075</span><span>237.49</span></div>
+                  </div>
+                  <div class="prop"><span class="prop-label">Volatility 90D</span><span class="prop-value tabular-nums">24.13%</span></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <div class="form-section-header">
+                <div>
+                  <h3 class="form-section-title">A group with a rule of its own</h3>
+                  <p class="form-section-note">The rule belongs to the group, not to one field.</p>
+                  <p class="form-section-error"><i class="ri-error-warning-line"></i> Pick at least one contact method.</p>
+                </div>
+              </div>
+              <form class="form-section-body" data-guard>
+                <div class="field-row">
+                  <div class="field">
+                    <label class="label" for="kit-bbg">Bloomberg code <span class="label-optional">Optional</span></label>
+                    <input class="input font-mono" id="kit-bbg" placeholder="e.g. AAPL US Equity">
+                  </div>
+                  <div class="field">
+                    <label class="label" for="kit-isin">ISIN <span class="label-optional">Optional</span></label>
+                    <input class="input font-mono" id="kit-isin" placeholder="e.g. US0378331005">
+                  </div>
+                </div>
+                <details class="disclosure">
+                  <summary>Advanced settings <i class="ri-arrow-down-s-line"></i></summary>
+                  <div class="disclosure-content">
+                    <p class="text-muted-foreground">
+                      For a group that is genuinely rare, not one that is merely long — the instrument
+                      identifiers were tried behind one and came back out (decision 82). No screen uses
+                      it at the moment.
+                    </p>
+                  </div>
+                </details>
+                <p class="field-description">Type here, then press Cancel: the form is guarded, so it asks first.</p>
+              </form>
+            </section>
+
+            <section class="form-section">
+              <div class="form-section-header"><h3 class="form-section-title">While a value is being fetched</h3></div>
+              <div class="props">
+                <div class="prop"><span class="prop-label">Last price</span><span class="skeleton w-24"></span></div>
+                <div class="prop"><span class="prop-label">Data date</span><span class="skeleton w-40"></span></div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- The confirmation lives inside the dialog: see the rules above. -->
+        <div class="dialog" id="confirm-discard" popover="manual" role="alertdialog" aria-labelledby="kit-confirm-title">
+          <div class="dialog-header">
+            <div class="dialog-heading">
+              <h2 class="dialog-title" id="kit-confirm-title">Discard changes?</h2>
+              <p class="dialog-description">Everything entered in this form will be lost.</p>
+            </div>
+          </div>
+          <div class="dialog-footer">
+            <button type="button" class="btn btn-outline" data-dialog-close>Keep editing</button>
+            <button type="button" class="btn btn-destructive" data-discard-confirm>Discard changes</button>
+          </div>
+        </div>
+
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline" data-dialog-close>Cancel</button>
+          <button type="button" class="btn btn-default">Save changes</button>
+        </div>
+      </dialog>
+
+      <dialog class="dialog" id="kit-dialog-sm" aria-labelledby="kit-dialog-sm-title">
+        <div class="dialog-header">
+          <div class="dialog-heading">
+            <h2 class="dialog-title" id="kit-dialog-sm-title">Deactivate Apple Inc.?</h2>
+            <p class="dialog-description">293 products use this instrument. Its market data stops updating, and the price on screen freezes at today's.</p>
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline" data-dialog-close>Cancel</button>
+          <button type="button" class="btn btn-destructive" data-dialog-close>Deactivate</button>
+        </div>
+      </dialog>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

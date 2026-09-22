@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Switch · Atoms · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Atoms</p>
+      <h1 class="page-title">Switch</h1>
+      <p class="kit-meta">Spartan: <code>hlm-switch</code> · shadcn: <code>switch.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        On/off that takes effect immediately, typically in Settings. Inside a form that has a Save button use a checkbox instead.
+      </p>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A switch that lives <em>beside</em> a form rather than in it — the instrument record's status, in the dialog header
+        next to its badge — still acts immediately, and that is the point: the state is an act, not a field waiting for Save
+        (decision 100). When the direction that costs something needs confirming, ask it and put the switch straight back,
+        so it never shows a state the record does not have; the harmless direction answers itself.
+      </p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div class="flex flex-wrap items-center gap-6">
+            <label class="choice items-center"><input class="switch" type="checkbox" role="switch"> Off</label>
+            <label class="choice items-center"><input class="switch" type="checkbox" role="switch" checked> On</label>
+            <label class="choice items-center"><input class="switch" type="checkbox" role="switch" disabled> Disabled</label>
+          </div>
+          <div class="grid gap-3">
+            <div class="switch-row">
+              <div>
+                <label class="label" for="sw1">Maintenance mode</label>
+                <p class="field-description mt-1.5">End users see a maintenance page. Admins keep access.</p>
+              </div>
+              <input class="switch" type="checkbox" role="switch" id="sw1">
+            </div>
+            <div class="switch-row">
+              <div>
+                <label class="label" for="sw2">Email notifications</label>
+                <p class="field-description mt-1.5">Send a summary when a product changes status.</p>
+              </div>
+              <input class="switch" type="checkbox" role="switch" id="sw2" checked>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

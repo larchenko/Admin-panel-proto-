@@ -1,6 +1,6 @@
 # Domain and scope
 
-Status: draft, 2026-09-20. Phase 0 of the back-office prototype.
+Status: draft, 2026-09-20.
 
 ## What we are building
 
@@ -10,7 +10,7 @@ as its own service. The back office is where staff manage the entities that the
 end-user service consumes.
 
 The prototype borrows the shadcn/ui design language. Production frontend is
-Spartan UI (Angular). See `docs/decisions.md` (to be created in Phase 1).
+Spartan UI (Angular). See `docs/decisions.md`.
 
 ## Entities
 
@@ -24,7 +24,7 @@ Four top-level areas, as confirmed by the product owner:
 | Settings | System-wide configuration | Which settings are editable from the back office to be defined |
 
 Only the area names are confirmed. Fields, relationships and states are open
-and will be captured per entity before its screens are designed (Phase 5).
+and will be captured per entity before its screens are designed.
 
 ## Users and roles
 
@@ -32,7 +32,7 @@ One role for now: **Master Admin**. Full access to all four areas.
 No permission matrix in this iteration. Screens do not need a "no access" state,
 but the kit will still include it for later.
 
-## Decisions fixed in Phase 0
+## Decisions fixed
 
 - Interface language: **English**.
 - Theme: **light only**. No dark theme.

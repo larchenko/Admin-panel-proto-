@@ -11,7 +11,7 @@ python3 serve.py
 Then open http://localhost:4173
 
 `serve.py` is Python's built-in static server with caching disabled, so edits to
-`theme.css`, `components.css` and `tailwind.js` show up on a normal reload.
+`theme.css`, `components.css`, `kit.css` and the scripts show up on a normal reload.
 Plain `python3 -m http.server --directory prototype` also works but the browser
 may keep old copies of those files; use a hard reload (Cmd+Shift+R) then.
 
@@ -23,9 +23,17 @@ prototype/
   assets/theme.css    tokens + Tailwind mapping + base styles (the theme)
   assets/components.css  component recipes (.btn, .btn-outline ...) built with @apply
   assets/tailwind.js  loads theme.css + components.css into the Tailwind browser build (one <script> per page)
-  assets/app.js       shared behaviour (Phase 6)
-  kit/                foundations and component catalogue (Phases 2–3)
-  screens/            app shell and entity screens (Phases 4–5)
+  assets/app.js       shared behaviour
+  assets/kit.css      the kit shell: the sidebar these docs are read in. NOT part of the theme —
+                      it is documentation chrome, so tailwind.js does not load it
+  assets/kit-nav.js   the design-system tree, written down once: the sidebar, the Components
+                      overview and the previous/next pager all read this one array
+  kit/                the design system, ordered atoms -> molecules -> organisms -> templates
+    components.html     overview: every component by layer
+    foundations.html    tokens, type, spacing, icons
+    navigation.html     the sidebar and the app shell
+    components/         one page per component (button.html, table.html ...)
+  screens/            app shell and entity screens
 docs/
   domain.md           scope, entities, roles
   decisions.md        decisions log

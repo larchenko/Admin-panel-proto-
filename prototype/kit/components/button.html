@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Button · Atoms · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Atoms</p>
+      <h1 class="page-title">Button</h1>
+      <p class="kit-meta">Spartan: <code>hlmBtn</code> · shadcn: <code>button.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        Triggers an action. Base class <code class="rounded-sm bg-muted px-1 py-0.5">btn</code> plus one variant,
+        optionally one size. Default size is 36px high.
+      </p>
+
+      <!-- Variants -->
+      <h2 id="variants" class="section-title mt-14">Variants</h2>
+      <p class="mt-1 text-muted-foreground">Left to right: descending emphasis. One <em>default</em> per screen.</p>
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="btn btn-default">Default</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-destructive">Destructive</button>
+          <button class="btn btn-link">Link</button>
+        </div>
+      </div>
+      <div class="mt-3 grid gap-x-8 gap-y-2 text-muted-foreground sm:grid-cols-2">
+        <p><code class="text-foreground">btn-default</code> · the primary action of the screen or dialog: Save, Create</p>
+        <p><code class="text-foreground">btn-outline</code> · the second action beside a default, and quiet ones: Cancel, Export, Filter</p>
+        <p><code class="text-foreground">btn-ghost</code> · low-emphasis, toolbars, icon buttons in tables</p>
+        <p><code class="text-foreground">btn-destructive</code> · irreversible actions only, inside a confirmation</p>
+        <p><code class="text-foreground">btn-link</code> · inline in text, or "View all" style links</p>
+      </div>
+
+      <!-- Sizes -->
+      <h2 id="sizes" class="section-title mt-14">Sizes</h2>
+      <p class="mt-1 max-w-2xl text-muted-foreground">
+        The size is decided by the container, not by the button. Anything sitting on a screen is small;
+        the default height belongs to a dialog footer and nowhere else. So the question to ask is never
+        "how important is this action" — it is "what am I standing in".
+      </p>
+
+      <div class="mt-3 rounded-lg border p-6">
+        <div class="flex flex-wrap items-end gap-6">
+          <div><p class="mb-3 text-xs text-muted-foreground">btn-sm · 32px</p><button class="btn btn-outline btn-sm">Small</button></div>
+          <div><p class="mb-3 text-xs text-muted-foreground">default · 36px</p><button class="btn btn-outline">Default</button></div>
+          <div><p class="mb-3 text-xs text-muted-foreground">btn-lg · 40px</p><button class="btn btn-outline btn-lg">Large</button></div>
+        </div>
+      </div>
+
+      <div class="mt-4 table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>Class</th><th>Height</th><th>Where it goes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>btn-sm</code></td>
+              <td class="num">32px</td>
+              <td>Everything that lives on a screen: the page toolbar, every icon button in a table row,
+                  panel headers, pagination, the dialog's close ✕, and controls inside a dialog body.</td>
+            </tr>
+            <tr>
+              <td class="text-muted-foreground">none</td>
+              <td class="num">36px</td>
+              <td>A dialog or confirmation <strong>footer</strong>. That is the whole list.</td>
+            </tr>
+            <tr data-inactive>
+              <td><code>btn-lg</code></td>
+              <td class="num">40px</td>
+              <td>Nothing, so far.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        Counted on the Instruments screen: <strong>39 buttons, 25 of them small</strong>. The other
+        <strong>14 are default height and every one of them is in a footer</strong> — the delete
+        confirmation, the discard confirmation, the record dialog. Not one is large.
+      </p>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        <code class="rounded-sm bg-muted px-1 py-0.5">btn-lg</code> is the size <code class="rounded-sm bg-muted px-1 py-0.5">btn-secondary</code>
+        was: it was reserved for empty-state calls to action, but the one empty state the product has
+        — <em>Clear all filters</em>, when a filter matches nothing — uses <code class="rounded-sm bg-muted px-1 py-0.5">btn-sm</code>
+        like the rest of that screen. Either an action earns it or it goes the way of 102.
+      </p>
+
+      <!-- With and without an icon -->
+      <h2 id="with-and-without-an-icon" class="section-title mt-14">With and without an icon</h2>
+      <p class="mt-1 max-w-2xl text-muted-foreground">
+        Every variant takes all three forms. The icon always comes <em>before</em> the label, and the
+        recipe narrows the side padding when one is present
+        (<code class="rounded-sm bg-muted px-1 py-0.5">has-[&gt;i]:px-3</code>) so a button with an icon
+        is not optically wider than one without.
+      </p>
+
+      <div class="mt-3 overflow-x-auto rounded-lg border p-6">
+        <div class="grid min-w-[42rem] items-center gap-x-6 gap-y-4 [grid-template-columns:7rem_repeat(3,minmax(0,1fr))]">
+          <span></span>
+          <p class="text-xs text-muted-foreground">Label only</p>
+          <p class="text-xs text-muted-foreground">Icon + label</p>
+          <p class="text-xs text-muted-foreground">Icon only</p>
+        <p class="text-muted-foreground">Default</p>
+          <div><button class="btn btn-default">Save</button></div>
+          <div><button class="btn btn-default"><i class="ri-add-line"></i> New instrument</button></div>
+          <div><button class="btn btn-default btn-icon" aria-label="New instrument" title="New instrument"><i class="ri-add-line"></i></button></div>
+        <p class="text-muted-foreground">Outline</p>
+          <div><button class="btn btn-outline">Cancel</button></div>
+          <div><button class="btn btn-outline"><i class="ri-download-2-line"></i> Export</button></div>
+          <div><button class="btn btn-outline btn-icon" aria-label="Filter" title="Filter"><i class="ri-filter-3-line"></i></button></div>
+        <p class="text-muted-foreground">Ghost</p>
+          <div><button class="btn btn-ghost">Edit</button></div>
+          <div><button class="btn btn-ghost"><i class="ri-pencil-line"></i> Edit</button></div>
+          <div><button class="btn btn-ghost btn-icon" aria-label="More actions" title="More actions"><i class="ri-more-2-line"></i></button></div>
+        <p class="text-muted-foreground">Destructive</p>
+          <div><button class="btn btn-destructive">Delete</button></div>
+          <div><button class="btn btn-destructive"><i class="ri-delete-bin-line"></i> Delete</button></div>
+          <div><button class="btn btn-destructive btn-icon" aria-label="Delete" title="Delete"><i class="ri-delete-bin-line"></i></button></div>
+        <p class="text-muted-foreground">Link</p>
+          <div><button class="btn btn-link">Reset</button></div>
+          <div><button class="btn btn-link"><i class="ri-refresh-line"></i> Reset</button></div>
+          <div class="text-muted-foreground">—</div>
+        </div>
+      </div>
+
+      <ul class="mt-4 max-w-2xl list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>An icon-only button is square: <code class="text-foreground">btn-icon</code> sets the width to the
+            height, so it is 36px, or 32px with <code class="text-foreground">btn-sm</code>.</li>
+        <li>It needs both <code class="text-foreground">aria-label</code> and <code class="text-foreground">title</code>
+            — the first for a screen reader, the second for the pointer. A button whose whole meaning is
+            a glyph has to say that meaning twice.</li>
+        <li>In a table row it is always <code class="text-foreground">btn-ghost btn-icon btn-sm</code>: the row is
+            already a busy line, and a bordered button on every row draws thirteen boxes down the page.</li>
+        <li>There is no icon-only <code class="text-foreground">btn-link</code>. Stripped of its text, a link
+            variant is a bare coloured glyph — indistinguishable from an icon that is not a control at all.</li>
+        <li>The primary action of a screen is never icon-only. <em>New instrument</em> keeps its words.</li>
+      </ul>
+
+      <!-- States -->
+      <h2 id="states" class="section-title mt-14">States</h2>
+      <p class="mt-1 max-w-2xl text-muted-foreground">
+        All five states of all five variants, drawn rather than described. Hover and focus are painted here
+        by <code class="rounded-sm bg-muted px-1 py-0.5">data-demo</code>, an attribute the recipe hangs off
+        the very same declaration <code class="rounded-sm bg-muted px-1 py-0.5">:hover</code> and
+        <code class="rounded-sm bg-muted px-1 py-0.5">:focus-visible</code> use — so what is below cannot
+        drift from what a pointer or a Tab key gets. Nothing in the product sets it.
+      </p>
+
+      <div class="mt-3 overflow-x-auto rounded-lg border p-6">
+        <div class="grid min-w-[46rem] items-center gap-x-5 gap-y-4 [grid-template-columns:7rem_repeat(5,minmax(0,1fr))]">
+          <span></span>
+          <p class="text-xs text-muted-foreground">Rest</p>
+          <p class="text-xs text-muted-foreground">Hover</p>
+          <p class="text-xs text-muted-foreground">Focus</p>
+          <p class="text-xs text-muted-foreground">Disabled</p>
+          <p class="text-xs text-muted-foreground">Loading</p>
+        <p class="text-muted-foreground">Default</p>
+          <div><button class="btn btn-default">Save</button></div>
+          <div><button class="btn btn-default" data-demo="hover">Save</button></div>
+          <div><button class="btn btn-default" data-demo="focus">Save</button></div>
+          <div><button class="btn btn-default" disabled>Save</button></div>
+          <div><button class="btn btn-default" disabled aria-busy="true"><i class="ri-loader-4-line animate-spin"></i> Save</button></div>
+        <p class="text-muted-foreground">Outline</p>
+          <div><button class="btn btn-outline">Cancel</button></div>
+          <div><button class="btn btn-outline" data-demo="hover">Cancel</button></div>
+          <div><button class="btn btn-outline" data-demo="focus">Cancel</button></div>
+          <div><button class="btn btn-outline" disabled>Cancel</button></div>
+          <div><button class="btn btn-outline" disabled aria-busy="true"><i class="ri-loader-4-line animate-spin"></i> Cancel</button></div>
+        <p class="text-muted-foreground">Ghost</p>
+          <div><button class="btn btn-ghost">Edit</button></div>
+          <div><button class="btn btn-ghost" data-demo="hover">Edit</button></div>
+          <div><button class="btn btn-ghost" data-demo="focus">Edit</button></div>
+          <div><button class="btn btn-ghost" disabled>Edit</button></div>
+          <div><button class="btn btn-ghost" disabled aria-busy="true"><i class="ri-loader-4-line animate-spin"></i> Edit</button></div>
+        <p class="text-muted-foreground">Destructive</p>
+          <div><button class="btn btn-destructive">Delete</button></div>
+          <div><button class="btn btn-destructive" data-demo="hover">Delete</button></div>
+          <div><button class="btn btn-destructive" data-demo="focus">Delete</button></div>
+          <div><button class="btn btn-destructive" disabled>Delete</button></div>
+          <div><button class="btn btn-destructive" disabled aria-busy="true"><i class="ri-loader-4-line animate-spin"></i> Delete</button></div>
+        <p class="text-muted-foreground">Link</p>
+          <div><button class="btn btn-link">Reset</button></div>
+          <div><button class="btn btn-link" data-demo="hover">Reset</button></div>
+          <div><button class="btn btn-link" data-demo="focus">Reset</button></div>
+          <div><button class="btn btn-link" disabled>Reset</button></div>
+          <div><button class="btn btn-link" disabled aria-busy="true"><i class="ri-loader-4-line animate-spin"></i> Reset</button></div>
+        </div>
+      </div>
+
+      <ul class="mt-4 max-w-2xl list-disc space-y-1 pl-5 text-muted-foreground">
+        <li><strong>Hover</strong> darkens the fill one step (<code class="text-foreground">/90</code>); the two
+            variants with no fill of their own take the brand tint instead. Nothing moves and nothing resizes.</li>
+        <li><strong>Focus</strong> is a 3px ring in the brand hue, plus the border taking the ring colour.
+            Destructive swaps the ring to its own hue so the ring never argues with the fill. It is
+            <code class="text-foreground">:focus-visible</code>, so a mouse click does not leave a ring behind.</li>
+        <li><strong>Disabled</strong> is 50% opacity and no pointer events. Because it also ignores hover, a
+            disabled button cannot explain itself — put the reason in a hint beside it, never in a tooltip
+            on the button.</li>
+        <li><strong>Loading</strong> is disabled plus <code class="text-foreground">aria-busy="true"</code>, with
+            the icon swapped for <code class="text-foreground">ri-loader-4-line animate-spin</code>. The label
+            should move to the progressive verb at the same time — <em>Save</em> becomes <em>Saving…</em> —
+            and the width is left to change with it; a spinner on an unchanged label reads as a stuck page.</li>
+        <li><strong>Ghost at rest is invisible</strong>, which the first column shows plainly. That is the
+            point of it, and also its limit: it only works where the container already says a control is
+            there — a toolbar, a row, a header.</li>
+      </ul>
+
+      <!-- Rules -->
+      <h2 id="rules" class="section-title mt-14">Rules</h2>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>One <code class="text-foreground">btn-default</code> per view. If two actions compete, one of them is outline.</li>
+        <li>There is no <code class="text-foreground">btn-secondary</code>. shadcn and Spartan ship one; this product never found it a job, and a second way to draw a Cancel is how two Cancels end up on one screen (decision&nbsp;102).</li>
+        <li>Destructive buttons never sit alone on a page; they live inside a confirmation dialog.</li>
+        <li>Labels are verbs: Save, Create instrument, Cancel. Not "OK", not "Yes".</li>
+        <li>In dialogs and forms the primary action is on the right, Cancel to its left.</li>
+        <li>Use <code class="text-foreground">&lt;button type="button"&gt;</code> unless the button submits a form.</li>
+      </ul>
+
+      <!-- Markup -->
+      <h2 id="markup" class="section-title mt-14">Markup</h2>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;button type="button" class="btn btn-default"&gt;Save&lt;/button&gt;
+&lt;button type="button" class="btn btn-outline btn-sm"&gt;Cancel&lt;/button&gt;
+&lt;button type="button" class="btn btn-default"&gt;&lt;i class="ri-add-line"&gt;&lt;/i&gt; New instrument&lt;/button&gt;
+&lt;button type="button" class="btn btn-ghost btn-icon" aria-label="More actions" title="More actions"&gt;
+  &lt;i class="ri-more-2-line"&gt;&lt;/i&gt;
+&lt;/button&gt;</code></pre>
+      <p class="mt-3 text-xs text-muted-foreground">
+        Spartan equivalent: <code>&lt;button hlmBtn variant="outline" size="sm"&gt;Cancel&lt;/button&gt;</code>.
+        Variant and size names are identical.
+      </p>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

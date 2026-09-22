@@ -8,334 +8,320 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/kit.css">
   <script src="../assets/tailwind.js"></script>
 </head>
 <body class="text-sm">
-  <header class="border-b">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-      <a href="../index.html" class="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground">
-        <i class="ri-arrow-left-line"></i> Prototype
-      </a>
-      <nav class="flex gap-6 text-muted-foreground">
-        <a href="./foundations.html" class="hover:text-foreground">Foundations</a>
-        <a href="./components.html" class="hover:text-foreground">Components</a>
-        <span class="text-foreground">Navigation</span>
-      </nav>
-    </div>
-  </header>
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
 
-  <main class="mx-auto max-w-5xl px-6 py-12">
-    <p class="text-muted-foreground">Phase 4</p>
-    <h1 class="mt-1 page-title">Navigation</h1>
-    <p class="mt-3 max-w-2xl text-muted-foreground">
-      The sidebar is the only primary navigation in the back office: six top-level areas,
-      always on screen, never scrolled away with the page. Recipes live in
-      <code class="rounded-sm bg-muted px-1 py-0.5">assets/components.css</code> under
-      <em>Sidebar</em> and <em>App shell</em>.
-    </p>
-
-    <nav class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-muted-foreground">
-      <a href="#shell" class="hover:text-foreground">In context</a>
-      <a href="#anatomy" class="hover:text-foreground">Anatomy</a>
-      <a href="#areas" class="hover:text-foreground">Areas and icons</a>
-      <a href="#states" class="hover:text-foreground">States</a>
-      <a href="#collapsed" class="hover:text-foreground">Collapsed rail</a>
-      <a href="#rules" class="hover:text-foreground">Rules</a>
-    </nav>
-
-    <!-- ============================================================= SHELL -->
-    <section id="shell" class="mt-16">
-      <div class="flex items-baseline justify-between gap-6">
-        <h2 class="section-title">In context</h2>
-        <p class="text-xs text-muted-foreground">Spartan: <code>hlm-sidebar</code> · shadcn: <code>sidebar.tsx</code></p>
-      </div>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Live. The active item is <em>Instruments</em>; it links to the real screen.
-        The button in the sidebar header collapses it to an icon rail.
+    <main class="kit-content">
+      <p class="kit-eyebrow">Organisms</p>
+      <h1 class="page-title">Navigation</h1>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        The sidebar is the only primary navigation in the back office: six top-level areas,
+        always on screen, never scrolled away with the page. Recipes live in
+        <code class="rounded-sm bg-muted px-1 py-0.5">assets/components.css</code> under
+        <em>Sidebar</em> and <em>App shell</em>.
       </p>
 
-      <div class="mt-4 h-[620px] overflow-hidden rounded-lg border bg-background">
-        <div class="flex h-full">
+      <!-- ============================================================= SHELL -->
+      <section id="shell" class="mt-16">
+        <div class="flex items-baseline justify-between gap-6">
+          <h2 class="section-title">In context</h2>
+          <p class="text-xs text-muted-foreground">Spartan: <code>hlm-sidebar</code> · shadcn: <code>sidebar.tsx</code></p>
+        </div>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Live. The active item is <em>Instruments</em>; it links to the real screen.
+          The button in the sidebar header collapses it to an icon rail.
+        </p>
 
-          <!-- ▼▼▼ the sidebar ▼▼▼ -->
-          <aside class="sidebar">
+        <div class="mt-4 h-[620px] overflow-hidden rounded-lg border bg-background">
+          <div class="flex h-full">
+
+            <!-- ▼▼▼ the sidebar ▼▼▼ -->
+            <aside class="sidebar">
+              <div class="sidebar-header">
+                <span class="sidebar-brand">Back Office</span>
+                <button type="button" class="btn btn-ghost btn-icon btn-sm" data-sidebar-toggle
+                        aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+                  <i class="ri-menu-fold-line"></i>
+                </button>
+              </div>
+
+              <nav class="sidebar-content" aria-label="Main">
+                <ul class="sidebar-menu">
+                  <li>
+                    <a class="sidebar-item" href="../screens/instruments.html" aria-current="page" title="Instruments">
+                      <i class="ri-line-chart-fill"></i><span>Instruments</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="sidebar-item" href="#" title="Products">
+                      <i class="ri-box-3-line"></i><span>Products</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="sidebar-item" href="#" title="Users &amp; Organizations">
+                      <i class="ri-group-line"></i><span>Users &amp; Organizations</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="sidebar-item" href="#" title="Custodians">
+                      <i class="ri-safe-2-line"></i><span>Custodians</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="sidebar-item" href="#" title="Issuers">
+                      <i class="ri-bank-line"></i><span>Issuers</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+
+              <div class="sidebar-footer">
+                <a class="sidebar-item" href="#" title="Settings">
+                  <i class="ri-settings-3-line"></i><span>Settings</span>
+                </a>
+                <button type="button" class="sidebar-user" title="Account">
+                  <span class="sidebar-avatar" aria-hidden="true">AL</span>
+                  <span class="sidebar-user-text"><span>Andriy Larchenko</span><span>Master Admin</span></span>
+                  <i class="ri-more-2-line"></i>
+                </button>
+              </div>
+            </aside>
+            <!-- ▲▲▲ the sidebar ▲▲▲ -->
+
+            <!-- stub page, only here so the sidebar is seen against a real screen -->
+            <div class="shell-main">
+              <div class="shell-body">
+                <header class="page-header">
+                  <div class="page-heading">
+                    <h3 class="page-title">Instruments</h3>
+                  </div>
+                  <div class="page-actions">
+                    <button class="btn btn-outline btn-sm"><i class="ri-download-2-line"></i> Export</button>
+                    <button class="btn btn-default btn-sm"><i class="ri-add-line"></i> New instrument</button>
+                  </div>
+                </header>
+                <div class="table-wrap">
+                  <table class="table">
+                    <thead>
+                      <tr><th>Name</th><th>Type</th><th>Currency</th><th class="num">Last price</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td class="font-medium">Apple Inc.</td><td>Equity</td><td>USD</td><td class="num">227.52</td><td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td></tr>
+                      <tr><td class="font-medium">Nestlé S.A.</td><td>Equity</td><td>CHF</td><td class="num">78.146</td><td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td></tr>
+                      <tr><td class="font-medium">SMI Index</td><td>Index</td><td>CHF</td><td class="num">11 942.3</td><td><span class="badge badge-secondary">Inactive</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="mt-4 text-muted-foreground">Stub content. The real screen is
+                  <a class="btn btn-link" href="../screens/instruments.html">Instruments</a>.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================== ANATOMY -->
+      <section id="anatomy" class="mt-16">
+        <h2 class="section-title">Anatomy</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Four parts, top to bottom, and no rules between them &mdash; the three zones are held apart
+          by space alone (decision&nbsp;61): 24px over the wordmark, 16px under it, 16px over the footer.
+          That spacing also keeps the sidebar in step with the page: the wordmark sits on the same
+          optical line as the page title, and the first nav item starts level with the page's tabs.
+        </p>
+        <div class="mt-4 grid gap-6 sm:grid-cols-[16rem_1fr]">
+          <div class="rounded-lg border">
+            <aside class="sidebar h-auto border-r-0">
+              <div class="sidebar-header">
+                <span class="sidebar-brand">Back Office</span>
+                <span class="btn btn-ghost btn-icon btn-sm"><i class="ri-menu-fold-line"></i></span>
+              </div>
+              <nav class="sidebar-content">
+                <ul class="sidebar-menu">
+                  <li><span class="sidebar-item" aria-current="page"><i class="ri-line-chart-fill"></i><span>Instruments</span></span></li>
+                  <li><span class="sidebar-item"><i class="ri-box-3-line"></i><span>Products</span></span></li>
+                  <li><span class="sidebar-item"><i class="ri-group-line"></i><span>Users &amp; Organizations</span></span></li>
+                </ul>
+              </nav>
+              <div class="sidebar-footer">
+                <span class="sidebar-item"><i class="ri-settings-3-line"></i><span>Settings</span></span>
+                <span class="sidebar-user">
+                  <span class="sidebar-avatar" aria-hidden="true">AL</span>
+                  <span class="sidebar-user-text"><span>Andriy Larchenko</span><span>Master Admin</span></span>
+                  <i class="ri-more-2-line"></i>
+                </span>
+              </div>
+            </aside>
+          </div>
+          <dl class="grid content-start gap-3 text-muted-foreground">
+            <div><dt class="font-medium text-foreground"><code>sidebar-header</code> · 72px</dt>
+              <dd>The wordmark <em>Back Office</em> (decision 25, brand colour, no logo yet) and the collapse button. <code>pt-6 pb-4</code> around a 32px row &mdash; the height is the spacing, not a fixed box.</dd></div>
+            <div><dt class="font-medium text-foreground"><code>sidebar-content</code></dt>
+              <dd>The areas, in the order the product owner gave. Scrolls on its own if the list ever outgrows the height; the header and footer stay put.</dd></div>
+            <div><dt class="font-medium text-foreground"><code>sidebar-footer</code></dt>
+              <dd>Settings, then the signed-in user. Pinned to the bottom so the five working areas read as one block. <code>pt-4</code> is what separates it from the list when the list is long enough to reach it.</dd></div>
+            <div><dt class="font-medium text-foreground"><code>sidebar-user</code></dt>
+              <dd>Placeholder: authentication is out of scope (decision 3), so this opens nothing yet. Name + role, 48px high.</dd></div>
+            <div><dt class="font-medium text-foreground">Width</dt>
+              <dd>256px (<code>w-64</code>), shadcn's default. Long enough for <em>Users &amp; Organizations</em> on one line, which is the longest label we have.</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ============================================================= AREAS -->
+      <section id="areas" class="mt-16">
+        <h2 class="section-title">Areas and icons</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Six areas. Order as given: the two things the business is built on first, then the
+          parties around them, then configuration. Labels are the entity name in plural, title
+          case, never a verb. One icon per area, line by default and fill when active (decision 10).
+        </p>
+        <div class="mt-4 table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Area</th><th class="bool">Line</th><th class="bool">Active (fill)</th><th>Icon</th><th>Why this icon</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="muted">1</td><td class="font-medium">Instruments</td><td class="bool"><i class="ri-line-chart-line"></i></td><td class="bool"><i class="ri-line-chart-fill text-primary"></i></td><td><code>ri-line-chart-line</code></td><td class="muted">A price series — what an instrument is to this system.</td></tr>
+              <tr><td class="muted">2</td><td class="font-medium">Products</td><td class="bool"><i class="ri-box-3-line"></i></td><td class="bool"><i class="ri-box-3-fill text-primary"></i></td><td><code>ri-box-3-line</code></td><td class="muted">A structured product is a package built out of instruments.</td></tr>
+              <tr><td class="muted">3</td><td class="font-medium">Users &amp; Organizations</td><td class="bool"><i class="ri-group-line"></i></td><td class="bool"><i class="ri-group-fill text-primary"></i></td><td><code>ri-group-line</code></td><td class="muted">People, and the organizations they belong to.</td></tr>
+              <tr><td class="muted">4</td><td class="font-medium">Custodians</td><td class="bool"><i class="ri-safe-2-line"></i></td><td class="bool"><i class="ri-safe-2-fill text-primary"></i></td><td><code>ri-safe-2-line</code></td><td class="muted">Safekeeping. A vault, not a bank building — that one is taken by Issuers.</td></tr>
+              <tr><td class="muted">5</td><td class="font-medium">Issuers</td><td class="bool"><i class="ri-bank-line"></i></td><td class="bool"><i class="ri-bank-fill text-primary"></i></td><td><code>ri-bank-line</code></td><td class="muted">The institution that issues the product.</td></tr>
+              <tr><td class="muted">6</td><td class="font-medium">Settings</td><td class="bool"><i class="ri-settings-3-line"></i></td><td class="bool"><i class="ri-settings-3-fill text-primary"></i></td><td><code>ri-settings-3-line</code></td><td class="muted">System-wide configuration. Always last.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4 rounded-lg border-l-2 border-l-warning bg-warning/5 p-4">
+          <p class="font-medium"><i class="ri-error-warning-line align-[-2px] text-warning-ink"></i> Two things to confirm</p>
+          <ul class="mt-2 grid gap-1 text-muted-foreground">
+            <li>Spelling: the brief said <em>Custodins</em>; written here as <strong>Custodians</strong>.</li>
+            <li><code>docs/domain.md</code> lists four areas. <em>Custodians</em> and <em>Issuers</em> are new — the domain doc
+              and its open question "are organizations issuers, distributors or clients?" both need updating,
+              since issuers now have an area of their own.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ STATES -->
+      <section id="states" class="mt-16">
+        <h2 class="section-title">States</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          The active item carries three cues at once — brand tint, brand text, filled icon — so the
+          item is still findable in greyscale, and still findable after a white-label swap changes
+          the tint. <code class="rounded-sm bg-muted px-1 py-0.5">aria-current="page"</code> both
+          triggers the styling and tells a screen reader which area is open.
+        </p>
+        <div class="mt-4 grid items-start gap-6 rounded-lg border p-6 sm:grid-cols-[1fr_16rem]">
+          <dl class="grid gap-3 text-muted-foreground">
+            <div><dt class="font-medium text-foreground">Rest</dt><dd>Label in foreground, icon in muted-foreground.</dd></div>
+            <div><dt class="font-medium text-foreground">Hover</dt><dd>Background <code>sidebar-accent</code> (4% brand tint). Nothing moves.</dd></div>
+            <div><dt class="font-medium text-foreground">Active</dt><dd>Tint + brand text + filled icon + <code>font-medium</code>.</dd></div>
+            <div><dt class="font-medium text-foreground">Focus</dt><dd>3px ring in the brand hue. Tab into the list to see it.</dd></div>
+            <div><dt class="font-medium text-foreground">Disabled</dt><dd><code>aria-disabled="true"</code>, 50% opacity, no pointer. For an area the role cannot open — not needed today (one role), kept for the permission matrix later.</dd></div>
+            <div><dt class="font-medium text-foreground">With a count</dt><dd>Optional <code>sidebar-count</code>, right-aligned, tabular. Use it only where a number changes behaviour (a review queue), never as decoration.</dd></div>
+          </dl>
+          <div class="rounded-md bg-sidebar p-2">
+            <ul class="sidebar-menu">
+              <li><a class="sidebar-item" href="#states"><i class="ri-box-3-line"></i><span>Rest</span></a></li>
+              <li><a class="sidebar-item" href="#states"><i class="ri-box-3-line"></i><span>Hover me</span></a></li>
+              <li><a class="sidebar-item" href="#states" aria-current="page"><i class="ri-box-3-fill"></i><span>Active</span></a></li>
+              <li><a class="sidebar-item" href="#states"><i class="ri-box-3-line"></i><span>Tab to me (focus)</span></a></li>
+              <li><span class="sidebar-item" aria-disabled="true"><i class="ri-box-3-line"></i><span>Disabled</span></span></li>
+              <li><a class="sidebar-item" href="#states"><i class="ri-box-3-line"></i><span>With a count</span><span class="sidebar-count">12</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= COLLAPSED -->
+      <section id="collapsed" class="mt-16">
+        <h2 class="section-title">Collapsed rail</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          48px, icons only, labels as tooltips. It buys 208px of table width, which matters on the
+          instruments list. It is a user choice, never a default and never automatic — this is a
+          desktop-only back office (decision 3), so nothing collapses on its own.
+        </p>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Items are square here — <code>size-9</code>, 36×36 around a 20px icon, centred in the rail
+          with an auto margin. The height is the one the expanded item already has, so closing the
+          rail moves nothing vertically; only the width comes in to meet it.
+        </p>
+        <div class="mt-4 flex gap-6 rounded-lg border p-6">
+          <aside class="sidebar h-[420px] rounded-md border" data-collapsed>
             <div class="sidebar-header">
               <span class="sidebar-brand">Back Office</span>
               <button type="button" class="btn btn-ghost btn-icon btn-sm" data-sidebar-toggle
-                      aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
-                <i class="ri-menu-fold-line"></i>
+                      aria-expanded="false" aria-label="Expand sidebar" title="Expand sidebar">
+                <i class="ri-menu-unfold-line"></i>
               </button>
             </div>
-
-            <nav class="sidebar-content" aria-label="Main">
+            <nav class="sidebar-content" aria-label="Main, collapsed example">
               <ul class="sidebar-menu">
-                <li>
-                  <a class="sidebar-item" href="../screens/instruments.html" aria-current="page" title="Instruments">
-                    <i class="ri-line-chart-fill"></i><span>Instruments</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="sidebar-item" href="#" title="Products">
-                    <i class="ri-box-3-line"></i><span>Products</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="sidebar-item" href="#" title="Users &amp; Organizations">
-                    <i class="ri-group-line"></i><span>Users &amp; Organizations</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="sidebar-item" href="#" title="Custodians">
-                    <i class="ri-safe-2-line"></i><span>Custodians</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="sidebar-item" href="#" title="Issuers">
-                    <i class="ri-bank-line"></i><span>Issuers</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-
-            <div class="sidebar-footer">
-              <a class="sidebar-item" href="#" title="Settings">
-                <i class="ri-settings-3-line"></i><span>Settings</span>
-              </a>
-              <button type="button" class="sidebar-user" title="Account">
-                <span class="sidebar-avatar" aria-hidden="true">AL</span>
-                <span class="sidebar-user-text"><span>Andriy Larchenko</span><span>Master Admin</span></span>
-                <i class="ri-more-2-line"></i>
-              </button>
-            </div>
-          </aside>
-          <!-- ▲▲▲ the sidebar ▲▲▲ -->
-
-          <!-- stub page, only here so the sidebar is seen against a real screen -->
-          <div class="shell-main">
-            <div class="shell-body">
-              <header class="page-header">
-                <div class="page-heading">
-                  <h3 class="page-title">Instruments</h3>
-                </div>
-                <div class="page-actions">
-                  <button class="btn btn-outline btn-sm"><i class="ri-download-2-line"></i> Export</button>
-                  <button class="btn btn-default btn-sm"><i class="ri-add-line"></i> New instrument</button>
-                </div>
-              </header>
-              <div class="table-wrap">
-                <table class="table">
-                  <thead>
-                    <tr><th>Name</th><th>Type</th><th>Currency</th><th class="num">Last price</th><th>Status</th></tr>
-                  </thead>
-                  <tbody>
-                    <tr><td class="font-medium">Apple Inc.</td><td>Equity</td><td>USD</td><td class="num">227.52</td><td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td></tr>
-                    <tr><td class="font-medium">Nestlé S.A.</td><td>Equity</td><td>CHF</td><td class="num">78.146</td><td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td></tr>
-                    <tr><td class="font-medium">SMI Index</td><td>Index</td><td>CHF</td><td class="num">11 942.3</td><td><span class="badge badge-secondary">Inactive</span></td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <p class="mt-4 text-muted-foreground">Stub content. The real screen is
-                <a class="btn btn-link" href="../screens/instruments.html">Instruments</a>.</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================== ANATOMY -->
-    <section id="anatomy" class="mt-16">
-      <h2 class="section-title">Anatomy</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Four parts, top to bottom, and no rules between them &mdash; the three zones are held apart
-        by space alone (decision&nbsp;61): 24px over the wordmark, 16px under it, 16px over the footer.
-        That spacing also keeps the sidebar in step with the page: the wordmark sits on the same
-        optical line as the page title, and the first nav item starts level with the page's tabs.
-      </p>
-      <div class="mt-4 grid gap-6 sm:grid-cols-[16rem_1fr]">
-        <div class="rounded-lg border">
-          <aside class="sidebar h-auto border-r-0">
-            <div class="sidebar-header">
-              <span class="sidebar-brand">Back Office</span>
-              <span class="btn btn-ghost btn-icon btn-sm"><i class="ri-menu-fold-line"></i></span>
-            </div>
-            <nav class="sidebar-content">
-              <ul class="sidebar-menu">
-                <li><span class="sidebar-item" aria-current="page"><i class="ri-line-chart-fill"></i><span>Instruments</span></span></li>
-                <li><span class="sidebar-item"><i class="ri-box-3-line"></i><span>Products</span></span></li>
-                <li><span class="sidebar-item"><i class="ri-group-line"></i><span>Users &amp; Organizations</span></span></li>
+                <li><a class="sidebar-item" href="#collapsed" aria-current="page" title="Instruments"><i class="ri-line-chart-fill"></i><span>Instruments</span></a></li>
+                <li><a class="sidebar-item" href="#collapsed" title="Products"><i class="ri-box-3-line"></i><span>Products</span></a></li>
+                <li><a class="sidebar-item" href="#collapsed" title="Users &amp; Organizations"><i class="ri-group-line"></i><span>Users &amp; Organizations</span></a></li>
+                <li><a class="sidebar-item" href="#collapsed" title="Custodians"><i class="ri-safe-2-line"></i><span>Custodians</span></a></li>
+                <li><a class="sidebar-item" href="#collapsed" title="Issuers"><i class="ri-bank-line"></i><span>Issuers</span></a></li>
               </ul>
             </nav>
             <div class="sidebar-footer">
-              <span class="sidebar-item"><i class="ri-settings-3-line"></i><span>Settings</span></span>
-              <span class="sidebar-user">
+              <a class="sidebar-item" href="#collapsed" title="Settings"><i class="ri-settings-3-line"></i><span>Settings</span></a>
+              <span class="sidebar-user" title="Andriy Larchenko · Master Admin">
                 <span class="sidebar-avatar" aria-hidden="true">AL</span>
                 <span class="sidebar-user-text"><span>Andriy Larchenko</span><span>Master Admin</span></span>
-                <i class="ri-more-2-line"></i>
               </span>
             </div>
           </aside>
+          <dl class="grid content-start gap-3 text-muted-foreground">
+            <div><dt class="font-medium text-foreground">How</dt><dd><code>data-collapsed</code> on <code>.sidebar</code>; the toggle in <code>app.js</code> flips it and swaps <code>ri-menu-fold-line</code> for <code>ri-menu-unfold-line</code>.</dd></div>
+            <div><dt class="font-medium text-foreground">Labels</dt><dd>Stay in the DOM and in the <code>title</code> attribute, so the tooltip and the screen reader still read them. Hover an icon to check.</dd></div>
+            <div><dt class="font-medium text-foreground">Wordmark</dt><dd>Hidden — there is no logo mark to fall back to yet (decision 25). When one exists, it stays visible here.</dd></div>
+            <div><dt class="font-medium text-foreground">Account</dt><dd>The avatar alone. The More chevron is hidden, not squeezed: the row is the same 36px square as every other item and the avatar is 32px of it, and the chevron only hints at a menu the whole row already opens. Name and role move into the tooltip — in production show that tooltip only while the rail is collapsed, since expanded it just repeats the two lines next to it.</dd></div>
+            <div><dt class="font-medium text-foreground">For the developer</dt><dd>The state must be remembered per user (Spartan's sidebar keeps it in a cookie). In the prototype it resets on reload.</dd></div>
+          </dl>
         </div>
-        <dl class="grid content-start gap-3 text-muted-foreground">
-          <div><dt class="font-medium text-foreground"><code>sidebar-header</code> · 72px</dt>
-            <dd>The wordmark <em>Back Office</em> (decision 25, brand colour, no logo yet) and the collapse button. <code>pt-6 pb-4</code> around a 32px row &mdash; the height is the spacing, not a fixed box.</dd></div>
-          <div><dt class="font-medium text-foreground"><code>sidebar-content</code></dt>
-            <dd>The areas, in the order the product owner gave. Scrolls on its own if the list ever outgrows the height; the header and footer stay put.</dd></div>
-          <div><dt class="font-medium text-foreground"><code>sidebar-footer</code></dt>
-            <dd>Settings, then the signed-in user. Pinned to the bottom so the five working areas read as one block. <code>pt-4</code> is what separates it from the list when the list is long enough to reach it.</dd></div>
-          <div><dt class="font-medium text-foreground"><code>sidebar-user</code></dt>
-            <dd>Placeholder: authentication is out of scope (decision 3), so this opens nothing yet. Name + role, 48px high.</dd></div>
-          <div><dt class="font-medium text-foreground">Width</dt>
-            <dd>256px (<code>w-64</code>), shadcn's default. Long enough for <em>Users &amp; Organizations</em> on one line, which is the longest label we have.</dd></div>
-        </dl>
-      </div>
-    </section>
+      </section>
 
-    <!-- ============================================================= AREAS -->
-    <section id="areas" class="mt-16">
-      <h2 class="section-title">Areas and icons</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Six areas. Order as given: the two things the business is built on first, then the
-        parties around them, then configuration. Labels are the entity name in plural, title
-        case, never a verb. One icon per area, line by default and fill when active (decision 10).
-      </p>
-      <div class="mt-4 table-wrap">
-        <table class="table">
-          <thead>
-            <tr><th>#</th><th>Area</th><th class="bool">Line</th><th class="bool">Active (fill)</th><th>Icon</th><th>Why this icon</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="muted">1</td><td class="font-medium">Instruments</td><td class="bool"><i class="ri-line-chart-line"></i></td><td class="bool"><i class="ri-line-chart-fill text-primary"></i></td><td><code>ri-line-chart-line</code></td><td class="muted">A price series — what an instrument is to this system.</td></tr>
-            <tr><td class="muted">2</td><td class="font-medium">Products</td><td class="bool"><i class="ri-box-3-line"></i></td><td class="bool"><i class="ri-box-3-fill text-primary"></i></td><td><code>ri-box-3-line</code></td><td class="muted">A structured product is a package built out of instruments.</td></tr>
-            <tr><td class="muted">3</td><td class="font-medium">Users &amp; Organizations</td><td class="bool"><i class="ri-group-line"></i></td><td class="bool"><i class="ri-group-fill text-primary"></i></td><td><code>ri-group-line</code></td><td class="muted">People, and the organizations they belong to.</td></tr>
-            <tr><td class="muted">4</td><td class="font-medium">Custodians</td><td class="bool"><i class="ri-safe-2-line"></i></td><td class="bool"><i class="ri-safe-2-fill text-primary"></i></td><td><code>ri-safe-2-line</code></td><td class="muted">Safekeeping. A vault, not a bank building — that one is taken by Issuers.</td></tr>
-            <tr><td class="muted">5</td><td class="font-medium">Issuers</td><td class="bool"><i class="ri-bank-line"></i></td><td class="bool"><i class="ri-bank-fill text-primary"></i></td><td><code>ri-bank-line</code></td><td class="muted">The institution that issues the product.</td></tr>
-            <tr><td class="muted">6</td><td class="font-medium">Settings</td><td class="bool"><i class="ri-settings-3-line"></i></td><td class="bool"><i class="ri-settings-3-fill text-primary"></i></td><td><code>ri-settings-3-line</code></td><td class="muted">System-wide configuration. Always last.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="mt-4 rounded-lg border-l-2 border-l-warning bg-warning/5 p-4">
-        <p class="font-medium"><i class="ri-error-warning-line align-[-2px] text-warning-ink"></i> Two things to confirm</p>
-        <ul class="mt-2 grid gap-1 text-muted-foreground">
-          <li>Spelling: the brief said <em>Custodins</em>; written here as <strong>Custodians</strong>.</li>
-          <li><code>docs/domain.md</code> lists four areas. <em>Custodians</em> and <em>Issuers</em> are new — the domain doc
-            and its open question "are organizations issuers, distributors or clients?" both need updating,
-            since issuers now have an area of their own.</li>
+      <!-- ============================================================= RULES -->
+      <section id="rules" class="mt-16">
+        <h2 class="section-title">Rules</h2>
+        <ul class="mt-3 grid gap-2 text-muted-foreground">
+          <li><strong class="text-foreground">One level.</strong> No sub-items and no accordions. Everything below an area is a tab or a filter on that area's screen — the instruments list already carries 13 types as tabs, and those must not be duplicated here.</li>
+          <li><strong class="text-foreground">Exactly one active item.</strong> A detail screen keeps its area active: an instrument's page still shows <em>Instruments</em> as current.</li>
+          <li><strong class="text-foreground">No rules inside the shell.</strong> Neither the sidebar nor the page divides itself with a line: the wordmark, the nav and the account block are separated by space, and so are the page title and the list. The one line left is the sidebar's right edge, which separates two different surfaces rather than two zones of the same one (decision&nbsp;61).</li>
+          <li><strong class="text-foreground">The sidebar never scrolls away.</strong> Only the page body scrolls (<code>shell-body</code>) &mdash; and the page title scrolls with it.</li>
+          <li><strong class="text-foreground">The page has no header bar.</strong> Its name is the first block inside the body (<code>page-header</code> &rarr; <code>page-title</code>, 24px/600), closed by space and not by a rule, with the one action that creates something on the page next to it (decision&nbsp;60). One <code>h1</code> per screen, and it is that one.</li>
+          <li><strong class="text-foreground">No group labels while there are six items.</strong> Grouping helps at ten or more; below that it adds a row of grey text over an obvious list. <code>sidebar-group-label</code> exists for when the list grows.</li>
+          <li><strong class="text-foreground">Labels are nouns, plural, title case.</strong> "Instruments", not "Manage instruments".</li>
+          <li><strong class="text-foreground">The icon is a recognition aid, not the label.</strong> Nothing is icon-only except in the collapsed rail, where every item keeps a tooltip.</li>
+          <li><strong class="text-foreground">Colour is never the only cue</strong> for the active item — see States.</li>
         </ul>
-      </div>
-    </section>
 
-    <!-- ============================================================ STATES -->
-    <section id="states" class="mt-16">
-      <h2 class="section-title">States</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        The active item carries three cues at once — brand tint, brand text, filled icon — so the
-        item is still findable in greyscale, and still findable after a white-label swap changes
-        the tint. <code class="rounded-sm bg-muted px-1 py-0.5">aria-current="page"</code> both
-        triggers the styling and tells a screen reader which area is open.
-      </p>
-      <div class="mt-4 grid items-start gap-6 rounded-lg border p-6 sm:grid-cols-[1fr_16rem]">
-        <dl class="grid gap-3 text-muted-foreground">
-          <div><dt class="font-medium text-foreground">Rest</dt><dd>Label in foreground, icon in muted-foreground.</dd></div>
-          <div><dt class="font-medium text-foreground">Hover</dt><dd>Background <code>sidebar-accent</code> (4% brand tint). Nothing moves.</dd></div>
-          <div><dt class="font-medium text-foreground">Active</dt><dd>Tint + brand text + filled icon + <code>font-medium</code>.</dd></div>
-          <div><dt class="font-medium text-foreground">Focus</dt><dd>3px ring in the brand hue. Tab into the list to see it.</dd></div>
-          <div><dt class="font-medium text-foreground">Disabled</dt><dd><code>aria-disabled="true"</code>, 50% opacity, no pointer. For an area the role cannot open — not needed today (one role), kept for the permission matrix later.</dd></div>
-          <div><dt class="font-medium text-foreground">With a count</dt><dd>Optional <code>sidebar-count</code>, right-aligned, tabular. Use it only where a number changes behaviour (a review queue), never as decoration.</dd></div>
-        </dl>
-        <div class="rounded-md bg-sidebar p-2">
-          <ul class="sidebar-menu">
-            <li><a class="sidebar-item" href="#states"><i class="ri-box-3-line"></i><span>Rest</span></a></li>
-            <li><a class="sidebar-item" href="#states"><i class="ri-box-3-line"></i><span>Hover me</span></a></li>
-            <li><a class="sidebar-item" href="#states" aria-current="page"><i class="ri-box-3-fill"></i><span>Active</span></a></li>
-            <li><a class="sidebar-item" href="#states"><i class="ri-box-3-line"></i><span>Tab to me (focus)</span></a></li>
-            <li><span class="sidebar-item" aria-disabled="true"><i class="ri-box-3-line"></i><span>Disabled</span></span></li>
-            <li><a class="sidebar-item" href="#states"><i class="ri-box-3-line"></i><span>With a count</span><span class="sidebar-count">12</span></a></li>
-          </ul>
+        <h3 class="mt-8 font-medium">For the developer</h3>
+        <div class="mt-3 grid gap-2 text-muted-foreground">
+          <p><code class="text-foreground">hlm-sidebar</code> · the shell: <code>hlm-sidebar-header</code>, <code>hlm-sidebar-content</code>, <code>hlm-sidebar-footer</code>, <code>hlm-sidebar-group</code>, <code>hlm-sidebar-menu</code>, <code>hlm-sidebar-menu-button</code>. Our class names follow those parts one for one.</p>
+          <p><code class="text-foreground">Variant</code> · Spartan's <code>collapsible="icon"</code> is the collapsed rail above; <code>collapsible="offcanvas"</code> is not used (desktop only).</p>
+          <p><code class="text-foreground">Active</code> · Helm's <code>isActive</code> input maps to our <code>aria-current="page"</code>. Drive it from the router, not from a click handler.</p>
+          <p><code class="text-foreground">Icons</code> · <code>@ng-icons/remixicon</code>, camel-case names: <code>ri-line-chart-line</code> → <code>remixLineChartLine</code>. Both the line and the fill variant of each of the six icons must be imported.</p>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ========================================================= COLLAPSED -->
-    <section id="collapsed" class="mt-16">
-      <h2 class="section-title">Collapsed rail</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        48px, icons only, labels as tooltips. It buys 208px of table width, which matters on the
-        instruments list. It is a user choice, never a default and never automatic — this is a
-        desktop-only back office (decision 3), so nothing collapses on its own.
+      <p class="mt-16 border-t pt-6 text-muted-foreground">
+        The shell is now wired around <a class="btn btn-link" href="../screens/instruments.html">the instruments screen</a>:
+        sidebar, then a scrolling body that opens with the page title and the primary action.
+        Still open at the top of the page: global search, and whether the account menu stays in the
+        sidebar footer or moves up there.
       </p>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Items are square here — <code>size-9</code>, 36×36 around a 20px icon, centred in the rail
-        with an auto margin. The height is the one the expanded item already has, so closing the
-        rail moves nothing vertically; only the width comes in to meet it.
-      </p>
-      <div class="mt-4 flex gap-6 rounded-lg border p-6">
-        <aside class="sidebar h-[420px] rounded-md border" data-collapsed>
-          <div class="sidebar-header">
-            <span class="sidebar-brand">Back Office</span>
-            <button type="button" class="btn btn-ghost btn-icon btn-sm" data-sidebar-toggle
-                    aria-expanded="false" aria-label="Expand sidebar" title="Expand sidebar">
-              <i class="ri-menu-unfold-line"></i>
-            </button>
-          </div>
-          <nav class="sidebar-content" aria-label="Main, collapsed example">
-            <ul class="sidebar-menu">
-              <li><a class="sidebar-item" href="#collapsed" aria-current="page" title="Instruments"><i class="ri-line-chart-fill"></i><span>Instruments</span></a></li>
-              <li><a class="sidebar-item" href="#collapsed" title="Products"><i class="ri-box-3-line"></i><span>Products</span></a></li>
-              <li><a class="sidebar-item" href="#collapsed" title="Users &amp; Organizations"><i class="ri-group-line"></i><span>Users &amp; Organizations</span></a></li>
-              <li><a class="sidebar-item" href="#collapsed" title="Custodians"><i class="ri-safe-2-line"></i><span>Custodians</span></a></li>
-              <li><a class="sidebar-item" href="#collapsed" title="Issuers"><i class="ri-bank-line"></i><span>Issuers</span></a></li>
-            </ul>
-          </nav>
-          <div class="sidebar-footer">
-            <a class="sidebar-item" href="#collapsed" title="Settings"><i class="ri-settings-3-line"></i><span>Settings</span></a>
-            <span class="sidebar-user" title="Andriy Larchenko · Master Admin">
-              <span class="sidebar-avatar" aria-hidden="true">AL</span>
-              <span class="sidebar-user-text"><span>Andriy Larchenko</span><span>Master Admin</span></span>
-            </span>
-          </div>
-        </aside>
-        <dl class="grid content-start gap-3 text-muted-foreground">
-          <div><dt class="font-medium text-foreground">How</dt><dd><code>data-collapsed</code> on <code>.sidebar</code>; the toggle in <code>app.js</code> flips it and swaps <code>ri-menu-fold-line</code> for <code>ri-menu-unfold-line</code>.</dd></div>
-          <div><dt class="font-medium text-foreground">Labels</dt><dd>Stay in the DOM and in the <code>title</code> attribute, so the tooltip and the screen reader still read them. Hover an icon to check.</dd></div>
-          <div><dt class="font-medium text-foreground">Wordmark</dt><dd>Hidden — there is no logo mark to fall back to yet (decision 25). When one exists, it stays visible here.</dd></div>
-          <div><dt class="font-medium text-foreground">Account</dt><dd>The avatar alone. The More chevron is hidden, not squeezed: the row is the same 36px square as every other item and the avatar is 32px of it, and the chevron only hints at a menu the whole row already opens. Name and role move into the tooltip — in production show that tooltip only while the rail is collapsed, since expanded it just repeats the two lines next to it.</dd></div>
-          <div><dt class="font-medium text-foreground">For the developer</dt><dd>The state must be remembered per user (Spartan's sidebar keeps it in a cookie). In the prototype it resets on reload.</dd></div>
-        </dl>
-      </div>
-    </section>
 
-    <!-- ============================================================= RULES -->
-    <section id="rules" class="mt-16">
-      <h2 class="section-title">Rules</h2>
-      <ul class="mt-3 grid gap-2 text-muted-foreground">
-        <li><strong class="text-foreground">One level.</strong> No sub-items and no accordions. Everything below an area is a tab or a filter on that area's screen — the instruments list already carries 13 types as tabs, and those must not be duplicated here.</li>
-        <li><strong class="text-foreground">Exactly one active item.</strong> A detail screen keeps its area active: an instrument's page still shows <em>Instruments</em> as current.</li>
-        <li><strong class="text-foreground">No rules inside the shell.</strong> Neither the sidebar nor the page divides itself with a line: the wordmark, the nav and the account block are separated by space, and so are the page title and the list. The one line left is the sidebar's right edge, which separates two different surfaces rather than two zones of the same one (decision&nbsp;61).</li>
-        <li><strong class="text-foreground">The sidebar never scrolls away.</strong> Only the page body scrolls (<code>shell-body</code>) &mdash; and the page title scrolls with it.</li>
-        <li><strong class="text-foreground">The page has no header bar.</strong> Its name is the first block inside the body (<code>page-header</code> &rarr; <code>page-title</code>, 24px/600), closed by space and not by a rule, with the one action that creates something on the page next to it (decision&nbsp;60). One <code>h1</code> per screen, and it is that one.</li>
-        <li><strong class="text-foreground">No group labels while there are six items.</strong> Grouping helps at ten or more; below that it adds a row of grey text over an obvious list. <code>sidebar-group-label</code> exists for when the list grows.</li>
-        <li><strong class="text-foreground">Labels are nouns, plural, title case.</strong> "Instruments", not "Manage instruments".</li>
-        <li><strong class="text-foreground">The icon is a recognition aid, not the label.</strong> Nothing is icon-only except in the collapsed rail, where every item keeps a tooltip.</li>
-        <li><strong class="text-foreground">Colour is never the only cue</strong> for the active item — see States.</li>
-      </ul>
-
-      <h3 class="mt-8 font-medium">For the developer</h3>
-      <div class="mt-3 grid gap-2 text-muted-foreground">
-        <p><code class="text-foreground">hlm-sidebar</code> · the shell: <code>hlm-sidebar-header</code>, <code>hlm-sidebar-content</code>, <code>hlm-sidebar-footer</code>, <code>hlm-sidebar-group</code>, <code>hlm-sidebar-menu</code>, <code>hlm-sidebar-menu-button</code>. Our class names follow those parts one for one.</p>
-        <p><code class="text-foreground">Variant</code> · Spartan's <code>collapsible="icon"</code> is the collapsed rail above; <code>collapsible="offcanvas"</code> is not used (desktop only).</p>
-        <p><code class="text-foreground">Active</code> · Helm's <code>isActive</code> input maps to our <code>aria-current="page"</code>. Drive it from the router, not from a click handler.</p>
-        <p><code class="text-foreground">Icons</code> · <code>@ng-icons/remixicon</code>, camel-case names: <code>ri-line-chart-line</code> → <code>remixLineChartLine</code>. Both the line and the fill variant of each of the six icons must be imported.</p>
-      </div>
-    </section>
-
-    <p class="mt-16 border-t pt-6 text-muted-foreground">
-      The shell is now wired around <a class="btn btn-link" href="../screens/instruments.html">the instruments screen</a>:
-      sidebar, then a scrolling body that opens with the page title and the primary action.
-      Still open at the top of the page: global search, and whether the account menu stays in the
-      sidebar footer or moves up there.
-    </p>
-  </main>
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+  <script src="../assets/kit-nav.js"></script>
   <script src="../assets/app.js"></script>
 </body>
 </html>

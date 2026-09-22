@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkbox · Atoms · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Atoms</p>
+      <h1 class="page-title">Checkbox</h1>
+      <p class="kit-meta">Spartan: <code>hlm-checkbox</code> · shadcn: <code>checkbox.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">Independent yes/no choices, or several from a list. Wrap control and text in a <code class="rounded-sm bg-muted px-1 py-0.5">label.choice</code> so the whole row is clickable.</p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-3">
+          <div class="grid gap-3">
+            <label class="choice"><input class="checkbox" type="checkbox"> Unchecked</label>
+            <label class="choice"><input class="checkbox" type="checkbox" checked> Checked</label>
+            <label class="choice"><input class="checkbox" type="checkbox" disabled> Disabled</label>
+            <label class="choice"><input class="checkbox" type="checkbox" checked disabled> Checked, disabled</label>
+          </div>
+          <div class="grid gap-3">
+            <p class="label">Visible to</p>
+            <label class="choice"><input class="checkbox" type="checkbox" checked> Distributors</label>
+            <label class="choice"><input class="checkbox" type="checkbox" checked> Advisors</label>
+            <label class="choice"><input class="checkbox" type="checkbox"> End clients</label>
+          </div>
+          <div>
+            <label class="choice">
+              <input class="checkbox" type="checkbox">
+              <span>
+                Publish immediately
+                <span class="field-description block">The product appears in the end-user service as soon as it is saved.</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;label class="choice"&gt;&lt;input class="checkbox" type="checkbox"&gt; Distributors&lt;/label&gt;</code></pre>
+
+      <h2 id="read-only-in-a-table" class="section-title mt-14">Read-only, in a table</h2>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        A boolean a row reports but nobody edits there — <em>Pricer</em> on the instruments list.
+        It is a <code class="rounded-sm bg-muted px-1 py-0.5">span</code>, not an input: no tab stop,
+        no cursor, nothing announced as a control. The value reaches a screen reader through the
+        <code class="rounded-sm bg-muted px-1 py-0.5">sr-only</code> label beside it.
+      </p>
+      <div class="mt-4 grid items-start gap-6 rounded-lg border p-6 sm:grid-cols-[14rem_1fr]">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Instrument</th><th class="bool">Pricer</th></tr></thead>
+            <tbody>
+              <tr><td class="font-medium">Apple Inc.</td><td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td></tr>
+              <tr><td class="font-medium">Nestl&eacute; 1.5% 2029</td><td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td></tr>
+              <tr><td class="font-medium">SARON 3M</td><td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td></tr>
+              <tr><td class="font-medium">Gold Spot</td><td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <dl class="grid content-start gap-3 text-muted-foreground">
+          <div><dt class="font-medium text-foreground">Why not a tick and a dash</dt>
+            <dd>Both are thin marks of about the same size, so a column of them reads as texture rather than as two states. A filled square against an empty square differs in shape, weight and colour at once — and still differs with the colour taken away.</dd></div>
+          <div><dt class="font-medium text-foreground">Why not a real disabled checkbox</dt>
+            <dd>Disabled means "you could change this, but not now". Nothing here is ever editable in the list, and the 50% opacity would undo the contrast we just bought.</dd></div>
+          <div><dt class="font-medium text-foreground">The one difference from the control</dt>
+            <dd>No <code>shadow-xs</code>. Same size, radius, border and fill; the missing lift is the cue that it does nothing.</dd></div>
+          <div><dt class="font-medium text-foreground">For the developer</dt>
+            <dd>Not a Spartan component — plain markup. Do not reach for <code>hlm-checkbox</code> with <code>[disabled]</code> here.</dd></div>
+        </dl>
+      </div>
+      <pre class="mt-4 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;span class="check-static" data-on&gt;&lt;/span&gt;&lt;span class="sr-only"&gt;In pricer&lt;/span&gt;
+&lt;span class="check-static"&gt;&lt;/span&gt;&lt;span class="sr-only"&gt;Not in pricer&lt;/span&gt;</code></pre>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

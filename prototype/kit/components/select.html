@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Select · Atoms · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Atoms</p>
+      <h1 class="page-title">Select</h1>
+      <p class="kit-meta">Spartan: <code>hlm-select</code> · shadcn: <code>select.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        Pick one from a short list (up to ~15 items). A trigger button that looks like an input, and a list
+        that opens below it. Fully custom, so it is identical in every browser. Behaviour is in
+        <code class="rounded-sm bg-muted px-1 py-0.5">app.js</code>: click or Space/Enter/arrows to open, arrows to move,
+        Enter to choose, Escape to close. For long lists use a searchable combobox (later).
+      </p>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        <strong class="font-medium text-foreground">Where it opens (decision 80).</strong>
+        Below the trigger, and above it when it does not fit below and there is more room above — so a
+        select near the bottom of the screen opens upward and one near the top opens downward. The side
+        is decided every time it opens, and again while it is open if the page scrolls or the window
+        resizes. The list is then capped to the room that side has, so a long one scrolls inside itself
+        instead of running off the edge; 288px stays the ceiling. Same 4px gap and 8px screen gutter as
+        the row-action menu, which has always flipped this way.
+      </p>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        <code class="rounded-sm bg-muted px-1 py-0.5">data-prefer="top"</code> on the list asks it to start
+        upward — for a select that sits in a page footer, where the screen edge is the whole point, like
+        <em>Rows per page</em> in the table footer. It is a preference, not a lock: with no room above it
+        opens downward like everything else.
+      </p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-3">
+          <div class="field">
+            <label class="label" for="s1">Currency</label>
+            <div class="select">
+              <button type="button" class="select-trigger" id="s1" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>Select currency</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s1" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+              </div>
+              <input type="hidden" name="currency-1" value="">
+            </div>
+            <p class="field-description">Placeholder state. Click to open.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="s2">Currency</label>
+            <div class="select">
+              <button type="button" class="select-trigger" id="s2" aria-haspopup="listbox" aria-expanded="false"><span>CHF</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s2" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1" aria-selected="true">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+              </div>
+              <input type="hidden" name="currency-2" value="CHF">
+            </div>
+            <p class="field-description">With a value. The chosen item shows a check.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="s3">Currency</label>
+            <div class="select">
+              <button type="button" class="select-trigger" id="s3" aria-haspopup="listbox" aria-expanded="false" disabled><span>CHF</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s3" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1" aria-selected="true">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+              </div>
+              <input type="hidden" name="currency-3" value="CHF">
+            </div>
+            <p class="field-description">Disabled.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="s4">Currency</label>
+            <div class="select">
+              <button type="button" class="select-trigger" id="s4" aria-haspopup="listbox" aria-expanded="false" data-placeholder aria-invalid="true"><span>Select currency</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s4" hidden>
+                <div class="select-item" role="option" data-value="CHF" tabindex="-1">CHF</div>
+                <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                <div class="select-item" role="option" data-value="GBP" tabindex="-1">GBP</div>
+              </div>
+              <input type="hidden" name="currency-4" value="">
+            </div>
+            <p class="field-error"><i class="ri-error-warning-line"></i> Select a currency.</p>
+          </div>
+          <div class="field">
+            <label class="label" for="s5">Small (toolbars)</label>
+            <div class="select select-sm">
+              <button type="button" class="select-trigger" id="s5" aria-haspopup="listbox" aria-expanded="false"><span>All</span><i class="ri-arrow-down-s-line"></i></button>
+              <div class="select-content" role="listbox" aria-labelledby="s5" hidden>
+                <div class="select-item" role="option" data-value="All" tabindex="-1" aria-selected="true">All</div>
+                <div class="select-item" role="option" data-value="Draft" tabindex="-1">Draft</div>
+                <div class="select-item" role="option" data-value="Live" tabindex="-1">Live</div>
+                <div class="select-item" role="option" data-value="Matured" tabindex="-1">Matured</div>
+              </div>
+              <input type="hidden" name="status" value="All">
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 id="markup" class="section-title mt-14">Markup</h2>
+      <pre class="mt-2 overflow-x-auto rounded-lg border bg-muted p-4 text-xs leading-relaxed"><code>&lt;div class="select"&gt;
+  &lt;button type="button" class="select-trigger" id="ccy" data-placeholder aria-haspopup="listbox" aria-expanded="false"&gt;
+    &lt;span&gt;Select currency&lt;/span&gt;&lt;i class="ri-arrow-down-s-line"&gt;&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;div class="select-content" role="listbox" aria-labelledby="ccy" hidden&gt;          &lt;!-- add data-prefer="top" in a page footer --&gt;
+    &lt;div class="select-item" role="option" data-value="CHF" tabindex="-1"&gt;CHF&lt;/div&gt;
+    &lt;div class="select-item" role="option" data-value="EUR" tabindex="-1"&gt;EUR&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;input type="hidden" name="currency" value=""&gt;
+&lt;/div&gt;</code></pre>
+      <p class="mt-3 text-xs text-muted-foreground">
+        The hidden input carries the value for the form. Remove <code>data-placeholder</code> and set <code>aria-selected="true"</code> on an item to start with a value.
+        Spartan: <code>&lt;hlm-select&gt;&lt;hlm-select-trigger&gt;…&lt;hlm-select-content&gt;&lt;hlm-option&gt;</code>.
+      </p>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

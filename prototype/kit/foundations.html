@@ -8,575 +8,554 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/kit.css">
   <script src="../assets/tailwind.js"></script>
 </head>
 <body class="text-sm">
-  <header class="border-b">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-      <a href="../index.html" class="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground">
-        <i class="ri-arrow-left-line"></i> Prototype
-      </a>
-      <nav class="flex gap-6 text-muted-foreground">
-        <span class="text-foreground">Foundations</span>
-        <a href="./components.html" class="hover:text-foreground">Components</a>
-        <a href="./navigation.html" class="hover:text-foreground">Navigation</a>
-      </nav>
-    </div>
-  </header>
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
 
-  <main class="mx-auto max-w-5xl px-6 py-12">
-    <p class="text-muted-foreground">Phase 2</p>
-    <h1 class="mt-1 page-title">Foundations</h1>
-    <p class="mt-3 max-w-2xl text-muted-foreground">
-      Everything a component is allowed to use: colour tokens, type scale, spacing, radius,
-      shadow and icon rules. Values shown are read live from <code class="rounded-sm bg-muted px-1 py-0.5">theme.css</code>,
-      so this page never goes stale. Every colour pair shows its live contrast ratio, measured in the browser.
-    </p>
-
-    <!-- Table of contents -->
-    <nav class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-muted-foreground">
-      <a href="#brand" class="hover:text-foreground">Brand</a>
-      <a href="#colour" class="hover:text-foreground">Colour</a>
-      <a href="#typography" class="hover:text-foreground">Typography</a>
-      <a href="#spacing" class="hover:text-foreground">Spacing</a>
-      <a href="#radius" class="hover:text-foreground">Radius</a>
-      <a href="#shadow" class="hover:text-foreground">Shadow</a>
-      <a href="#icons" class="hover:text-foreground">Icons</a>
-      <a href="#spartan" class="hover:text-foreground">Spartan mapping</a>
-    </nav>
-
-    <!-- ============================================================= BRAND -->
-    <section id="brand" class="mt-16">
-      <h2 class="section-title">Brand</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        One brand colour, one typeface, no logo yet. Until a logo exists the product is signed with a
-        wordmark set in the interface font — nothing to replace later except the mark itself.
+    <main class="kit-content">
+      <h1 class="page-title">Foundations</h1>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        Everything a component is allowed to use: colour tokens, type scale, spacing, radius,
+        shadow and icon rules. Values shown are read live from <code class="rounded-sm bg-muted px-1 py-0.5">theme.css</code>,
+        so this page never goes stale. Every colour pair shows its live contrast ratio, measured in the browser.
       </p>
 
-      <div class="mt-6 grid gap-3 lg:grid-cols-2">
-        <div class="rounded-lg border p-6">
-          <p class="overline">Wordmark</p>
-          <p class="mt-4 text-2xl font-semibold tracking-tight text-primary">Back Office</p>
-          <p class="mt-6 text-muted-foreground">
-            Archivo 600, <code class="rounded-sm bg-muted px-1 py-0.5">tracking-tight</code>, brand colour.
-            Title case, two words. In the app shell it sits top-left in the sidebar at
-            <code class="rounded-sm bg-muted px-1 py-0.5">text-base</code>; this is the specimen size.
-          </p>
+      <!-- ============================================================= BRAND -->
+      <section id="brand" class="mt-16">
+        <h2 class="section-title">Brand</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          One brand colour, one typeface, no logo yet. Until a logo exists the product is signed with a
+          wordmark set in the interface font — nothing to replace later except the mark itself.
+        </p>
+
+        <div class="mt-6 grid gap-3 lg:grid-cols-2">
+          <div class="rounded-lg border p-6">
+            <p class="overline">Wordmark</p>
+            <p class="mt-4 text-2xl font-semibold tracking-tight text-primary">Back Office</p>
+            <p class="mt-6 text-muted-foreground">
+              Archivo 600, <code class="rounded-sm bg-muted px-1 py-0.5">tracking-tight</code>, brand colour.
+              Title case, two words. In the app shell it sits top-left in the sidebar at
+              <code class="rounded-sm bg-muted px-1 py-0.5">text-base</code>; this is the specimen size.
+            </p>
+          </div>
+          <div class="rounded-lg border p-6">
+            <p class="overline">Brand colour</p>
+            <div class="mt-4 flex items-center gap-3">
+              <div class="size-12 rounded-md bg-primary"></div>
+              <div>
+                <p class="font-mono text-sm">#200766</p>
+                <p class="font-mono text-xs text-muted-foreground" data-var="--primary"></p>
+              </div>
+            </div>
+            <p class="mt-6 text-muted-foreground">
+              Carries <code class="rounded-sm bg-muted px-1 py-0.5">--primary</code>, the focus ring, the active nav item
+              and the selected-row tint. Greys stay neutral (chroma&nbsp;0) so this is the only colour competing for
+              attention on a screen full of data. It does not reach the status colours — see below.
+            </p>
+          </div>
         </div>
-        <div class="rounded-lg border p-6">
-          <p class="overline">Brand colour</p>
-          <div class="mt-4 flex items-center gap-3">
-            <div class="size-12 rounded-md bg-primary"></div>
+
+        <div class="mt-3 rounded-lg border p-6">
+          <p class="overline">What a white-label swap replaces</p>
+          <div class="mt-4 grid gap-6 sm:grid-cols-2">
             <div>
-              <p class="font-mono text-sm">#200766</p>
-              <p class="font-mono text-xs text-muted-foreground" data-var="--primary"></p>
+              <p class="font-medium">Brand — replaced</p>
+              <ul class="mt-2 space-y-1 font-mono text-xs text-muted-foreground">
+                <li>--primary, --primary-foreground</li>
+                <li>--accent, --accent-foreground</li>
+                <li>--ring</li>
+                <li>--sidebar-primary, --sidebar-accent, --sidebar-ring</li>
+              </ul>
+            </div>
+            <div>
+              <p class="font-medium">System — left alone</p>
+              <ul class="mt-2 space-y-1 font-mono text-xs text-muted-foreground">
+                <li>--background, --foreground, --card, --popover</li>
+                <li>--secondary, --muted</li>
+                <li>--border, --input</li>
+                <li>--success, --warning, --info, --destructive</li>
+              </ul>
             </div>
           </div>
-          <p class="mt-6 text-muted-foreground">
-            Carries <code class="rounded-sm bg-muted px-1 py-0.5">--primary</code>, the focus ring, the active nav item
-            and the selected-row tint. Greys stay neutral (chroma&nbsp;0) so this is the only colour competing for
-            attention on a screen full of data. It does not reach the status colours — see below.
+          <p class="mt-4 max-w-2xl text-muted-foreground">
+            Status colours are never derived from, tinted with, or replaced by the brand. A status describes the state of
+            the system, not who owns the product — if green turns violet because a client's brand is violet, the colour
+            stops carrying information and every badge has to be read word by word. If a client's brand lands on a status
+            hue, the brand moves in the UI; the status does not. That is also why
+            <code class="rounded-sm bg-muted px-1 py-0.5">--info</code> is a plain blue at hue 240 rather than a lighter
+            cut of the brand: it was the one status that had no value of its own.
           </p>
         </div>
-      </div>
+      </section>
 
-      <div class="mt-3 rounded-lg border p-6">
-        <p class="overline">What a white-label swap replaces</p>
-        <div class="mt-4 grid gap-6 sm:grid-cols-2">
-          <div>
-            <p class="font-medium">Brand — replaced</p>
-            <ul class="mt-2 space-y-1 font-mono text-xs text-muted-foreground">
-              <li>--primary, --primary-foreground</li>
-              <li>--accent, --accent-foreground</li>
-              <li>--ring</li>
-              <li>--sidebar-primary, --sidebar-accent, --sidebar-ring</li>
-            </ul>
-          </div>
-          <div>
-            <p class="font-medium">System — left alone</p>
-            <ul class="mt-2 space-y-1 font-mono text-xs text-muted-foreground">
-              <li>--background, --foreground, --card, --popover</li>
-              <li>--secondary, --muted</li>
-              <li>--border, --input</li>
-              <li>--success, --warning, --info, --destructive</li>
-            </ul>
-          </div>
-        </div>
-        <p class="mt-4 max-w-2xl text-muted-foreground">
-          Status colours are never derived from, tinted with, or replaced by the brand. A status describes the state of
-          the system, not who owns the product — if green turns violet because a client's brand is violet, the colour
-          stops carrying information and every badge has to be read word by word. If a client's brand lands on a status
-          hue, the brand moves in the UI; the status does not. That is also why
-          <code class="rounded-sm bg-muted px-1 py-0.5">--info</code> is a plain blue at hue 240 rather than a lighter
-          cut of the brand: it was the one status that had no value of its own.
+      <!-- ============================================================ COLOUR -->
+      <section id="colour" class="mt-16">
+        <h2 class="section-title">Colour</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Tokens come in pairs: a surface and the text that sits on it (<em>-foreground</em>).
+          Components use the pair, never a raw colour. Values are OKLCH: lightness 0–1, chroma, hue.
         </p>
-      </div>
-    </section>
 
-    <!-- ============================================================ COLOUR -->
-    <section id="colour" class="mt-16">
-      <h2 class="section-title">Colour</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Tokens come in pairs: a surface and the text that sits on it (<em>-foreground</em>).
-        Components use the pair, never a raw colour. Values are OKLCH: lightness 0–1, chroma, hue.
-      </p>
+        <h3 class="mt-8 font-medium">Surfaces &amp; text</h3>
+        <p class="mt-1 max-w-2xl text-muted-foreground">
+          One thing to watch: <code class="rounded-sm bg-muted px-1 py-0.5">--muted-foreground</code> is 4.74:1 on the page
+          but 4.35:1 on a <code class="rounded-sm bg-muted px-1 py-0.5">--muted</code> fill, which is what the swatch below
+          measures. Captions and helper text in that grey belong on the page or a card, not on a muted surface.
+        </p>
+        <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="swatch" data-bg="background" data-fg="foreground" data-note="Page background and default text"></div>
+          <div class="swatch" data-bg="card" data-fg="card-foreground" data-note="Cards, panels"></div>
+          <div class="swatch" data-bg="popover" data-fg="popover-foreground" data-note="Dropdowns, tooltips"></div>
+          <div class="swatch" data-bg="muted" data-fg="muted-foreground" data-note="Subdued fills; captions, secondary text"></div>
+        </div>
 
-      <h3 class="mt-8 font-medium">Surfaces &amp; text</h3>
-      <p class="mt-1 max-w-2xl text-muted-foreground">
-        One thing to watch: <code class="rounded-sm bg-muted px-1 py-0.5">--muted-foreground</code> is 4.74:1 on the page
-        but 4.35:1 on a <code class="rounded-sm bg-muted px-1 py-0.5">--muted</code> fill, which is what the swatch below
-        measures. Captions and helper text in that grey belong on the page or a card, not on a muted surface.
-      </p>
-      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="swatch" data-bg="background" data-fg="foreground" data-note="Page background and default text"></div>
-        <div class="swatch" data-bg="card" data-fg="card-foreground" data-note="Cards, panels"></div>
-        <div class="swatch" data-bg="popover" data-fg="popover-foreground" data-note="Dropdowns, tooltips"></div>
-        <div class="swatch" data-bg="muted" data-fg="muted-foreground" data-note="Subdued fills; captions, secondary text"></div>
-      </div>
+        <h3 class="mt-8 font-medium">Roles</h3>
+        <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="swatch" data-bg="primary" data-fg="primary-foreground" data-note="Main action per screen"></div>
+          <div class="swatch" data-bg="secondary" data-fg="secondary-foreground" data-note="Quiet fills: the neutral badge"></div>
+          <div class="swatch" data-bg="accent" data-fg="accent-foreground" data-note="Hover and selected rows / items"></div>
+          <div class="swatch" data-bg="destructive" data-fg="destructive-foreground" data-note="Delete, irreversible actions, errors"></div>
+        </div>
 
-      <h3 class="mt-8 font-medium">Roles</h3>
-      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="swatch" data-bg="primary" data-fg="primary-foreground" data-note="Main action per screen"></div>
-        <div class="swatch" data-bg="secondary" data-fg="secondary-foreground" data-note="Secondary buttons"></div>
-        <div class="swatch" data-bg="accent" data-fg="accent-foreground" data-note="Hover and selected rows / items"></div>
-        <div class="swatch" data-bg="destructive" data-fg="destructive-foreground" data-note="Delete, irreversible actions, errors"></div>
-      </div>
+        <h3 class="mt-8 font-medium">Status (our addition)</h3>
+        <p class="mt-1 max-w-2xl text-muted-foreground">
+          Not in shadcn. Three tokens each, because one colour cannot do all three jobs:
+          <code class="rounded-sm bg-muted px-1 py-0.5">--success</code> is the colour itself (dots, solid fills),
+          <code class="rounded-sm bg-muted px-1 py-0.5">--success-foreground</code> is text on a solid fill, and
+          <code class="rounded-sm bg-muted px-1 py-0.5">--success-ink</code> is text on the 10% tint used by soft badges.
+          The green and yellow reach only 2.9:1 and 2.4:1 as text, so the ink shade is the same hue darkened until it passes 4.5:1.
+          These four colours are fixed: they are never derived from the brand and a white-label swap does not touch them.
+        </p>
+        <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="swatch" data-bg="success" data-fg="success-foreground" data-note="Live, active, completed"></div>
+          <div class="swatch" data-bg="warning" data-fg="warning-foreground" data-note="Pending, expiring, needs attention"></div>
+          <div class="swatch" data-bg="info" data-fg="info-foreground" data-note="Informational, in progress"></div>
+        </div>
+        <div class="mt-3 overflow-hidden rounded-lg border">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b bg-muted/40 text-left">
+                <th class="h-10 px-4 font-medium">Status</th>
+                <th class="h-10 px-3 font-medium">Soft badge (tint + ink)</th>
+                <th class="h-10 px-3 font-medium">Ink shade</th>
+                <th class="h-10 px-3 font-medium">Text on tint</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="px-4 py-2">success</td>
+                <td class="px-3 py-2"><span class="badge badge-success"><span class="badge-dot"></span> Live</span></td>
+                <td class="px-3 py-2 font-mono text-xs text-muted-foreground" data-var="--success-ink"></td>
+                <td class="px-3 py-2 font-mono text-xs" data-ratio="--success-ink|--success|0.1"></td>
+              </tr>
+              <tr class="border-b">
+                <td class="px-4 py-2">warning</td>
+                <td class="px-3 py-2"><span class="badge badge-warning"><span class="badge-dot"></span> Pending</span></td>
+                <td class="px-3 py-2 font-mono text-xs text-muted-foreground" data-var="--warning-ink"></td>
+                <td class="px-3 py-2 font-mono text-xs" data-ratio="--warning-ink|--warning|0.1"></td>
+              </tr>
+              <tr class="border-b">
+                <td class="px-4 py-2">info</td>
+                <td class="px-3 py-2"><span class="badge badge-info"><span class="badge-dot"></span> In progress</span></td>
+                <td class="px-3 py-2 font-mono text-xs text-muted-foreground" data-var="--info-ink"></td>
+                <td class="px-3 py-2 font-mono text-xs" data-ratio="--info-ink|--info|0.1"></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2">destructive</td>
+                <td class="px-3 py-2"><span class="badge badge-destructive">Failed</span></td>
+                <td class="px-3 py-2 font-mono text-xs text-muted-foreground" data-var="--destructive-ink"></td>
+                <td class="px-3 py-2 font-mono text-xs" data-ratio="--destructive-ink|--destructive|0.1"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-      <h3 class="mt-8 font-medium">Status (our addition)</h3>
-      <p class="mt-1 max-w-2xl text-muted-foreground">
-        Not in shadcn. Three tokens each, because one colour cannot do all three jobs:
-        <code class="rounded-sm bg-muted px-1 py-0.5">--success</code> is the colour itself (dots, solid fills),
-        <code class="rounded-sm bg-muted px-1 py-0.5">--success-foreground</code> is text on a solid fill, and
-        <code class="rounded-sm bg-muted px-1 py-0.5">--success-ink</code> is text on the 10% tint used by soft badges.
-        The green and yellow reach only 2.9:1 and 2.4:1 as text, so the ink shade is the same hue darkened until it passes 4.5:1.
-        These four colours are fixed: they are never derived from the brand and a white-label swap does not touch them.
-      </p>
-      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="swatch" data-bg="success" data-fg="success-foreground" data-note="Live, active, completed"></div>
-        <div class="swatch" data-bg="warning" data-fg="warning-foreground" data-note="Pending, expiring, needs attention"></div>
-        <div class="swatch" data-bg="info" data-fg="info-foreground" data-note="Informational, in progress"></div>
-      </div>
-      <div class="mt-3 overflow-hidden rounded-lg border">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="border-b bg-muted/40 text-left">
-              <th class="h-10 px-4 font-medium">Status</th>
-              <th class="h-10 px-3 font-medium">Soft badge (tint + ink)</th>
-              <th class="h-10 px-3 font-medium">Ink shade</th>
-              <th class="h-10 px-3 font-medium">Text on tint</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b">
-              <td class="px-4 py-2">success</td>
-              <td class="px-3 py-2"><span class="badge badge-success"><span class="badge-dot"></span> Live</span></td>
-              <td class="px-3 py-2 font-mono text-xs text-muted-foreground" data-var="--success-ink"></td>
-              <td class="px-3 py-2 font-mono text-xs" data-ratio="--success-ink|--success|0.1"></td>
-            </tr>
-            <tr class="border-b">
-              <td class="px-4 py-2">warning</td>
-              <td class="px-3 py-2"><span class="badge badge-warning"><span class="badge-dot"></span> Pending</span></td>
-              <td class="px-3 py-2 font-mono text-xs text-muted-foreground" data-var="--warning-ink"></td>
-              <td class="px-3 py-2 font-mono text-xs" data-ratio="--warning-ink|--warning|0.1"></td>
-            </tr>
-            <tr class="border-b">
-              <td class="px-4 py-2">info</td>
-              <td class="px-3 py-2"><span class="badge badge-info"><span class="badge-dot"></span> In progress</span></td>
-              <td class="px-3 py-2 font-mono text-xs text-muted-foreground" data-var="--info-ink"></td>
-              <td class="px-3 py-2 font-mono text-xs" data-ratio="--info-ink|--info|0.1"></td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2">destructive</td>
-              <td class="px-3 py-2"><span class="badge badge-destructive">Failed</span></td>
-              <td class="px-3 py-2 font-mono text-xs text-muted-foreground" data-var="--destructive-ink"></td>
-              <td class="px-3 py-2 font-mono text-xs" data-ratio="--destructive-ink|--destructive|0.1"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <h3 class="mt-8 font-medium">Lines &amp; focus</h3>
+        <p class="mt-1 max-w-2xl text-muted-foreground">
+          A line is not text: what matters is how it reads against the page behind it, so these are measured
+          against <code class="rounded-sm bg-muted px-1 py-0.5">--background</code>. WCAG asks 3:1 for a line that is the only
+          thing marking a control, so <code class="rounded-sm bg-muted px-1 py-0.5">--input</code> was darkened until it passes.
+          <code class="rounded-sm bg-muted px-1 py-0.5">--border</code> keeps the light shadcn grey — see the note below.
+        </p>
+        <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="swatch" data-bg="border" data-fg="foreground" data-against="--background" data-note="Dividers, card outlines"></div>
+          <div class="swatch" data-bg="input" data-fg="foreground" data-against="--background" data-note="Form field borders"></div>
+          <div class="swatch" data-bg="ring" data-fg="foreground" data-against="--background" data-note="Keyboard focus ring"></div>
+        </div>
+        <p class="mt-3 max-w-2xl text-muted-foreground">
+          The two greys are deliberately different. <code class="rounded-sm bg-muted px-1 py-0.5">--input</code> is the boundary
+          of a control — input, textarea, select, checkbox, radio, outline button — and a user has to see where to click, so it
+          is <code class="rounded-sm bg-muted px-1 py-0.5">oklch(0.668 0 0)</code>, the lightest grey that still clears 3:1.
+          <code class="rounded-sm bg-muted px-1 py-0.5">--border</code> only separates content that is already visible —
+          card edges, table rules, dividers — so it stays at the light shadcn grey and the page does not turn into a grid.
+        </p>
 
-      <h3 class="mt-8 font-medium">Lines &amp; focus</h3>
-      <p class="mt-1 max-w-2xl text-muted-foreground">
-        A line is not text: what matters is how it reads against the page behind it, so these are measured
-        against <code class="rounded-sm bg-muted px-1 py-0.5">--background</code>. WCAG asks 3:1 for a line that is the only
-        thing marking a control, so <code class="rounded-sm bg-muted px-1 py-0.5">--input</code> was darkened until it passes.
-        <code class="rounded-sm bg-muted px-1 py-0.5">--border</code> keeps the light shadcn grey — see the note below.
-      </p>
-      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="swatch" data-bg="border" data-fg="foreground" data-against="--background" data-note="Dividers, card outlines"></div>
-        <div class="swatch" data-bg="input" data-fg="foreground" data-against="--background" data-note="Form field borders"></div>
-        <div class="swatch" data-bg="ring" data-fg="foreground" data-against="--background" data-note="Keyboard focus ring"></div>
-      </div>
-      <p class="mt-3 max-w-2xl text-muted-foreground">
-        The two greys are deliberately different. <code class="rounded-sm bg-muted px-1 py-0.5">--input</code> is the boundary
-        of a control — input, textarea, select, checkbox, radio, outline button — and a user has to see where to click, so it
-        is <code class="rounded-sm bg-muted px-1 py-0.5">oklch(0.668 0 0)</code>, the lightest grey that still clears 3:1.
-        <code class="rounded-sm bg-muted px-1 py-0.5">--border</code> only separates content that is already visible —
-        card edges, table rules, dividers — so it stays at the light shadcn grey and the page does not turn into a grid.
-      </p>
+        <h3 class="mt-8 font-medium">Sidebar</h3>
+        <p class="mt-1 text-muted-foreground">Own set, so the navigation can differ from the content area later.</p>
+        <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="swatch" data-bg="sidebar" data-fg="sidebar-foreground" data-note="Sidebar surface"></div>
+          <div class="swatch" data-bg="sidebar-primary" data-fg="sidebar-primary-foreground" data-note="Sidebar emphasis"></div>
+          <div class="swatch" data-bg="sidebar-accent" data-fg="sidebar-accent-foreground" data-note="Active nav item"></div>
+          <div class="swatch" data-bg="sidebar-border" data-fg="sidebar-foreground" data-note="Sidebar divider"></div>
+        </div>
 
-      <h3 class="mt-8 font-medium">Sidebar</h3>
-      <p class="mt-1 text-muted-foreground">Own set, so the navigation can differ from the content area later.</p>
-      <div class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="swatch" data-bg="sidebar" data-fg="sidebar-foreground" data-note="Sidebar surface"></div>
-        <div class="swatch" data-bg="sidebar-primary" data-fg="sidebar-primary-foreground" data-note="Sidebar emphasis"></div>
-        <div class="swatch" data-bg="sidebar-accent" data-fg="sidebar-accent-foreground" data-note="Active nav item"></div>
-        <div class="swatch" data-bg="sidebar-border" data-fg="sidebar-foreground" data-note="Sidebar divider"></div>
-      </div>
+        <h3 class="mt-8 font-medium">Charts</h3>
+        <p class="mt-1 text-muted-foreground">Kept for parity with Spartan. Not used until we have data views.</p>
+        <div class="mt-3 flex gap-2">
+          <div class="h-10 flex-1 rounded-md bg-chart-1"></div>
+          <div class="h-10 flex-1 rounded-md bg-chart-2"></div>
+          <div class="h-10 flex-1 rounded-md bg-chart-3"></div>
+          <div class="h-10 flex-1 rounded-md bg-chart-4"></div>
+          <div class="h-10 flex-1 rounded-md bg-chart-5"></div>
+        </div>
+      </section>
 
-      <h3 class="mt-8 font-medium">Charts</h3>
-      <p class="mt-1 text-muted-foreground">Kept for parity with Spartan. Not used until we have data views.</p>
-      <div class="mt-3 flex gap-2">
-        <div class="h-10 flex-1 rounded-md bg-chart-1"></div>
-        <div class="h-10 flex-1 rounded-md bg-chart-2"></div>
-        <div class="h-10 flex-1 rounded-md bg-chart-3"></div>
-        <div class="h-10 flex-1 rounded-md bg-chart-4"></div>
-        <div class="h-10 flex-1 rounded-md bg-chart-5"></div>
-      </div>
-    </section>
+      <!-- ======================================================== TYPOGRAPHY -->
+      <section id="typography" class="mt-16">
+        <h2 class="section-title">Typography</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Archivo. Base size is <strong>14px</strong> (<code class="rounded-sm bg-muted px-1 py-0.5">text-sm</code>),
+          the shadcn convention for dense admin screens. Three weights only: 400, 500, 600.
+        </p>
+        <p class="mt-3 max-w-2xl text-muted-foreground">
+          <strong class="text-foreground">Every step of the ladder changes at least two of size, weight and
+          colour.</strong> Weight on its own does not carry a level: Archivo 500 against 400 at 14px is a
+          difference you can measure and cannot see. So the three heading levels are all 600 and each one is
+          also a size apart, and 500 is left for emphasis inside a line of body text, where the words around
+          it are the reference.
+        </p>
+        <p class="mt-3 max-w-2xl text-muted-foreground">
+          <strong class="text-foreground">Three heading levels, and the steps get smaller on the way
+          down:</strong> 36 &rarr; 24 is 1.5&times;, 24 &rarr; 18 is 1.33&times;, 18 &rarr; 14 is
+          1.29&times;, 14 &rarr; 12 is 1.17&times;. That is the shape a scale should have &mdash; the further
+          from the body text, the bigger the jump. The page title has to be found from anywhere on the screen;
+          the card title only has to win against the line underneath it.
+        </p>
 
-    <!-- ======================================================== TYPOGRAPHY -->
-    <section id="typography" class="mt-16">
-      <h2 class="section-title">Typography</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Archivo. Base size is <strong>14px</strong> (<code class="rounded-sm bg-muted px-1 py-0.5">text-sm</code>),
-        the shadcn convention for dense admin screens. Three weights only: 400, 500, 600.
-      </p>
-      <p class="mt-3 max-w-2xl text-muted-foreground">
-        <strong class="text-foreground">Every step of the ladder changes at least two of size, weight and
-        colour.</strong> Weight on its own does not carry a level: Archivo 500 against 400 at 14px is a
-        difference you can measure and cannot see. So the three heading levels are all 600 and each one is
-        also a size apart, and 500 is left for emphasis inside a line of body text, where the words around
-        it are the reference.
-      </p>
-      <p class="mt-3 max-w-2xl text-muted-foreground">
-        <strong class="text-foreground">Three heading levels, and the steps get smaller on the way
-        down:</strong> 36 &rarr; 24 is 1.5&times;, 24 &rarr; 18 is 1.33&times;, 18 &rarr; 14 is
-        1.29&times;, 14 &rarr; 12 is 1.17&times;. That is the shape a scale should have &mdash; the further
-        from the body text, the bigger the jump. The page title has to be found from anywhere on the screen;
-        the card title only has to win against the line underneath it.
-      </p>
-
-      <div class="mt-6 divide-y rounded-lg border">
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground"><span class="overline">h1</span> Page title</span>
-          <span class="page-title">Instruments</span>
-          <code class="text-xs text-muted-foreground">36 / 600 &middot; .page-title</code>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground"><span class="overline">h2</span> Dialog / section title</span>
-          <span class="section-title">Edit instrument</span>
-          <code class="text-xs text-muted-foreground">24 / 600 &middot; .section-title .dialog-title</code>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground"><span class="overline">h3</span> Card / subsection title</span>
-          <span class="card-title">General details</span>
-          <code class="text-xs text-muted-foreground">18 / 600 &middot; .card-title .form-section-title</code>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground">Body</span>
-          <span>The product references one or more instruments and inherits their currency.</span>
-          <code class="text-xs text-muted-foreground">14 / 400 &middot; body default</code>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground">Emphasis</span>
-          <span>Fetched from <span class="font-medium">SIX Swiss Exchange</span> at 17:30</span>
-          <code class="text-xs text-muted-foreground">14 / 500 &middot; font-medium</code>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground">Secondary</span>
-          <span class="text-muted-foreground">Last updated 2 hours ago by Master Admin</span>
-          <code class="text-xs text-muted-foreground">14 / 400 muted &middot; .page-description</code>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground">Overline</span>
-          <span class="overline">Last price</span>
-          <code class="text-xs text-muted-foreground">12 / 600 &middot; .overline, table th</code>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground">Caption / helper</span>
-          <span class="text-xs text-muted-foreground">12 characters, letters and digits</span>
-          <code class="text-xs text-muted-foreground">12 / 400 muted &middot; .field-description</code>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
-          <span class="text-muted-foreground">Code / identifiers</span>
-          <span class="font-mono">CH0012345678</span>
-          <code class="text-xs text-muted-foreground">14 / 400 mono &middot; font-mono</code>
-        </div>
-      </div>
-
-      <p class="mt-4 max-w-2xl text-xs text-muted-foreground">
-        The overline is the one place where weight carries a level on its own, and it can: against 14 / 400
-        body it is also two steps smaller and a grey lighter. It is not set in uppercase &mdash; that was tried
-        and dropped, see decision 77. Keep those labels to one to three words; the role is scanned, not read.
-        Where the levels sit next to each other: a form label stays 14 / 500 above its input, because the
-        field border already separates the two. A read-only value pairs a 12px muted label with a 14px
-        foreground value &mdash; two axes again, no weight needed. Column headers take the overline, so the
-        header band differs from the data by size, weight and colour, not only by its tint.
-      </p>
-    </section>
-
-    <!-- =========================================================== SPACING -->
-    <section id="spacing" class="mt-16">
-      <h2 class="section-title">Spacing</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Tailwind's 4px grid. One unit = 0.25rem = 4px. The grid offers every whole number; this product
-        uses <strong class="text-foreground">seven steps &mdash; 0.5, 1, 1.5, 2, 3, 4 and 6</strong> &mdash;
-        and each one has a job. A step with no job is not a spare value to reach for later; it is a value
-        that will end up meaning two different things on two different screens.
-      </p>
-      <p class="mt-3 max-w-2xl text-muted-foreground">
-        <strong class="text-foreground">Space is the main grouping device these screens have.</strong>
-        The form is not a stack of cards, the table has no wrapper and no radius (decision 50), the sidebar
-        has no rules in it (decision 76), and the page header is closed by space rather than by a line
-        (decision 60). What tells a reader that a label belongs to the field under it, and that the field
-        belongs to the section around it, is that every gap is larger than the gaps inside it. So the ladder
-        below is a set of statements, not a set of sizes.
-      </p>
-
-      <div class="mt-6 divide-y rounded-lg border">
-        <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
-          <span class="text-muted-foreground"><span class="overline">0.5</span> 2px</span>
-          <div class="h-4 w-0.5 bg-primary"></div>
-          <span>Two lines that are one value &mdash; a price over its source, a name over its code.
-            <code class="text-xs text-muted-foreground">.cell .stat-value</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
-          <span class="text-muted-foreground"><span class="overline">1</span> 4px</span>
-          <div class="h-4 w-1 bg-primary"></div>
-          <span>Items in a list that is one object: nav items, tabs, menu rows, a read-only label over its
-            value. Also the offset of a menu or select from its trigger (decision 80).
-            <code class="text-xs text-muted-foreground">.sidebar-menu .tabs-list .prop</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
-          <span class="text-muted-foreground"><span class="overline">1.5</span> 6px</span>
-          <div class="h-4 w-1.5 bg-primary"></div>
-          <span>Half step, two jobs only: an icon next to 12px text, and the vertical padding of a menu or
-            select row. <code class="text-xs text-muted-foreground">.field-error .metric-label .menu-item</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
-          <span class="text-muted-foreground"><span class="overline">2</span> 8px</span>
-          <div class="h-4 w-2 bg-primary"></div>
-          <span>Two things that belong together but are not the same thing: a label and its control, an icon
-            and its label in a button, two buttons in one action group. Also a table cell's vertical padding.
-            <code class="text-xs text-muted-foreground">.field .btn .page-actions</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
-          <span class="text-muted-foreground"><span class="overline">3</span> 12px</span>
-          <div class="h-4 w-3 bg-primary"></div>
-          <span>Inside a control &mdash; the side padding of an input, a select, a tab, a small button &mdash;
-            and the gutter between table columns, which is also what the row bleeds outwards (decision 55).
-            Controls standing in a toolbar take the same 12.
-            <code class="text-xs text-muted-foreground">.input .table td .table-toolbar</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
-          <span class="text-muted-foreground"><span class="overline">4</span> 16px</span>
-          <div class="h-4 w-4 bg-primary"></div>
-          <span>Between fields in a form section, and between a block and its own furniture &mdash; the
-            toolbar over the table, the count under it. Also the vertical padding of a dialog's header and
-            footer. <code class="text-xs text-muted-foreground">.form-section-body .table-toolbar .dialog-header</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
-          <span class="text-muted-foreground"><span class="overline">6</span> 24px</span>
-          <div class="h-4 w-6 bg-primary"></div>
-          <span>The page's own inset, the space between blocks on it, the space between form sections, the
-            gap between two fields side by side, and the inner padding of a card or a dialog.
-            <code class="text-xs text-muted-foreground">.shell-body .card .form-section .field-row</code></span>
-        </div>
-      </div>
-
-      <p class="mt-4 max-w-2xl text-xs text-muted-foreground">
-        Not on the ladder: <strong class="text-foreground">5 (20px)</strong> and
-        <strong class="text-foreground">7 (28px)</strong> &mdash; each sits between two steps that already
-        have a meaning, so it can only blur one of them. Half steps below 2 exist inside controls for optical
-        balance (<code>px-2.5</code> on an icon button, <code>px-1.5</code> on a tab count); those are part of
-        a control's drawing, not of the page's spacing.
-      </p>
-
-      <h3 class="mt-8 card-title">Four rules</h3>
-      <div class="mt-4 grid gap-3 lg:grid-cols-2">
-        <div class="rounded-lg border p-6">
-          <p class="font-medium">1 &middot; Every gap is larger than the gaps inside it</p>
-          <p class="mt-2 text-muted-foreground">
-            A form holds together on this alone: <strong class="text-foreground">8</strong> between a label
-            and its control, <strong class="text-foreground">16</strong> between one field and the next,
-            <strong class="text-foreground">24</strong> between one section and the next. Break the order
-            anywhere and the label starts belonging to the field above it. This is also why a group's own
-            inner gap decides the gap around it: a block of read-only values is 16 apart inside, so the space
-            between that block and the one under it has to be 24, not 16.
-          </p>
-        </div>
-        <div class="rounded-lg border p-6">
-          <p class="font-medium">2 &middot; Across is wider than down</p>
-          <p class="mt-2 text-muted-foreground">
-            Two fields side by side are <strong class="text-foreground">24</strong> apart, two fields stacked
-            are <strong class="text-foreground">16</strong>. Not a balance judgement: stacked, a label stands
-            between the two controls and does the separating. On one line nothing stands between them, and two
-            bordered boxes 16 apart read as one wide control that has been split in half.
-          </p>
-        </div>
-        <div class="rounded-lg border p-6">
-          <p class="font-medium">3 &middot; Padding has three tiers</p>
-          <p class="mt-2 text-muted-foreground">
-            A <strong class="text-foreground">control</strong> is padded 12 (input, select, tab, small button).
-            A <strong class="text-foreground">band</strong> is padded 16 (dialog header and footer, alert,
-            metric cell). A <strong class="text-foreground">container</strong> is padded 24 (card, dialog body,
-            page). Reading inwards, the inset gets smaller, so the frame is always the calmer of any two edges.
-          </p>
-        </div>
-        <div class="rounded-lg border p-6">
-          <p class="font-medium">4 &middot; 24 is the ceiling on a screen</p>
-          <p class="mt-2 text-muted-foreground">
-            Nothing on a product screen is separated by more than 24px. This is a dense back office; past 24
-            the eye stops reading a gap as a gap and starts looking for what is missing. Anything that needs
-            more separation than that gets a rule, a surface or a container instead. The single exception is
-            an empty table body (48), where the emptiness is the message. The kit's own pages use 32 and 64
-            between their sections &mdash; they are long-form documents, not screens, and that is not a
-            product rule.
-          </p>
-        </div>
-      </div>
-
-      <h3 class="mt-8 card-title">The vertical rhythm of a screen</h3>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Measured down the instruments list. Blocks of the page are 24 apart; the table and the two rows that
-        serve it are bound at 16, which is how the toolbar reads as part of the table rather than as a band
-        of its own.
-      </p>
-      <div class="mt-4 divide-y rounded-lg border">
-        <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
-          <code class="text-xs text-muted-foreground">24</code>
-          <span>Page inset, all four sides <code class="text-xs text-muted-foreground">.shell-body</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
-          <code class="text-xs text-muted-foreground">24</code>
-          <span>Page header &rarr; metrics <code class="text-xs text-muted-foreground">.page-header mb-6</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
-          <code class="text-xs text-muted-foreground">24</code>
-          <span>Metrics &rarr; type tabs <code class="text-xs text-muted-foreground">.metrics mb-6</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
-          <code class="text-xs text-muted-foreground">16</code>
-          <span>Tabs &rarr; toolbar <code class="text-xs text-muted-foreground">pt-4</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
-          <code class="text-xs text-muted-foreground">16</code>
-          <span>Toolbar &rarr; table <code class="text-xs text-muted-foreground">.table-toolbar pb-4</code></span>
-        </div>
-        <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
-          <code class="text-xs text-muted-foreground">16</code>
-          <span>Table &rarr; count and pagination <code class="text-xs text-muted-foreground">.table-footer pt-4</code></span>
-        </div>
-      </div>
-
-      <p class="mt-4 max-w-2xl text-xs text-muted-foreground">
-        The sidebar is measured to the same ladder and to the page beside it: 24 over the wordmark, 16 under
-        it, which puts the wordmark on the page title's optical line and the first nav item level with the
-        page's tabs (decision 76). See decision 87 for the whole rule.
-      </p>
-    </section>
-
-    <!-- ============================================================ RADIUS -->
-    <section id="radius" class="mt-16">
-      <h2 class="section-title">Radius</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        One base token <code class="rounded-sm bg-muted px-1 py-0.5">--radius</code> (<span data-var="--radius"></span> = 4px), the rest is derived
-        with shadcn's steps: base−4 / base−2 / base / base+4, so <strong>0 / 2 / 4 / 8px</strong>. Change the base and every corner follows.
-      </p>
-      <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div><div class="h-20 rounded-sm border bg-card"></div><p class="mt-2 font-medium">rounded-sm</p><p class="text-xs text-muted-foreground">badges, code, small chips</p></div>
-        <div><div class="h-20 rounded-md border bg-card"></div><p class="mt-2 font-medium">rounded-md</p><p class="text-xs text-muted-foreground">buttons, inputs, menu items</p></div>
-        <div><div class="h-20 rounded-lg border bg-card"></div><p class="mt-2 font-medium">rounded-lg</p><p class="text-xs text-muted-foreground">cards, dialogs, popovers</p></div>
-        <div><div class="h-20 rounded-xl border bg-card"></div><p class="mt-2 font-medium">rounded-xl</p><p class="text-xs text-muted-foreground">large containers, empty states</p></div>
-      </div>
-    </section>
-
-    <!-- ============================================================ SHADOW -->
-    <section id="shadow" class="mt-16">
-      <h2 class="section-title">Shadow</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Shadows mark elevation only. Content that sits on the page uses a border, not a shadow.
-      </p>
-      <div class="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
-        <div><div class="h-20 rounded-lg border bg-card"></div><p class="mt-2 font-medium">border only</p><p class="text-xs text-muted-foreground">cards, tables, panels</p></div>
-        <div><div class="h-20 rounded-lg border bg-card shadow-xs"></div><p class="mt-2 font-medium">shadow-xs</p><p class="text-xs text-muted-foreground">buttons, inputs (subtle lift)</p></div>
-        <div><div class="h-20 rounded-lg border bg-card shadow-md"></div><p class="mt-2 font-medium">shadow-md</p><p class="text-xs text-muted-foreground">dropdowns, popovers</p></div>
-        <div><div class="h-20 rounded-lg border bg-card shadow-lg"></div><p class="mt-2 font-medium">shadow-lg</p><p class="text-xs text-muted-foreground">dialogs</p></div>
-      </div>
-    </section>
-
-    <!-- ============================================================= ICONS -->
-    <section id="icons" class="mt-16">
-      <h2 class="section-title">Icons</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        RemixIcon, used as an icon font: <code class="rounded-sm bg-muted px-1 py-0.5">&lt;i class="ri-search-line"&gt;&lt;/i&gt;</code>.
-        The icon inherits the text colour and its size follows <code class="rounded-sm bg-muted px-1 py-0.5">font-size</code>.
-      </p>
-
-      <div class="mt-6 grid gap-6 lg:grid-cols-2">
-        <div class="rounded-lg border p-6">
-          <h3 class="font-medium">Rule 1 · Line by default, fill for "on"</h3>
-          <p class="mt-1 text-muted-foreground">Fill marks the active navigation item or a selected state. Nothing else.</p>
-          <div class="mt-4 flex flex-wrap gap-6">
-            <span class="inline-flex items-center gap-2"><i class="ri-home-5-line text-xl"></i> Home</span>
-            <span class="inline-flex items-center gap-2 font-medium"><i class="ri-home-5-fill text-xl"></i> Home (active)</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-star-line text-xl"></i> Watch</span>
-            <span class="inline-flex items-center gap-2 font-medium"><i class="ri-star-fill text-xl"></i> Watching</span>
+        <div class="mt-6 divide-y rounded-lg border">
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground"><span class="overline">h1</span> Page title</span>
+            <span class="page-title">Instruments</span>
+            <code class="text-xs text-muted-foreground">36 / 600 &middot; .page-title</code>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground"><span class="overline">h2</span> Dialog / section title</span>
+            <span class="section-title">Edit instrument</span>
+            <code class="text-xs text-muted-foreground">24 / 600 &middot; .section-title .dialog-title</code>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground"><span class="overline">h3</span> Card / subsection title</span>
+            <span class="card-title">General details</span>
+            <code class="text-xs text-muted-foreground">18 / 600 &middot; .card-title .form-section-title</code>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground">Body</span>
+            <span>The product references one or more instruments and inherits their currency.</span>
+            <code class="text-xs text-muted-foreground">14 / 400 &middot; body default</code>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground">Emphasis</span>
+            <span>Fetched from <span class="font-medium">SIX Swiss Exchange</span> at 17:30</span>
+            <code class="text-xs text-muted-foreground">14 / 500 &middot; font-medium</code>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground">Secondary</span>
+            <span class="text-muted-foreground">Last updated 2 hours ago by Master Admin</span>
+            <code class="text-xs text-muted-foreground">14 / 400 muted &middot; .page-description</code>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground">Overline</span>
+            <span class="overline">Last price</span>
+            <code class="text-xs text-muted-foreground">12 / 600 &middot; .overline, table th</code>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground">Caption / helper</span>
+            <span class="text-xs text-muted-foreground">12 characters, letters and digits</span>
+            <code class="text-xs text-muted-foreground">12 / 400 muted &middot; .field-description</code>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[11rem_1fr_13rem] sm:items-baseline">
+            <span class="text-muted-foreground">Code / identifiers</span>
+            <span class="font-mono">CH0012345678</span>
+            <code class="text-xs text-muted-foreground">14 / 400 mono &middot; font-mono</code>
           </div>
         </div>
 
-        <div class="rounded-lg border p-6">
-          <h3 class="font-medium">Rule 2 · Three sizes</h3>
-          <p class="mt-1 text-muted-foreground">Inline with text 16px, navigation and toolbar 20px, empty states 32px+.</p>
-          <div class="mt-4 space-y-3">
-            <p class="inline-flex items-center gap-2"><i class="ri-search-line text-base"></i> 16px · <code class="text-xs text-muted-foreground">text-base</code> · in buttons, inputs, table cells</p><br>
-            <p class="inline-flex items-center gap-2"><i class="ri-search-line text-xl"></i> 20px · <code class="text-xs text-muted-foreground">text-xl</code> · sidebar nav, toolbar icon buttons</p><br>
-            <p class="inline-flex items-center gap-2"><i class="ri-search-line text-3xl"></i> 30px · <code class="text-xs text-muted-foreground">text-3xl</code> · empty states, illustrations</p>
+        <p class="mt-4 max-w-2xl text-xs text-muted-foreground">
+          The overline is the one place where weight carries a level on its own, and it can: against 14 / 400
+          body it is also two steps smaller and a grey lighter. It is not set in uppercase &mdash; that was tried
+          and dropped, see decision 77. Keep those labels to one to three words; the role is scanned, not read.
+          Where the levels sit next to each other: a form label stays 14 / 500 above its input, because the
+          field border already separates the two. A read-only value pairs a 12px muted label with a 14px
+          foreground value &mdash; two axes again, no weight needed. Column headers take the overline, so the
+          header band differs from the data by size, weight and colour, not only by its tint.
+        </p>
+      </section>
+
+      <!-- =========================================================== SPACING -->
+      <section id="spacing" class="mt-16">
+        <h2 class="section-title">Spacing</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Tailwind's 4px grid. One unit = 0.25rem = 4px. The grid offers every whole number; this product
+          uses <strong class="text-foreground">seven steps &mdash; 0.5, 1, 1.5, 2, 3, 4 and 6</strong> &mdash;
+          and each one has a job. A step with no job is not a spare value to reach for later; it is a value
+          that will end up meaning two different things on two different screens.
+        </p>
+        <p class="mt-3 max-w-2xl text-muted-foreground">
+          <strong class="text-foreground">Space is the main grouping device these screens have.</strong>
+          The form is not a stack of cards, the table has no wrapper and no radius (decision 50), the sidebar
+          has no rules in it (decision 76), and the page header is closed by space rather than by a line
+          (decision 60). What tells a reader that a label belongs to the field under it, and that the field
+          belongs to the section around it, is that every gap is larger than the gaps inside it. So the ladder
+          below is a set of statements, not a set of sizes.
+        </p>
+
+        <div class="mt-6 divide-y rounded-lg border">
+          <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
+            <span class="text-muted-foreground"><span class="overline">0.5</span> 2px</span>
+            <div class="h-4 w-0.5 bg-primary"></div>
+            <span>Two lines that are one value &mdash; a price over its source, a name over its code.
+              <code class="text-xs text-muted-foreground">.cell .stat-value</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
+            <span class="text-muted-foreground"><span class="overline">1</span> 4px</span>
+            <div class="h-4 w-1 bg-primary"></div>
+            <span>Items in a list that is one object: nav items, tabs, menu rows, a read-only label over its
+              value. Also the offset of a menu or select from its trigger (decision 80).
+              <code class="text-xs text-muted-foreground">.sidebar-menu .tabs-list .prop</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
+            <span class="text-muted-foreground"><span class="overline">1.5</span> 6px</span>
+            <div class="h-4 w-1.5 bg-primary"></div>
+            <span>Half step, two jobs only: an icon next to 12px text, and the vertical padding of a menu or
+              select row. <code class="text-xs text-muted-foreground">.field-error .metric-label .menu-item</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
+            <span class="text-muted-foreground"><span class="overline">2</span> 8px</span>
+            <div class="h-4 w-2 bg-primary"></div>
+            <span>Two things that belong together but are not the same thing: a label and its control, an icon
+              and its label in a button, two buttons in one action group. Also a table cell's vertical padding.
+              <code class="text-xs text-muted-foreground">.field .btn .page-actions</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
+            <span class="text-muted-foreground"><span class="overline">3</span> 12px</span>
+            <div class="h-4 w-3 bg-primary"></div>
+            <span>Inside a control &mdash; the side padding of an input, a select, a tab, a small button &mdash;
+              and the gutter between table columns, which is also what the row bleeds outwards (decision 55).
+              Controls standing in a toolbar take the same 12.
+              <code class="text-xs text-muted-foreground">.input .table td .table-toolbar</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
+            <span class="text-muted-foreground"><span class="overline">4</span> 16px</span>
+            <div class="h-4 w-4 bg-primary"></div>
+            <span>Between fields in a form section, and between a block and its own furniture &mdash; the
+              toolbar over the table, the count under it. Also the vertical padding of a dialog's header and
+              footer. <code class="text-xs text-muted-foreground">.form-section-body .table-toolbar .dialog-header</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[6rem_4rem_1fr] sm:items-center">
+            <span class="text-muted-foreground"><span class="overline">6</span> 24px</span>
+            <div class="h-4 w-6 bg-primary"></div>
+            <span>The page's own inset, the space between blocks on it, the space between form sections, the
+              gap between two fields side by side, and the inner padding of a card or a dialog.
+              <code class="text-xs text-muted-foreground">.shell-body .card .form-section .field-row</code></span>
           </div>
         </div>
 
-        <div class="rounded-lg border p-6">
-          <h3 class="font-medium">Rule 3 · Icon + label, or icon with a tooltip</h3>
-          <p class="mt-1 text-muted-foreground">An icon alone must have an accessible name (<code class="rounded-sm bg-muted px-1 py-0.5">aria-label</code>) and a tooltip. Decorative icons get <code class="rounded-sm bg-muted px-1 py-0.5">aria-hidden</code>.</p>
-          <div class="mt-4 flex flex-wrap items-center gap-6">
-            <span class="inline-flex items-center gap-2"><i class="ri-add-line text-base" aria-hidden="true"></i> New instrument</span>
-            <span class="inline-flex size-8 items-center justify-center rounded-md border" role="img" aria-label="Filter"><i class="ri-filter-3-line text-xl"></i></span>
+        <p class="mt-4 max-w-2xl text-xs text-muted-foreground">
+          Not on the ladder: <strong class="text-foreground">5 (20px)</strong> and
+          <strong class="text-foreground">7 (28px)</strong> &mdash; each sits between two steps that already
+          have a meaning, so it can only blur one of them. Half steps below 2 exist inside controls for optical
+          balance (<code>px-2.5</code> on an icon button, <code>px-1.5</code> on a tab count); those are part of
+          a control's drawing, not of the page's spacing.
+        </p>
+
+        <h3 class="mt-8 card-title">Four rules</h3>
+        <div class="mt-4 grid gap-3 lg:grid-cols-2">
+          <div class="rounded-lg border p-6">
+            <p class="font-medium">1 &middot; Every gap is larger than the gaps inside it</p>
+            <p class="mt-2 text-muted-foreground">
+              A form holds together on this alone: <strong class="text-foreground">8</strong> between a label
+              and its control, <strong class="text-foreground">16</strong> between one field and the next,
+              <strong class="text-foreground">24</strong> between one section and the next. Break the order
+              anywhere and the label starts belonging to the field above it. This is also why a group's own
+              inner gap decides the gap around it: a block of read-only values is 16 apart inside, so the space
+              between that block and the one under it has to be 24, not 16.
+            </p>
+          </div>
+          <div class="rounded-lg border p-6">
+            <p class="font-medium">2 &middot; Across is wider than down</p>
+            <p class="mt-2 text-muted-foreground">
+              Two fields side by side are <strong class="text-foreground">24</strong> apart, two fields stacked
+              are <strong class="text-foreground">16</strong>. Not a balance judgement: stacked, a label stands
+              between the two controls and does the separating. On one line nothing stands between them, and two
+              bordered boxes 16 apart read as one wide control that has been split in half.
+            </p>
+          </div>
+          <div class="rounded-lg border p-6">
+            <p class="font-medium">3 &middot; Padding has three tiers</p>
+            <p class="mt-2 text-muted-foreground">
+              A <strong class="text-foreground">control</strong> is padded 12 (input, select, tab, small button).
+              A <strong class="text-foreground">band</strong> is padded 16 (dialog header and footer, alert,
+              metric cell). A <strong class="text-foreground">container</strong> is padded 24 (card, dialog body,
+              page). Reading inwards, the inset gets smaller, so the frame is always the calmer of any two edges.
+            </p>
+          </div>
+          <div class="rounded-lg border p-6">
+            <p class="font-medium">4 &middot; 24 is the ceiling on a screen</p>
+            <p class="mt-2 text-muted-foreground">
+              Nothing on a product screen is separated by more than 24px. This is a dense back office; past 24
+              the eye stops reading a gap as a gap and starts looking for what is missing. Anything that needs
+              more separation than that gets a rule, a surface or a container instead. The single exception is
+              an empty table body (48), where the emptiness is the message. The kit's own pages use 32 and 64
+              between their sections &mdash; they are long-form documents, not screens, and that is not a
+              product rule.
+            </p>
           </div>
         </div>
 
-        <div class="rounded-lg border p-6">
-          <h3 class="font-medium">Vocabulary we will reuse</h3>
-          <p class="mt-1 text-muted-foreground">Fix one icon per meaning so screens stay consistent.</p>
-          <div class="mt-4 grid grid-cols-2 gap-y-3 text-muted-foreground sm:grid-cols-3">
-            <span class="inline-flex items-center gap-2"><i class="ri-add-line text-xl text-foreground"></i> Create</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-pencil-line text-xl text-foreground"></i> Edit</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-delete-bin-line text-xl text-foreground"></i> Delete</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-search-line text-xl text-foreground"></i> Search</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-filter-3-line text-xl text-foreground"></i> Filter</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-arrow-up-down-line text-xl text-foreground"></i> Sort</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-more-2-line text-xl text-foreground"></i> More actions</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-external-link-line text-xl text-foreground"></i> Open</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-close-line text-xl text-foreground"></i> Close / clear</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-check-line text-xl text-foreground"></i> Confirm</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-error-warning-line text-xl text-foreground"></i> Warning</span>
-            <span class="inline-flex items-center gap-2"><i class="ri-information-line text-xl text-foreground"></i> Info</span>
+        <h3 class="mt-8 card-title">The vertical rhythm of a screen</h3>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Measured down the instruments list. Blocks of the page are 24 apart; the table and the two rows that
+          serve it are bound at 16, which is how the toolbar reads as part of the table rather than as a band
+          of its own.
+        </p>
+        <div class="mt-4 divide-y rounded-lg border">
+          <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
+            <code class="text-xs text-muted-foreground">24</code>
+            <span>Page inset, all four sides <code class="text-xs text-muted-foreground">.shell-body</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
+            <code class="text-xs text-muted-foreground">24</code>
+            <span>Page header &rarr; metrics <code class="text-xs text-muted-foreground">.page-header mb-6</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
+            <code class="text-xs text-muted-foreground">24</code>
+            <span>Metrics &rarr; type tabs <code class="text-xs text-muted-foreground">.metrics mb-6</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
+            <code class="text-xs text-muted-foreground">16</code>
+            <span>Tabs &rarr; toolbar <code class="text-xs text-muted-foreground">pt-4</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
+            <code class="text-xs text-muted-foreground">16</code>
+            <span>Toolbar &rarr; table <code class="text-xs text-muted-foreground">.table-toolbar pb-4</code></span>
+          </div>
+          <div class="grid gap-2 p-4 sm:grid-cols-[5rem_1fr] sm:items-baseline">
+            <code class="text-xs text-muted-foreground">16</code>
+            <span>Table &rarr; count and pagination <code class="text-xs text-muted-foreground">.table-footer pt-4</code></span>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- =========================================================== SPARTAN -->
-    <section id="spartan" class="mt-16 mb-24">
-      <h2 class="section-title">Spartan mapping</h2>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Token names and the OKLCH format match Spartan UI's theme file one to one. A developer copies the
-        <code class="rounded-sm bg-muted px-1 py-0.5">:root</code> block from <code class="rounded-sm bg-muted px-1 py-0.5">theme.css</code> into the Angular project's global styles and the theme is done.
-        Icons map to <code class="rounded-sm bg-muted px-1 py-0.5">@ng-icons/remixicon</code>; the icon name stays the same
-        (<code class="rounded-sm bg-muted px-1 py-0.5">ri-search-line</code> → <code class="rounded-sm bg-muted px-1 py-0.5">remixSearchLine</code>).
-      </p>
-    </section>
-  </main>
+        <p class="mt-4 max-w-2xl text-xs text-muted-foreground">
+          The sidebar is measured to the same ladder and to the page beside it: 24 over the wordmark, 16 under
+          it, which puts the wordmark on the page title's optical line and the first nav item level with the
+          page's tabs (decision 76). See decision 87 for the whole rule.
+        </p>
+      </section>
+
+      <!-- ============================================================ RADIUS -->
+      <section id="radius" class="mt-16">
+        <h2 class="section-title">Radius</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          One base token <code class="rounded-sm bg-muted px-1 py-0.5">--radius</code> (<span data-var="--radius"></span> = 4px), the rest is derived
+          with shadcn's steps: base−4 / base−2 / base / base+4, so <strong>0 / 2 / 4 / 8px</strong>. Change the base and every corner follows.
+        </p>
+        <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div><div class="h-20 rounded-sm border bg-card"></div><p class="mt-2 font-medium">rounded-sm</p><p class="text-xs text-muted-foreground">badges, code, small chips</p></div>
+          <div><div class="h-20 rounded-md border bg-card"></div><p class="mt-2 font-medium">rounded-md</p><p class="text-xs text-muted-foreground">buttons, inputs, menu items</p></div>
+          <div><div class="h-20 rounded-lg border bg-card"></div><p class="mt-2 font-medium">rounded-lg</p><p class="text-xs text-muted-foreground">cards, dialogs, popovers</p></div>
+          <div><div class="h-20 rounded-xl border bg-card"></div><p class="mt-2 font-medium">rounded-xl</p><p class="text-xs text-muted-foreground">large containers, empty states</p></div>
+        </div>
+      </section>
+
+      <!-- ============================================================ SHADOW -->
+      <section id="shadow" class="mt-16">
+        <h2 class="section-title">Shadow</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Shadows mark elevation only. Content that sits on the page uses a border, not a shadow.
+        </p>
+        <div class="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
+          <div><div class="h-20 rounded-lg border bg-card"></div><p class="mt-2 font-medium">border only</p><p class="text-xs text-muted-foreground">cards, tables, panels</p></div>
+          <div><div class="h-20 rounded-lg border bg-card shadow-xs"></div><p class="mt-2 font-medium">shadow-xs</p><p class="text-xs text-muted-foreground">buttons, inputs (subtle lift)</p></div>
+          <div><div class="h-20 rounded-lg border bg-card shadow-md"></div><p class="mt-2 font-medium">shadow-md</p><p class="text-xs text-muted-foreground">dropdowns, popovers</p></div>
+          <div><div class="h-20 rounded-lg border bg-card shadow-lg"></div><p class="mt-2 font-medium">shadow-lg</p><p class="text-xs text-muted-foreground">dialogs</p></div>
+        </div>
+      </section>
+
+      <!-- ============================================================= ICONS -->
+      <section id="icons" class="mt-16">
+        <h2 class="section-title">Icons</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          RemixIcon, used as an icon font: <code class="rounded-sm bg-muted px-1 py-0.5">&lt;i class="ri-search-line"&gt;&lt;/i&gt;</code>.
+          The icon inherits the text colour and its size follows <code class="rounded-sm bg-muted px-1 py-0.5">font-size</code>.
+        </p>
+
+        <div class="mt-6 grid gap-6 lg:grid-cols-2">
+          <div class="rounded-lg border p-6">
+            <h3 class="font-medium">Rule 1 · Line by default, fill for "on"</h3>
+            <p class="mt-1 text-muted-foreground">Fill marks the active navigation item or a selected state. Nothing else.</p>
+            <div class="mt-4 flex flex-wrap gap-6">
+              <span class="inline-flex items-center gap-2"><i class="ri-home-5-line text-xl"></i> Home</span>
+              <span class="inline-flex items-center gap-2 font-medium"><i class="ri-home-5-fill text-xl"></i> Home (active)</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-star-line text-xl"></i> Watch</span>
+              <span class="inline-flex items-center gap-2 font-medium"><i class="ri-star-fill text-xl"></i> Watching</span>
+            </div>
+          </div>
+
+          <div class="rounded-lg border p-6">
+            <h3 class="font-medium">Rule 2 · Three sizes</h3>
+            <p class="mt-1 text-muted-foreground">Inline with text 16px, navigation and toolbar 20px, empty states 32px+.</p>
+            <div class="mt-4 space-y-3">
+              <p class="inline-flex items-center gap-2"><i class="ri-search-line text-base"></i> 16px · <code class="text-xs text-muted-foreground">text-base</code> · in buttons, inputs, table cells</p><br>
+              <p class="inline-flex items-center gap-2"><i class="ri-search-line text-xl"></i> 20px · <code class="text-xs text-muted-foreground">text-xl</code> · sidebar nav, toolbar icon buttons</p><br>
+              <p class="inline-flex items-center gap-2"><i class="ri-search-line text-3xl"></i> 30px · <code class="text-xs text-muted-foreground">text-3xl</code> · empty states, illustrations</p>
+            </div>
+          </div>
+
+          <div class="rounded-lg border p-6">
+            <h3 class="font-medium">Rule 3 · Icon + label, or icon with a tooltip</h3>
+            <p class="mt-1 text-muted-foreground">An icon alone must have an accessible name (<code class="rounded-sm bg-muted px-1 py-0.5">aria-label</code>) and a tooltip. Decorative icons get <code class="rounded-sm bg-muted px-1 py-0.5">aria-hidden</code>.</p>
+            <div class="mt-4 flex flex-wrap items-center gap-6">
+              <span class="inline-flex items-center gap-2"><i class="ri-add-line text-base" aria-hidden="true"></i> New instrument</span>
+              <span class="inline-flex size-8 items-center justify-center rounded-md border" role="img" aria-label="Filter"><i class="ri-filter-3-line text-xl"></i></span>
+            </div>
+          </div>
+
+          <div class="rounded-lg border p-6">
+            <h3 class="font-medium">Vocabulary we will reuse</h3>
+            <p class="mt-1 text-muted-foreground">Fix one icon per meaning so screens stay consistent.</p>
+            <div class="mt-4 grid grid-cols-2 gap-y-3 text-muted-foreground sm:grid-cols-3">
+              <span class="inline-flex items-center gap-2"><i class="ri-add-line text-xl text-foreground"></i> Create</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-pencil-line text-xl text-foreground"></i> Edit</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-delete-bin-line text-xl text-foreground"></i> Delete</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-search-line text-xl text-foreground"></i> Search</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-filter-3-line text-xl text-foreground"></i> Filter</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-arrow-up-down-line text-xl text-foreground"></i> Sort</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-more-2-line text-xl text-foreground"></i> More actions</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-external-link-line text-xl text-foreground"></i> Open</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-close-line text-xl text-foreground"></i> Close / clear</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-check-line text-xl text-foreground"></i> Confirm</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-error-warning-line text-xl text-foreground"></i> Warning</span>
+              <span class="inline-flex items-center gap-2"><i class="ri-information-line text-xl text-foreground"></i> Info</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================== SPARTAN -->
+      <section id="spartan" class="mt-16 mb-24">
+        <h2 class="section-title">Spartan mapping</h2>
+        <p class="mt-2 max-w-2xl text-muted-foreground">
+          Token names and the OKLCH format match Spartan UI's theme file one to one. A developer copies the
+          <code class="rounded-sm bg-muted px-1 py-0.5">:root</code> block from <code class="rounded-sm bg-muted px-1 py-0.5">theme.css</code> into the Angular project's global styles and the theme is done.
+          Icons map to <code class="rounded-sm bg-muted px-1 py-0.5">@ng-icons/remixicon</code>; the icon name stays the same
+          (<code class="rounded-sm bg-muted px-1 py-0.5">ri-search-line</code> → <code class="rounded-sm bg-muted px-1 py-0.5">remixSearchLine</code>).
+        </p>
+      </section>
+    </main>
+  </div>
 
   <script>
     // Render swatches: read the live value of each token from the stylesheet.
@@ -657,6 +636,7 @@
     }
     renderWhenReady();
   </script>
+  <script src="../assets/kit-nav.js"></script>
   <script src="../assets/app.js"></script>
 </body>
 </html>

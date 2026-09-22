@@ -18,30 +18,17 @@
 </head>
 <body>
   <main class="mx-auto max-w-2xl px-6 py-16">
-    <p class="text-sm text-muted-foreground">Phase 1 · environment check</p>
-    <h1 class="mt-2 page-title">VIZ 2.0 Back office</h1>
+    <h1 class="page-title">VIZ 2.0 Back office</h1>
     <p class="mt-3 text-muted-foreground">
-      Prototype shell. If you can read this in Archivo, on a white page, with a grey
-      caption above, the theme is wired up.
+      Admin panel prototype for a structured-products management system.
+      Design language: shadcn/ui, targeting Spartan UI (Angular) in production.
     </p>
-
-    <ul class="mt-8 space-y-2 text-sm">
-      <li class="flex items-center gap-2">
-        <i class="ri-checkbox-circle-line text-base"></i> Tailwind utilities render
-      </li>
-      <li class="flex items-center gap-2">
-        <i class="ri-palette-line text-base"></i> Theme tokens from <code class="rounded-sm bg-muted px-1 py-0.5">theme.css</code> apply
-      </li>
-      <li class="flex items-center gap-2">
-        <i class="ri-remixicon-line text-base"></i> RemixIcon loads
-      </li>
-    </ul>
 
     <nav class="mt-8 rounded-lg border bg-card p-4">
       <p class="overline">Kit</p>
       <ul class="mt-2 space-y-1 text-sm">
         <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./kit/foundations.html"><i class="ri-palette-line"></i> Foundations: tokens, type, spacing, icons</a></li>
-        <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./kit/components.html"><i class="ri-layout-grid-line"></i> Components: catalogue with recipes and Spartan mapping</a></li>
+        <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./kit/components.html"><i class="ri-layout-grid-line"></i> Components: one page each, ordered atoms → molecules → organisms → templates</a></li>
         <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./kit/navigation.html"><i class="ri-side-bar-line"></i> Navigation: the sidebar, its six areas and the app shell</a></li>
       </ul>
     </nav>
@@ -52,12 +39,6 @@
         <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./screens/instruments.html"><i class="ri-line-chart-line"></i> Instruments: the list in the app shell — sidebar, page header, type tabs, search and filters</a></li>
       </ul>
     </nav>
-
-    <div class="mt-4 rounded-lg border bg-card p-4">
-      <p class="text-sm">This box uses <code class="rounded-sm bg-muted px-1 py-0.5">border</code>,
-        <code class="rounded-sm bg-muted px-1 py-0.5">bg-card</code> and
-        <code class="rounded-sm bg-muted px-1 py-0.5">rounded-lg</code>, all driven by tokens.</p>
-    </div>
   </main>
   <script src="./assets/app.js"></script>
 </body>

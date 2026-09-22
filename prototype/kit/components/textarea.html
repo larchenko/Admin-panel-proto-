@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Textarea · Atoms · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Atoms</p>
+      <h1 class="page-title">Textarea</h1>
+      <p class="kit-meta">Spartan: <code>hlmInput</code> on <code>&lt;textarea&gt;</code> · shadcn: <code>textarea.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">Multi-line text. Grows with content (<code class="rounded-sm bg-muted px-1 py-0.5">field-sizing: content</code>), minimum 64px.</p>
+      <div class="mt-6 rounded-lg border p-6">
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div class="field">
+            <label class="label" for="ta1">Description <span class="label-optional">Optional</span></label>
+            <textarea class="textarea" id="ta1" placeholder="Internal notes about this instrument"></textarea>
+          </div>
+          <div class="field">
+            <label class="label" for="ta2">Description</label>
+            <textarea class="textarea" id="ta2" aria-invalid="true" aria-describedby="ta2-err">Too short</textarea>
+            <p class="field-error" id="ta2-err"><i class="ri-error-warning-line"></i> Enter at least 20 characters.</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

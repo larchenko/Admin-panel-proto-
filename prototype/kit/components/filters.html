@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Filters · Organisms · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Organisms</p>
+      <h1 class="page-title">Filters</h1>
+      <p class="kit-meta">Spartan: <code>hlm-popover</code> · shadcn: <code>popover.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        A list with more than about four filters does not put them in the toolbar: past that they eat the
+        width the search box and the primary action need, and none of them is used often enough to earn a
+        permanent slot. They go in one panel behind a <strong>Filters</strong> button, and the button carries
+        the number of them that are on (decision 89). Because a shut panel hides the query, a
+        <strong>chip row</strong> sits under the toolbar: one chip per filter the panel holds, each clearing
+        itself, so the list is never narrowed by something invisible. A filter whose own control is on screen
+        — the search box, a type tab, a summary cell that filters — gets no chip; two copies of one state is
+        one too many. Nothing is applied by a button: every change filters at once, so the footer count moves
+        while the panel is open. <strong>Clear all</strong> means all — the panel, the search box and any
+        filter parked in a control elsewhere.
+      </p>
+      <p class="mt-2 max-w-2xl text-muted-foreground">
+        Fields are laid out two across, which is what keeps the panel short enough to open downward under the
+        toolbar. A pair of fields that is one filter — pick a field, then <em>Empty</em> or <em>Filled</em> —
+        is ruled off as its own group with an overline: the Instruments list asks that of all twelve
+        identifiers that way instead of carrying twelve controls (decision 90). Until both halves are set the
+        filter does nothing, and the second select stays disabled so that half a filter never looks like a
+        whole one.
+      </p>
+
+      <div class="mt-6 flex items-center gap-3">
+        <button type="button" class="btn btn-outline btn-sm" popovertarget="kit-filters" aria-haspopup="dialog">
+          <i class="ri-equalizer-line"></i> Filters <span class="btn-count">2</span>
+        </button>
+        <span class="text-xs text-muted-foreground">the panel opens under the button</span>
+      </div>
+
+      <div class="menu filter-panel" id="kit-filters" popover data-align="start" aria-label="Filters">
+        <div class="filter-panel-header">
+          <span class="overline">Filters</span>
+          <button type="button" class="btn btn-link btn-sm">Clear all</button>
+        </div>
+        <div class="filter-panel-body">
+          <div class="field-row">
+            <div class="field">
+              <span class="label" id="k-status-l">Status</span>
+              <div class="select select-sm">
+                <button type="button" class="select-trigger" id="k-status" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="k-status-l k-status" data-autofocus><span>Active</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="k-status-l" hidden>
+                  <div class="select-item" role="option" data-value="All" tabindex="-1">All</div>
+                  <div class="select-item" role="option" data-value="Active" tabindex="-1" aria-selected="true">Active</div>
+                  <div class="select-item" role="option" data-value="Inactive" tabindex="-1">Inactive</div>
+                </div>
+                <input type="hidden" name="k-status" value="Active">
+              </div>
+            </div>
+            <div class="field">
+              <span class="label" id="k-ccy-l">Currency</span>
+              <div class="select select-sm">
+                <button type="button" class="select-trigger" id="k-ccy" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="k-ccy-l k-ccy"><span>CHF</span><i class="ri-arrow-down-s-line"></i></button>
+                <div class="select-content" role="listbox" aria-labelledby="k-ccy-l" hidden>
+                  <div class="select-item" role="option" data-value="All" tabindex="-1">All</div>
+                  <div class="select-item" role="option" data-value="CHF" tabindex="-1" aria-selected="true">CHF</div>
+                  <div class="select-item" role="option" data-value="EUR" tabindex="-1">EUR</div>
+                  <div class="select-item" role="option" data-value="USD" tabindex="-1">USD</div>
+                </div>
+                <input type="hidden" name="k-ccy" value="CHF">
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-panel-group">
+            <span class="overline">Identifier</span>
+            <div class="field-row">
+              <div class="field">
+                <span class="label" id="k-id-l">Field</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="k-id" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="k-id-l k-id" data-placeholder><span>Pick a field</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="k-id-l" hidden>
+                    <div class="select-item" role="option" data-value="isin" tabindex="-1">ISIN</div>
+                    <div class="select-item" role="option" data-value="valor" tabindex="-1">VALOR</div>
+                    <div class="select-item" role="option" data-value="six-bc" tabindex="-1">SIX Bc</div>
+                  </div>
+                  <input type="hidden" name="k-id" value="">
+                </div>
+              </div>
+              <div class="field">
+                <span class="label" id="k-id-state-l">Condition</span>
+                <div class="select select-sm">
+                  <button type="button" class="select-trigger" id="k-id-state" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="k-id-state-l k-id-state" data-placeholder disabled><span>Pick a condition</span><i class="ri-arrow-down-s-line"></i></button>
+                  <div class="select-content" role="listbox" aria-labelledby="k-id-state-l" hidden>
+                    <div class="select-item" role="option" data-value="empty" tabindex="-1">Empty</div>
+                    <div class="select-item" role="option" data-value="filled" tabindex="-1">Filled</div>
+                  </div>
+                  <input type="hidden" name="k-id-state" value="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-6 text-xs text-muted-foreground">The chip row, as it looks under the toolbar</p>
+      <div class="mt-2 filter-chips">
+        <span class="chip"><span class="chip-label">Status:</span><span>Active</span><button type="button" class="chip-clear" aria-label="Clear filter: Status Active"><i class="ri-close-line" aria-hidden="true"></i></button></span>
+        <span class="chip"><span class="chip-label">Currency:</span><span>CHF</span><button type="button" class="chip-clear" aria-label="Clear filter: Currency CHF"><i class="ri-close-line" aria-hidden="true"></i></button></span>
+        <span class="chip"><span class="chip-label">SIX Bc is empty</span><button type="button" class="chip-clear" aria-label="Clear filter: SIX Bc is empty"><i class="ri-close-line" aria-hidden="true"></i></button></span>
+      </div>
+
+      <pre class="mt-6 overflow-x-auto rounded-md border bg-muted/40 p-4 text-xs"><code>&lt;button type="button" class="btn btn-outline btn-sm" popovertarget="filters" aria-haspopup="dialog"&gt;
+  &lt;i class="ri-equalizer-line"&gt;&lt;/i&gt; Filters &lt;span class="btn-count" data-filter-count hidden&gt;0&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;div class="menu filter-panel" id="filters" popover data-align="start" aria-label="Filters"&gt;   &lt;!-- data-align="start": left edges, not right --&gt;
+  &lt;div class="filter-panel-header"&gt;
+    &lt;span class="overline"&gt;Filters&lt;/span&gt;
+    &lt;button type="button" class="btn btn-link btn-sm" data-clear-all&gt;Clear all&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="filter-panel-body"&gt;
+    &lt;div class="field-row"&gt;…two fields…&lt;/div&gt;
+    &lt;div class="filter-panel-group"&gt;&lt;span class="overline"&gt;Identifier&lt;/span&gt; …&lt;/div&gt;   &lt;!-- a pair that is one filter --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="filter-chips" data-chips hidden&gt;&lt;/div&gt;   &lt;!-- written by app.js from the filters --&gt;
+
+&lt;!-- each filter carries the value the row is matched on and the word its chip uses --&gt;
+&lt;input type="hidden" name="currency" value="All" data-filter="currency" data-filter-label="Currency"&gt;
+&lt;tr data-currency="CHF" data-ids="isin=CH0038863350;six-bc=4"&gt;</code></pre>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>

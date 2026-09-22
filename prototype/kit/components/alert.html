@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alert · Molecules · VIZ 2.0 Back office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/kit.css">
+  <script src="../../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Molecules</p>
+      <h1 class="page-title">Alert</h1>
+      <p class="kit-meta">Spartan: <code>hlm-alert</code> · shadcn: <code>alert.tsx</code></p>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        A message about the thing on screen, in the flow of the page. Not a toast (it does not disappear)
+        and not a tooltip (it is not an expansion of something else). Used for the result of a data fetch
+        and for a save that failed. Variants use the status tokens with the <code class="rounded-sm bg-muted px-1 py-0.5">-ink</code>
+        text shade, so each one clears 4.5:1 on its own tint (decision 24).
+      </p>
+
+      <div class="mt-6 grid gap-4">
+        <div class="alert">
+          <i class="ri-information-line"></i>
+          <div class="alert-title">Neutral, for something the user should notice</div>
+          <div class="alert-description">Everything below the title is the description. It wraps.</div>
+        </div>
+        <div class="alert alert-success">
+          <i class="ri-check-line"></i>
+          <div class="alert-title">Apple Inc. found at SIX</div>
+          <div class="alert-description">Last price <span class="font-medium tabular-nums">227.858 USD</span>, data date <span class="font-medium tabular-nums">19 Sep 2026, 22:00:00</span>.</div>
+        </div>
+        <div class="alert alert-destructive">
+          <i class="ri-error-warning-line"></i>
+          <div class="alert-title">SIX returned an error</div>
+          <div class="alert-description">No instrument found for SIX Code ZZZZ (404). The instrument can still be created.</div>
+        </div>
+        <div class="alert alert-warning">
+          <i class="ri-alert-line"></i>
+          <div class="alert-title">Showing data from 18 Sep 2026</div>
+          <div class="alert-description">The last refresh failed, so these values are two days old.</div>
+        </div>
+      </div>
+
+      <h2 id="rules" class="section-title mt-14">Rules</h2>
+      <ul class="mt-2 max-w-2xl list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>Title is one line and says what happened; the description carries the detail and the way out.</li>
+        <li>Destructive for something that failed, warning for something that is stale or risky, success only
+            as the answer to an action the user just took. Never as decoration.</li>
+        <li>An alert that reports a failure never removes the action that caused it — the user has to be able to retry.</li>
+      </ul>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../../assets/kit-nav.js"></script>
+  <script src="../../assets/app.js"></script>
+</body>
+</html>
