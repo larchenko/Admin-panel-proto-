@@ -42,7 +42,7 @@
             <!-- ▼▼▼ the sidebar ▼▼▼ -->
             <aside class="sidebar">
               <div class="sidebar-header">
-                <span class="sidebar-brand">Back Office</span>
+                <span class="sidebar-brand"><img src="../assets/logo.svg?v=2026-09-23" alt="VIZ"></span>
                 <button type="button" class="btn btn-ghost btn-icon btn-sm" data-sidebar-toggle
                         aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
                   <i class="ri-menu-fold-line"></i>
@@ -138,7 +138,7 @@
           <div class="rounded-lg border">
             <aside class="sidebar h-auto border-r-0">
               <div class="sidebar-header">
-                <span class="sidebar-brand">Back Office</span>
+                <span class="sidebar-brand"><img src="../assets/logo.svg?v=2026-09-23" alt="VIZ"></span>
                 <span class="btn btn-ghost btn-icon btn-sm"><i class="ri-menu-fold-line"></i></span>
               </div>
               <nav class="sidebar-content">
@@ -160,7 +160,7 @@
           </div>
           <dl class="grid content-start gap-3 text-muted-foreground">
             <div><dt class="font-medium text-foreground"><code>sidebar-header</code> · 72px</dt>
-              <dd>The wordmark <em>Back Office</em> (decision 25, brand colour, no logo yet) and the collapse button. <code>pt-6 pb-4</code> around a 32px row &mdash; the height is the spacing, not a fixed box.</dd></div>
+              <dd>The logo (decision 25, <code>assets/logo.svg</code> at 28px) and the collapse button. <code>pt-6 pb-4</code> around a 32px row &mdash; the height is the spacing, not a fixed box.</dd></div>
             <div><dt class="font-medium text-foreground"><code>sidebar-content</code></dt>
               <dd>The areas, in the order the product owner gave. Scrolls on its own if the list ever outgrows the height; the header and footer stay put.</dd></div>
             <div><dt class="font-medium text-foreground"><code>sidebar-footer</code></dt>
@@ -248,13 +248,14 @@
         </p>
         <p class="mt-2 max-w-2xl text-muted-foreground">
           Items are square here — <code>size-9</code>, 36×36 around a 20px icon, centred in the rail
-          with an auto margin. The height is the one the expanded item already has, so closing the
-          rail moves nothing vertically; only the width comes in to meet it.
+          with an auto margin. The height is the one the expanded item already has, so the items
+          themselves do not change size; only the width comes in to meet it. The list as a whole moves
+          down 36px, because the logo mark stacks over the toggle.
         </p>
         <div class="mt-4 flex gap-6 rounded-lg border p-6">
           <aside class="sidebar h-[420px] rounded-md border" data-collapsed>
             <div class="sidebar-header">
-              <span class="sidebar-brand">Back Office</span>
+              <span class="sidebar-brand"><img src="../assets/logo.svg?v=2026-09-23" alt="VIZ"></span>
               <button type="button" class="btn btn-ghost btn-icon btn-sm" data-sidebar-toggle
                       aria-expanded="false" aria-label="Expand sidebar" title="Expand sidebar">
                 <i class="ri-menu-unfold-line"></i>
@@ -280,7 +281,7 @@
           <dl class="grid content-start gap-3 text-muted-foreground">
             <div><dt class="font-medium text-foreground">How</dt><dd><code>data-collapsed</code> on <code>.sidebar</code>; the toggle in <code>app.js</code> flips it and swaps <code>ri-menu-fold-line</code> for <code>ri-menu-unfold-line</code>.</dd></div>
             <div><dt class="font-medium text-foreground">Labels</dt><dd>Stay in the DOM and in the <code>title</code> attribute, so the tooltip and the screen reader still read them. Hover an icon to check.</dd></div>
-            <div><dt class="font-medium text-foreground">Wordmark</dt><dd>Hidden — there is no logo mark to fall back to yet (decision 25). When one exists, it stays visible here.</dd></div>
+            <div><dt class="font-medium text-foreground">Logo</dt><dd>The mark alone, stacked over the toggle — 48px cannot hold them side by side. The header grows by 36px and the nav moves down with it; that is accepted so the logo never leaves the screen (decision 25).</dd></div>
             <div><dt class="font-medium text-foreground">Account</dt><dd>The avatar alone. The More chevron is hidden, not squeezed: the row is the same 36px square as every other item and the avatar is 32px of it, and the chevron only hints at a menu the whole row already opens. Name and role move into the tooltip — in production show that tooltip only while the rail is collapsed, since expanded it just repeats the two lines next to it.</dd></div>
             <div><dt class="font-medium text-foreground">For the developer</dt><dd>The state must be remembered per user (Spartan's sidebar keeps it in a cookie). In the prototype it resets on reload.</dd></div>
           </dl>

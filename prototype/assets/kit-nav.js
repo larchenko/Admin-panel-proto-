@@ -118,7 +118,7 @@
     const brand = el('a', 'kit-brand');
     brand.href = ROOT + 'index.html';
     brand.innerHTML = `
-      <span class="kit-brand-mark">V</span>
+      <img class="kit-brand-mark" src="${ROOT}assets/logo-mark.svg?v=2026-09-23" alt="">
       <span>
         <span class="kit-brand-name">VIZ 2.0 Back office</span>
         <span class="kit-brand-sub">Design system</span>

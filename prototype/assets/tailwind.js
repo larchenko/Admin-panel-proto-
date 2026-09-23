@@ -16,7 +16,17 @@
   // Files are concatenated in this order: tokens first, then component recipes.
   const FILES = ['theme.css', 'components.css'];
 
-  Promise.all(FILES.map((f) => fetch(base + f).then((r) => r.text())))
+  // Favicon: the logo mark, on every page. The ?v= query is the cache-buster —
+  // browsers hold on to favicons long after the file changes; bump it when it does.
+  const icon = document.createElement('link');
+  icon.rel = 'icon';
+  icon.type = 'image/svg+xml';
+  icon.href = base + 'logo-mark.svg?v=2026-09-23';
+  document.head.appendChild(icon);
+
+  // cache: 'no-cache' revalidates on every load, so an edited theme or recipe
+  // shows up without a hard reload on the deployed site too.
+  Promise.all(FILES.map((f) => fetch(base + f, { cache: 'no-cache' }).then((r) => r.text())))
     .then((parts) => parts.join('\n'))
     .then((css) => {
       const style = document.createElement('style');
