@@ -751,4 +751,54 @@
   syncExport();
   industryFields();
   setMode('create');
+
+  /* ------------------------------------------------- the kit's state links
+     Documentation scaffolding and nothing else. `pages/instrument-record.html`
+     loads this screen as ?state=<id> to show one state of the record modal, so
+     that the kit never keeps a copy of the modal that could drift from it.
+     Product code never reads this; with no query string the block does nothing.
+
+     Two states are FORCED, and the page says so rather than pretending: no row
+     in the demo data has zero products, so the destructive branch of the delete
+     confirmation (95) cannot be reached by clicking. Those two set the count to
+     0 on the way in. Everything else is the real path, opened by the real
+     functions — `discard` even goes through the Close button, so app.js sets
+     its own `pending` and the confirmation's answers work.
+  */
+  const rowAt = (i) => table.tBodies[0].rows[i];
+
+  const STATES = {
+    'create':             () => openCreate(),
+    'record':             () => openRecord(rowAt(0)),
+    'record-dirty':       () => { openRecord(rowAt(0)); form.setAttribute('data-dirty', ''); syncSave(); },
+    'record-performance': () => { openRecord(rowAt(0)); dlg.querySelector('[data-tab-btn="performance"]')?.click(); },
+    'record-inactive':    () => openRecord([...table.tBodies[0].rows].find((r) => r.hasAttribute('data-inactive')) || rowAt(0)),
+    'discard':            () => {
+      openRecord(rowAt(0));
+      form.setAttribute('data-dirty', '');
+      syncSave();
+      dlg.querySelector('[data-only="record"][data-dialog-close]')?.click();
+    },
+    'deactivate':         () => { openRecord(rowAt(0)); askRecord('deactivate'); },
+    'delete-refused':     () => { openRecord(rowAt(0)); askRecord('delete'); },
+    'delete':             () => { openRecord(rowAt(0)); current.products = 0; askRecord('delete'); },
+    'list-delete-refused': () => askDelete(rowAt(0)),
+    'list-delete':        () => {
+      const row = rowAt(0);
+      pendingDelete = row;
+      fillDelete(delList, { ...readRow(row), products: '0' });
+      delList.showModal();
+    },
+  };
+
+  // On DOMContentLoaded, not now: the dialog's tabs are wired by
+  // instruments-performance.js, which is the next <script> on the page, so a
+  // click dispatched from here would land before its listener exists.
+  const wanted = new URLSearchParams(location.search).get('state');
+  if (wanted && STATES[wanted]) {
+    const open = () => { document.documentElement.dataset.state = wanted; STATES[wanted](); };
+    if (document.readyState === 'loading') addEventListener('DOMContentLoaded', open, { once: true });
+    else open();
+  }
+
 })();

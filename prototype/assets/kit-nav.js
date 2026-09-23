@@ -96,6 +96,13 @@
         { title: 'Settings',              href: null, blurb: 'System-wide configuration. Which settings live here is still open.' },
       ],
     },
+    {
+      name: 'Modals',
+      note: 'What opens over a screen. Each one documented in every state it can be in, drawn live from the screen that owns it.',
+      items: [
+        { title: 'Instrument record', href: 'pages/instrument-record.html', blurb: 'Create and record modes, the discard guard, and the deactivate and delete confirmations — eleven states.' },
+      ],
+    },
   ];
 
   const SECTIONS = [

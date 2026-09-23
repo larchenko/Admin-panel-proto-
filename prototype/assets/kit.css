@@ -311,3 +311,72 @@
 .kit-pager .kit-pager-dir { display: block; font-size: 11px; color: var(--muted-foreground); }
 .kit-pager .kit-pager-name { display: block; font-size: 13px; font-weight: 500; }
 .kit-pager i { font-size: 16px; color: var(--muted-foreground); }
+
+/* --------------------------------------------------- Live state viewer
+   A modal only exists inside the screen that opens it, so the Modals page
+   does not keep a copy of one: it loads the real screen in a frame, with
+   ?state= telling it which state to open. Nothing here can go stale, because
+   there is nothing here to go stale.
+
+   The frame runs at a true desktop width and is scaled down to the room the
+   page has, rather than being squeezed into it — a modal shown at the wrong
+   viewport width is a different modal. The scale is set in the page. */
+.kit-viewer {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--muted);
+  overflow: hidden;
+}
+
+.kit-viewer-frame {
+  position: relative;
+  overflow: hidden;
+}
+
+.kit-viewer-frame iframe {
+  display: block;
+  border: 0;
+  transform-origin: top left;
+}
+
+.kit-viewer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--background);
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.kit-viewer-bar code { color: var(--foreground); }
+
+/* The button that loads a state into the viewer. Plain, because the table row
+   around it is already the documentation — this is just the way in. */
+.kit-state {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 500;
+  color: var(--primary);
+  text-align: left;
+  cursor: pointer;
+  text-underline-offset: 4px;
+}
+
+.kit-state:hover { text-decoration: underline; }
+
+.kit-state[aria-pressed="true"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+.kit-state:focus-visible {
+  outline: 3px solid color-mix(in oklch, var(--ring) 45%, transparent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instrument record · Modals · VIZ 2.0 Admin panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/kit.css">
+  <script src="../assets/tailwind.js"></script>
+</head>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
+
+    <main class="kit-content">
+      <p class="kit-eyebrow">Modals</p>
+      <h1 class="page-title">Instrument record</h1>
+      <p class="kit-meta"><code>#instrument</code> · <code>.dialog.dialog-lg</code>, 768px · Spartan: <code>hlm-dialog</code></p>
+
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        The one modal the Admin panel has so far, and every state it can be in. Creating an instrument
+        and reading one are the same dialog in two modes (decision 91): there is no second entry point
+        and no view-then-edit step, so the fields are live from the moment it opens.
+      </p>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        Nothing below is a copy. The frame is the real
+        <a class="btn btn-link" href="../screens/instruments.html">Instruments screen</a>, loaded with
+        <code class="rounded-sm bg-muted px-1 py-0.5">?state=</code> telling it which state to open —
+        a documentation hook in <code class="rounded-sm bg-muted px-1 py-0.5">instruments.js</code> that
+        product code never reads. So this page cannot drift from the thing it documents: if the modal
+        changes, what is drawn here changes with it.
+      </p>
+
+      <!-- ============================================================ VIEWER -->
+      <div class="kit-viewer" data-viewer>
+        <div class="kit-viewer-frame" data-frame>
+          <iframe title="The Instruments screen, showing one state of the record modal"
+                  src="../screens/instruments.html?state=record"></iframe>
+        </div>
+        <div class="kit-viewer-bar">
+          <span>Showing <code data-showing>record</code> · scaled to fit, the frame runs at 1440&nbsp;×&nbsp;900</span>
+          <a class="btn btn-link btn-sm" data-full href="../screens/instruments.html?state=record" target="_blank" rel="noopener">
+            Open at full size <i class="ri-external-link-line"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- ============================================================= MODES -->
+      <h2 id="modes" class="section-title mt-14">Modes</h2>
+      <p class="mt-1 max-w-2xl text-muted-foreground">
+        One dialog, one <code class="rounded-sm bg-muted px-1 py-0.5">data-mode</code> attribute. Every
+        part that belongs to only one mode carries <code class="rounded-sm bg-muted px-1 py-0.5">data-only</code>
+        and is hidden rather than rebuilt, so the two modes cannot drift apart and the body keeps its
+        markup (decision 75).
+      </p>
+
+      <div class="mt-4 table-wrap">
+        <table class="table">
+          <thead><tr><th>State</th><th>How it is reached</th><th>What is different</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="create">Create</button></td>
+              <td>The <em>New instrument</em> button in the page header.</td>
+              <td>No status badge, no switch, no Products card, no tabs, no Delete. Footer is
+                  <strong>Cancel · Create instrument</strong>. The title is fixed text, not a field's echo.</td>
+            </tr>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="record">Record, at rest</button></td>
+              <td>A row's name, or its More menu → <em>View details</em>.</td>
+              <td>Header gains the name, the status badge, the switch that changes it and the Products
+                  card; two tabs appear. Footer is <strong>Delete instrument</strong> at the left end,
+                  then <strong>Close · Save changes</strong>. Save is <strong>disabled</strong>.</td>
+            </tr>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="record-dirty">Record, edited</button></td>
+              <td>One keystroke or one changed select, anywhere in the form.</td>
+              <td>Only <strong>Save changes</strong> enables. <code>app.js</code> sets
+                  <code>data-dirty</code> on the <code>form[data-guard]</code>; the same flag is what the
+                  discard question reads. The header title follows the Name field as it is typed.</td>
+            </tr>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="record-performance">Record, performance</button></td>
+              <td>The second tab, <em>Instrument performance</em>.</td>
+              <td>The price chart, its six-period toggle group (decision 94) and <em>Refresh data</em>.
+                  Drawn, and does nothing in the prototype. The footer does not change with the tab.</td>
+            </tr>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="record-inactive">Record, deactivated</button></td>
+              <td>Opening an instrument whose row is inactive.</td>
+              <td>The badge reads <em>Inactive</em> and the switch is off. Everything else stays readable
+                  and editable — deactivating stops the market-data updates, it does not lock the record.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ================================================== BEFORE IT CLOSES -->
+      <h2 id="before-it-closes" class="section-title mt-14">Before it closes</h2>
+      <p class="mt-1 max-w-2xl text-muted-foreground">
+        A confirmation that opens over an open dialog is a <code class="rounded-sm bg-muted px-1 py-0.5">popover="manual"</code>
+        inside it, never a second <code class="rounded-sm bg-muted px-1 py-0.5">&lt;dialog&gt;</code>: one
+        Escape closes a whole stack of native dialogs, which would answer the question by discarding the
+        work it is asking about (decision 68).
+      </p>
+
+      <div class="mt-4 table-wrap">
+        <table class="table">
+          <thead><tr><th>State</th><th>How it is reached</th><th>What it asks</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="discard">Discard changes?</button></td>
+              <td>Close, Escape, or a click on the backdrop — but only while the form is dirty. A clean
+                  form closes without a question.</td>
+              <td><strong>Cancel · Discard changes.</strong> The guard is generic
+                  (<code>app.js</code>, <code>#confirm-discard</code>), so any dialog with a
+                  <code>form[data-guard]</code> gets it without writing anything.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- =================================================== BEFORE IT ACTS -->
+      <h2 id="before-it-acts" class="section-title mt-14">Before it acts</h2>
+      <p class="mt-1 max-w-2xl text-muted-foreground">
+        Two acts work on the whole record rather than on a field — deactivating and deleting — and both
+        ask first, through the one element <code class="rounded-sm bg-muted px-1 py-0.5">#confirm-record</code>.
+        One element, because the two questions have the same shape: what it does, how many products feel
+        it, one answer (decision 100).
+      </p>
+
+      <div class="mt-4 table-wrap">
+        <table class="table">
+          <thead><tr><th>State</th><th>How it is reached</th><th>What it asks</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="deactivate">Deactivate?</button></td>
+              <td>The header switch, <strong>off only</strong>. Switching on applies at once — it restores
+                  what deactivating stopped and loses nothing.</td>
+              <td><strong>Cancel · Deactivate.</strong> The switch is put straight back until the answer
+                  comes, so it never shows a state the record does not have.</td>
+            </tr>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="delete-refused">Delete, refused</button></td>
+              <td><em>Delete instrument</em> in the footer, while one or more products read the instrument.</td>
+              <td>Not a question — a <strong>refusal</strong>. The title says it cannot be deleted, a
+                  warning names the count, and the single button is <strong>Back to the instrument</strong>.
+                  An instrument with products on it is almost always wrong rather than unwanted (95).</td>
+            </tr>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="delete">Delete, destructive</button></td>
+              <td><em>Delete instrument</em> with a product count of zero.</td>
+              <td><strong>Cancel · Delete instrument</strong> (destructive). No undo and no message
+                  afterwards — the row leaving the list is the message.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ====================================================== FROM THE LIST -->
+      <h2 id="from-the-list" class="section-title mt-14">The same question, asked from the list</h2>
+      <p class="mt-1 max-w-2xl text-muted-foreground">
+        A row's More menu can delete without opening the record, so the question exists a second time —
+        <code class="rounded-sm bg-muted px-1 py-0.5">#confirm-delete</code>, a real modal
+        <code class="rounded-sm bg-muted px-1 py-0.5">&lt;dialog&gt;</code> this time, because nothing is
+        open underneath it for an Escape to take down with it. Same two answers, one difference: the
+        refusal here can offer the record, which the record's own copy cannot.
+      </p>
+
+      <div class="mt-4 table-wrap">
+        <table class="table">
+          <thead><tr><th>State</th><th>How it is reached</th><th>What it asks</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="list-delete-refused">Refused, from the list</button></td>
+              <td>Row menu → <em>Delete instrument</em>, with products on it.</td>
+              <td><strong>Cancel · Edit instrument.</strong> The second button opens the record, which is
+                  what was almost always wanted.</td>
+            </tr>
+            <tr>
+              <td><button type="button" class="kit-state" data-state="list-delete">Destructive, from the list</button></td>
+              <td>Row menu → <em>Delete instrument</em>, with no products on it.</td>
+              <td><strong>Cancel · Delete instrument</strong> (destructive). Identical wording to the
+                  record's, and deliberately so: one act, one sentence, wherever it is asked from.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ============================================================= RULES -->
+      <h2 id="rules" class="section-title mt-14">Rules</h2>
+      <ul class="mt-2 max-w-2xl list-disc space-y-1 pl-5 text-muted-foreground">
+        <li>One modal per record. Reading and editing are the same screen, so there is no
+            <em>Edit</em> button to press and no state where the fields are shown but dead.</li>
+        <li>The primary action never opens a confirmation in red. <em>Delete instrument</em> in the footer
+            is <code class="text-foreground">btn-outline</code>; the destructive fill belongs to the
+            answer, not to the question.</li>
+        <li>A confirmation over an open dialog is a manual popover, not a dialog (68). A confirmation with
+            nothing open under it is a dialog.</li>
+        <li>Every confirmation names the record it is about. <em>Delete Apple Inc.?</em>, never
+            <em>Delete this item?</em> — the modal is reused for every row, and the name is the only
+            thing telling the admin which one they are answering for.</li>
+        <li>The status switch sits <strong>outside</strong> the form. It has its own confirmation, it never
+            makes <em>Save changes</em> light up, and closing the record never asks to discard it.</li>
+      </ul>
+
+      <h2 id="not-drawn-yet" class="section-title mt-14">Not drawn yet</h2>
+      <p class="mt-1 max-w-2xl text-muted-foreground">
+        Stated so that the gaps are not mistaken for decisions.
+      </p>
+      <ul class="mt-3 max-w-2xl list-disc space-y-1 pl-5 text-muted-foreground">
+        <li><strong>No field is ever invalid.</strong> The record has no validation state — nothing sets
+            <code class="text-foreground">aria-invalid</code>, so the error the
+            <a class="btn btn-link" href="../kit/components/field.html">Form field</a> recipe draws has
+            never been seen on this modal. Required fields, and what <em>Create instrument</em> does when
+            one is empty, are open.</li>
+        <li><strong>Nothing is ever pending.</strong> <code class="text-foreground">.skeleton</code> exists
+            in the recipes and the record does not use it: every value is in the markup, so there is no
+            state for a value still being fetched — which the record view will have as soon as it reads a
+            real source.</li>
+        <li><strong>Saving is instant and silent.</strong> <em>Save changes</em> closes the dialog; there is
+            no saving state on the button, no failure, and no confirmation that it worked. The
+            <a class="btn btn-link" href="../kit/components/button.html#states">loading state</a> is drawn
+            in the kit and unused here.</li>
+        <li><strong>Two of the states above are forced.</strong> No instrument in the demo data has a
+            product count of zero, so the destructive branch of both delete confirmations cannot be
+            reached by clicking. <code class="text-foreground">?state=delete</code> and
+            <code class="text-foreground">?state=list-delete</code> set the count to zero on the way in.
+            The branch is real; the data has no case for it.</li>
+      </ul>
+
+      <nav class="kit-pager" data-kit-pager></nav>
+    </main>
+  </div>
+
+  <script src="../assets/kit-nav.js"></script>
+  <script src="../assets/app.js"></script>
+
+  <script>
+    /* The viewer. Page chrome, so it lives here rather than in app.js.
+       The frame is laid out at a true desktop size and scaled to the width the
+       page has, because a modal shown at the wrong viewport width is a
+       different modal: 768px of dialog inside a 700px frame would wrap and
+       scroll in ways the real screen never does. */
+    (() => {
+      const W = 1440, H = 900;
+      const box = document.querySelector('[data-frame]');
+      const frame = box.querySelector('iframe');
+      const showing = document.querySelector('[data-showing]');
+      const full = document.querySelector('[data-full]');
+      const buttons = [...document.querySelectorAll('.kit-state')];
+
+      frame.width = W;
+      frame.height = H;
+
+      // The viewer is allowed out of the text column: prose wants a measured
+      // line length, a specimen wants the screen. It takes everything from its
+      // own left edge to the window's right padding, capped at the frame's own
+      // 1440 so it never scales up past 1:1.
+      const viewer = document.querySelector('[data-viewer]');
+      const SIDEBAR = 264, PAD = 48;
+
+      const fit = () => {
+        const room = document.documentElement.clientWidth - SIDEBAR - PAD * 2;
+        viewer.style.width = `${Math.max(320, Math.min(W, room))}px`;
+        const k = Math.min(1, box.clientWidth / W);
+        frame.style.transform = `scale(${k})`;
+        box.style.height = `${Math.round(H * k)}px`;
+      };
+      addEventListener('resize', fit);
+      fit();
+
+      const load = (state) => {
+        frame.src = `../screens/instruments.html?state=${state}`;
+        full.href = frame.src;
+        showing.textContent = state;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.state === state)));
+      };
+
+      buttons.forEach((b) => b.addEventListener('click', () => {
+        load(b.dataset.state);
+        document.querySelector('[data-viewer]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }));
+
+      load('record');
+    })();
+  </script>
+</body>
+</html>

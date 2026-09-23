@@ -21,6 +21,7 @@ may keep old copies of those files; use a hard reload (Cmd+Shift+R) then.
 prototype/
   index.html          THE LANDING PAGE — the design-system overview, every component by layer
   pages.html          the other half of the switcher: the six screens, built and unbuilt
+  pages/              one page per modal, each drawn live from the screen that opens it
   kit/                the design system, ordered atoms -> molecules -> organisms -> templates
     foundations.html    tokens, type, spacing, icons
     navigation.html     the sidebar and the app shell
