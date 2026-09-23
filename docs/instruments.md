@@ -625,7 +625,7 @@ Open for this screen:
 - Delete in the prototype removes the row and takes its contribution out of the
   summary counts. There is no undo and no message afterwards — the row leaving is
   the message. If deletes turn out to be frequent, an undo needs a toast, which
-  the kit does not have (see `kit/components.html`).
+  the kit does not have (see the design system at `prototype/index.html`).
 - `Refresh data` in record mode is drawn but does nothing in the prototype.
 - `Save changes` closes the dialog and does not write the edited values back into
   the row behind it. Whether it should is open (decision 91).

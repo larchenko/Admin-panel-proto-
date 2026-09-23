@@ -1,25 +1,31 @@
-// kit-nav.js — the design-system tree, and the one place it is written down.
+// kit-nav.js — the map of the prototype, and the one place it is written down.
 //
 // Every kit page carries <aside class="kit-sidebar" data-kit-nav></aside> and
-// this script fills it. The same LAYERS array also renders the Components
-// overview (<div data-kit-index>) and the previous/next pager
-// (<nav data-kit-pager>), so a component is added to the system in exactly one
-// place: here, plus its own page under kit/components/.
+// this script fills it: the brand, the Design system / Pages switcher, the
+// filter box and the tree. The same arrays render each section's overview
+// (<div data-kit-index>) and the previous/next pager (<nav data-kit-pager>), so
+// a component is added to the system in exactly one place: here, plus its own
+// page under kit/components/.
+//
+// Two sections, and the split is Atomic Design's own (decisions 101, 105):
+//
+//   DESIGN_SYSTEM   Foundations → Atoms → Molecules → Organisms → Templates.
+//                   A component sits in the layer it is BUILT at, not the layer
+//                   it is used at — a Badge stays an atom although it spends its
+//                   life inside a table row.
+//   PAGES           The last layer: a template filled with the real thing. The
+//                   six areas of the Admin panel, built and unbuilt.
 //
 // `note` is not drawn in the tree — a layer name stands on its own there. It is
-// what the overview page says the layer means.
-//
-// Ordering is Atomic Design (decision 101): Foundations → Atoms → Molecules →
-// Organisms → Templates. A component sits in the layer it is BUILT at, not the
-// layer it is used at — a Badge stays an atom although it spends its life
-// inside a table row.
+// what the overview page says the layer means. An item with `href: null` is a
+// screen that does not exist yet: it shows in the tree, greyed and unclickable.
 
 (() => {
   // Everything is written relative to prototype/, resolved from this script's
   // own URL, so a page three folders deep links the same way as the index.
   const ROOT = document.currentScript.src.replace(/assets\/kit-nav\.js(\?.*)?$/, '');
 
-  const LAYERS = [
+  const DESIGN_SYSTEM = [
     {
       name: 'Foundations',
       note: 'What every component is made of. One page, eight sections.',
@@ -65,33 +71,55 @@
         { title: 'Table',   href: 'kit/components/table.html',   blurb: 'The list view of every entity: toolbar, sortable header, rows, footer, column chooser.' },
         { title: 'Filters', href: 'kit/components/filters.html', blurb: 'The panel behind a Filters button, and the chip row that keeps the query visible.' },
         { title: 'Dialog',  href: 'kit/components/dialog.html',  blurb: 'A modal for one task. Anatomy, sizes, and the confirmation that opens over one.' },
-        { title: 'Navigation', href: 'kit/navigation.html',      blurb: 'The sidebar: six areas of the back office, their icons, states and collapsed rail.' },
+        { title: 'Navigation', href: 'kit/navigation.html',      blurb: 'The sidebar: six areas of the Admin panel, their icons, states and collapsed rail.' },
       ],
     },
     {
       name: 'Templates',
-      note: 'Whole screens. What the layers above look like assembled.',
+      note: 'The layout of a whole screen, with nothing real in it yet.',
       items: [
-        { title: 'Form example',      href: 'kit/components/form-example.html', blurb: 'A record form: sections, two columns, where the buttons go.' },
-        { title: 'Instruments screen', href: 'screens/instruments.html',        blurb: 'The live list inside the app shell — sidebar, page header, tabs, search, filters.' },
+        { title: 'Form example', href: 'kit/components/form-example.html', blurb: 'A record form: sections, two columns, where the buttons go.' },
       ],
     },
   ];
 
-  // Sits above the layers: the page that explains what the layers are.
-  const TOP = [{ title: 'Overview', href: 'kit/components.html' }];
+  const PAGES = [
+    {
+      name: 'Screens',
+      note: 'A template filled with the real thing. Six areas, in the order the product owner gave them.',
+      items: [
+        { title: 'Instruments',           href: 'screens/instruments.html', blurb: 'The list inside the app shell — sidebar, page header, type tabs, search, filters, the record dialog.' },
+        { title: 'Products',              href: null, blurb: 'Structured products. Types, statuses and the link to instruments are still open.' },
+        { title: 'Users & Organizations', href: null, blurb: 'Who has access, and which organization they belong to.' },
+        { title: 'Custodians',            href: null, blurb: 'The banks that hold the assets.' },
+        { title: 'Issuers',               href: null, blurb: 'The banks that issue the products.' },
+        { title: 'Settings',              href: null, blurb: 'System-wide configuration. Which settings live here is still open.' },
+      ],
+    },
+  ];
 
-  const FLAT = LAYERS.flatMap((l) => l.items.map((i) => ({ ...i, layer: l.name })));
-  const ALL = [...TOP, ...FLAT];
+  const SECTIONS = [
+    { label: 'Design system', home: 'index.html', layers: DESIGN_SYSTEM },
+    { label: 'Pages',         home: 'pages.html', layers: PAGES },
+  ];
 
-  // The open page: the longest href that the current path ends with, so
-  // components/button.html does not also match navigation.html.
-  const path = location.pathname.replace(/\/index\.html$/, '/');
+  // A directory index is served as index.html, so "/" and "/index.html" are the
+  // same page and have to match the same way.
+  const path = location.pathname.replace(/\/$/, '/index.html');
   const file = (href) => href.split('#')[0];
+
+  // Which half of the switcher the open page belongs to. Its own overview
+  // counts, so /pages.html lands on Pages even before any screen is opened.
+  const holds = (sec) => path.endsWith(sec.home)
+    || sec.layers.some((l) => l.items.some((i) => i.href && path.endsWith(file(i.href))));
+  const section = SECTIONS.find(holds) || SECTIONS[0];
+
+  const LAYERS = section.layers;
+  const FLAT = LAYERS.flatMap((l) => l.items.filter((i) => i.href).map((i) => ({ ...i, layer: l.name })));
 
   // Every item that lives on the open page. Foundations puts eight of them on
   // one page; everything else puts one.
-  const here = ALL
+  const here = FLAT
     .filter((i) => path.endsWith(file(i.href)))
     .sort((a, b) => file(b.href).length - file(a.href).length);
   const onThisPage = here.length ? here.filter((i) => file(i.href) === file(here[0].href)) : [];
@@ -119,36 +147,46 @@
     brand.href = ROOT + 'index.html';
     brand.innerHTML = `
       <img class="kit-brand-mark" src="${ROOT}assets/logo-mark.svg?v=2026-09-23" alt="">
-      <span>
-        <span class="kit-brand-name">VIZ 2.0 Back office</span>
-        <span class="kit-brand-sub">Design system</span>
-      </span>`;
+      <span class="kit-brand-name">VIZ 2.0 Admin panel</span>`;
     aside.append(brand);
 
+    // The switcher. It says which half of the prototype is open, which is why
+    // the brand no longer carries a "Design system" line under it — one label
+    // for one thing, and this one is also the control that changes it.
+    const nav = el('nav', 'kit-switch');
+    nav.setAttribute('aria-label', 'Section');
+    SECTIONS.forEach((sec) => {
+      const a = el('a', 'kit-switch-item', sec.label);
+      a.href = ROOT + sec.home;
+      if (sec === section) a.setAttribute('aria-current', 'page');
+      nav.append(a);
+    });
+    aside.append(nav);
+
     const search = el('div', 'kit-search');
+    const finding = section.layers === PAGES ? 'Find a screen' : 'Find a component';
     search.innerHTML = `
       <i class="ri-search-line"></i>
-      <input type="search" placeholder="Find a component" aria-label="Find a component" autocomplete="off">
+      <input type="search" placeholder="${finding}" aria-label="${finding}" autocomplete="off">
       <kbd>/</kbd>`;
     aside.append(search);
 
     const tree = el('div', 'kit-tree');
     aside.append(tree);
 
-    const top = el('div', 'kit-group');
-    TOP.forEach((item) => {
-      const a = el('a', 'kit-link', item.title);
-      a.href = ROOT + item.href;
-      if (isCurrent(item)) a.setAttribute('aria-current', 'page');
-      top.append(a);
-    });
-    tree.append(top);
-
     LAYERS.forEach((layer) => {
       const g = el('div', 'kit-group');
       g.append(el('p', 'kit-group-label', layer.name));
 
       layer.items.forEach((item) => {
+        // A screen that does not exist yet is listed but is not a link: the
+        // tree has to be able to say "owed" as well as "there".
+        if (!item.href) {
+          const todo = el('span', 'kit-link kit-link-todo', `${item.title}<em>not built</em>`);
+          g.append(todo);
+          return;
+        }
+
         const a = el('a', 'kit-link', item.title);
         a.href = ROOT + item.href;
         if (isCurrent(item)) a.setAttribute('aria-current', 'page');
@@ -183,8 +221,7 @@
 
     const foot = el('div', 'kit-sidebar-foot');
     foot.innerHTML = `Recipes: <code>assets/components.css</code><br>
-      Tokens: <code>assets/theme.css</code><br>
-      <a href="${ROOT}index.html">Prototype index</a>`;
+      Tokens: <code>assets/theme.css</code>`;
     aside.append(foot);
 
     /* Filtering. Hides items and empties whole layers, so the tree keeps
@@ -276,7 +313,9 @@
     if (i < FLAT.length - 1) pager.append(link(FLAT[i + 1], 'Next', 'ri-arrow-right-line', 'kit-pager-next'));
   }
 
-  /* ------------------------------------------------- Components overview */
+  /* ---------------------------------------- The open section's overview */
+  // Foundations is left out: its eight items are sections of one page, and a
+  // card each would send the reader to the same page eight times.
   const index = document.querySelector('[data-kit-index]');
   if (index) {
     LAYERS.filter((l) => l.name !== 'Foundations').forEach((layer) => {
@@ -289,13 +328,21 @@
         <div class="mt-5 grid gap-3 sm:grid-cols-2"></div>`;
       const grid = sec.querySelector('div');
       layer.items.forEach((item) => {
-        const a = document.createElement('a');
-        a.href = ROOT + item.href;
-        a.className = 'rounded-lg border bg-card p-4 hover:bg-muted';
-        a.innerHTML = `
-          <p class="font-medium">${item.title}</p>
+        const card = document.createElement(item.href ? 'a' : 'div');
+        if (item.href) {
+          card.href = ROOT + item.href;
+          card.className = 'rounded-lg border bg-card p-4 hover:bg-muted';
+        } else {
+          // Not a link, and drawn as one of the things it is missing: a dashed
+          // edge and no surface, so the eye sorts built from owed without
+          // reading a word.
+          card.className = 'rounded-lg border border-dashed p-4';
+        }
+        card.innerHTML = `
+          <p class="font-medium${item.href ? '' : ' text-muted-foreground'}">${item.title}${
+            item.href ? '' : ' <span class="badge badge-secondary">Not built</span>'}</p>
           <p class="mt-1 text-muted-foreground">${item.blurb || ''}</p>`;
-        grid.append(a);
+        grid.append(card);
       });
       index.append(sec);
     });

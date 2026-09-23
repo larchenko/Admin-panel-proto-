@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VIZ 2.0 Back office · Prototype</title>
+  <title>Design system · VIZ 2.0 Admin panel</title>
 
   <!-- Font: Archivo, see docs/decisions.md -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,33 +13,39 @@
   <!-- Icons: RemixIcon, used as <i class="ri-name-line"></i> -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
 
-  <!-- Tailwind v4 (browser build) + shared theme, see assets/tailwind.js -->
+  <!-- The kit shell (sidebar); then Tailwind v4 browser build + shared theme -->
+  <link rel="stylesheet" href="./assets/kit.css">
   <script src="./assets/tailwind.js"></script>
 </head>
-<body>
-  <main class="mx-auto max-w-2xl px-6 py-16">
-    <h1 class="page-title">VIZ 2.0 Back office</h1>
-    <p class="mt-3 text-muted-foreground">
-      Admin panel prototype for a structured-products management system.
-      Design language: shadcn/ui, targeting Spartan UI (Angular) in production.
-    </p>
+<body class="text-sm">
+  <div class="kit-shell">
+    <aside class="kit-sidebar" data-kit-nav></aside>
 
-    <nav class="mt-8 rounded-lg border bg-card p-4">
-      <p class="overline">Kit</p>
-      <ul class="mt-2 space-y-1 text-sm">
-        <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./kit/foundations.html"><i class="ri-palette-line"></i> Foundations: tokens, type, spacing, icons</a></li>
-        <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./kit/components.html"><i class="ri-layout-grid-line"></i> Components: one page each, ordered atoms → molecules → organisms → templates</a></li>
-        <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./kit/navigation.html"><i class="ri-side-bar-line"></i> Navigation: the sidebar, its six areas and the app shell</a></li>
-      </ul>
-    </nav>
+    <main class="kit-content">
+      <p class="kit-eyebrow">Overview</p>
+      <h1 class="page-title">Design system</h1>
+      <p class="mt-4 max-w-2xl text-muted-foreground">
+        The prototype of the VIZ 2.0 Admin panel, a management system for structured products.
+        Design language: shadcn/ui, targeting Spartan UI (Angular) in production — the markup here maps
+        1:1 onto Spartan Helm components. Recipes live in
+        <code class="rounded-sm bg-muted px-1 py-0.5">assets/components.css</code>, tokens in
+        <code class="rounded-sm bg-muted px-1 py-0.5">assets/theme.css</code>.
+      </p>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        One page per component: its variants, sizes and states, the rules for using it, the recipe
+        classes, and the Spartan equivalent. They are ordered by Atomic Design — each layer built from
+        the one above it — and a component sits in the layer it is <em>built</em> at, not the layer it is
+        used at: a Badge stays an atom although it spends its life inside a table row. That order is also
+        the order to build in, since an atom whose states are undecided makes every organism that holds
+        it a guess. The screens themselves are the last layer, and they are under
+        <a class="btn btn-link" href="./pages.html">Pages</a>.
+      </p>
 
-    <nav class="mt-4 rounded-lg border bg-card p-4">
-      <p class="overline">Screens</p>
-      <ul class="mt-2 space-y-1 text-sm">
-        <li><a class="inline-flex items-center gap-2 underline-offset-4 hover:underline" href="./screens/instruments.html"><i class="ri-line-chart-line"></i> Instruments: the list in the app shell — sidebar, page header, type tabs, search and filters</a></li>
-      </ul>
-    </nav>
-  </main>
+      <div data-kit-index></div>
+    </main>
+  </div>
+
+  <script src="./assets/kit-nav.js"></script>
   <script src="./assets/app.js"></script>
 </body>
 </html>
