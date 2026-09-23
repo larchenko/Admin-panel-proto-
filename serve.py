@@ -6,7 +6,9 @@ response so the browser always picks up edited CSS/JS without a hard reload.
 
 Usage:  python3 serve.py            -> http://localhost:4173
         python3 serve.py 8000       -> custom port
+        PORT=8000 python3 serve.py  -> custom port from the environment
 """
+import os
 import sys
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -24,7 +26,7 @@ class NoCacheHandler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 4173
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else int(os.environ.get("PORT", 4173))
     handler = partial(NoCacheHandler, directory="prototype")
     print(f"Serving prototype/ at http://localhost:{port}  (Ctrl+C to stop)")
     ThreadingHTTPServer(("", port), handler).serve_forever()
