@@ -44,7 +44,7 @@
       name: 'Atoms',
       note: 'One control, nothing inside it that is a component of its own.',
       items: [
-        { title: 'Button',   href: 'kit/components/button.html',   blurb: 'Triggers an action. Six variants in descending emphasis, three sizes.' },
+        { title: 'Button',   href: 'kit/components/button.html',   blurb: 'Triggers an action. Five variants in descending emphasis; the container sets the size.' },
         { title: 'Input',    href: 'kit/components/input.html',    blurb: 'One line of text, with its error, disabled and read-only states.' },
         { title: 'Textarea', href: 'kit/components/textarea.html', blurb: 'Multi-line text that grows with its content.' },
         { title: 'Select',   href: 'kit/components/select.html',   blurb: 'One value from a list. Custom, because the native control cannot be themed.' },
