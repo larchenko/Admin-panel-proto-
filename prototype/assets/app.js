@@ -280,6 +280,11 @@
     current = el;
     render(el);
     bubble.style.visibility = 'hidden';
+    // Measure from the top-left corner, not from where the last tooltip sat:
+    // a stale `left` near the right edge would squeeze the new text into the
+    // room left of the viewport edge and wrap it before it is even placed.
+    bubble.style.top = '0px';
+    bubble.style.left = '0px';
     bubble.showPopover();
     place(el);
     bubble.style.visibility = '';

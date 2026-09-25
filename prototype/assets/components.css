@@ -233,19 +233,22 @@
      written here as data-side; app.js also caps the height to the room that
      side actually has, so a long list scrolls instead of running off the
      screen. 288px (max-h-72) stays the ceiling. */
+  /* The list has a 4px inset top and bottom only (113): an item's highlight
+     runs edge to edge, so the option is the row, not a pill inside it. Items
+     never wrap — the list grows past a narrow trigger instead. */
   .select-content {
     @apply absolute left-0 top-[calc(100%+4px)] z-50 max-h-72 min-w-full overflow-y-auto rounded-md border
-           bg-popover p-1 text-popover-foreground shadow-md;
+           bg-popover py-1 text-popover-foreground shadow-md;
   }
   .select-content[data-side="top"] { @apply top-auto bottom-[calc(100%+4px)]; }
   .select-item {
-    @apply relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none
+    @apply relative flex w-full cursor-default select-none items-center gap-2 whitespace-nowrap py-1.5 pl-3 pr-9 text-sm outline-none
            hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
            aria-disabled:pointer-events-none aria-disabled:opacity-50;
   }
   .select-item[aria-selected="true"]::after {
     content: "";
-    @apply absolute right-2 size-4 bg-current;
+    @apply absolute right-3 size-4 bg-current;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E") center / contain no-repeat;
   }
 
@@ -427,19 +430,22 @@
 
   /* ------------------------------------------------------------------ Menu
      shadcn: dropdown-menu.tsx (Radix)    Spartan: hlm-menu (brn-menu)
-     Row actions and other "More" menus. Built on the native popover attribute so
-     the menu sits in the top layer and is NOT clipped by the table's overflow;
-     position is set in app.js from the trigger's rect. Escape and click-outside
-     are handled by the browser.
+     "More" menus and the column chooser. Built on the native popover attribute
+     so the menu sits in the top layer and is NOT clipped by the table's
+     overflow; position is set in app.js from the trigger's rect. Escape and
+     click-outside are handled by the browser. Row actions are no longer a menu
+     (109) — see .row-actions above.
      Markup:
-       <button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions">…</button>
-       <div class="menu" id="row-menu" popover role="menu"> <button class="menu-item" role="menuitem">…</button> </div>
+       <button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="some-menu" aria-label="More actions">…</button>
+       <div class="menu" id="some-menu" popover role="menu"> <button class="menu-item" role="menuitem">…</button> </div>
   */
   .menu {
-    @apply fixed inset-auto m-0 min-w-44 rounded-md border bg-popover p-1 text-popover-foreground shadow-md;
+    @apply fixed inset-auto m-0 min-w-44 rounded-md border bg-popover py-1 text-popover-foreground shadow-md;
   }
+  /* Same rule as the select list (113): 4px inset top and bottom only, the
+     highlight runs edge to edge. */
   .menu-item {
-    @apply flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none
+    @apply flex w-full cursor-default select-none items-center gap-2 whitespace-nowrap px-3 py-1.5 text-left text-sm outline-none
            hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
            aria-disabled:pointer-events-none aria-disabled:opacity-50
            [&>i]:text-base [&>i]:leading-none [&>i]:text-muted-foreground;
@@ -448,8 +454,8 @@
     @apply text-destructive-ink hover:bg-destructive/10 hover:text-destructive-ink
            focus:bg-destructive/10 focus:text-destructive-ink [&>i]:text-destructive-ink;
   }
-  .menu-separator { @apply -mx-1 my-1 h-px bg-border; }
-  .menu-label     { @apply px-2 py-1.5 text-xs font-semibold text-muted-foreground; }
+  .menu-separator { @apply my-1 h-px bg-border; }
+  .menu-label     { @apply px-3 py-1.5 text-xs font-semibold text-muted-foreground; }
 
   /* --------------------------------------------------------- Column chooser
      shadcn: dropdown-menu + a data-table column menu   Spartan: hlm-menu
