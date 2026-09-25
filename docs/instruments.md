@@ -108,7 +108,7 @@ Section header — where the numbers come from and how fresh they are:
 | Field | Source | Notes |
 |---|---|---|
 | Source | picked from a list | SIX, Yahoo, email, Excel, web scraping … |
-| DataBasedOn | set at creation, editable | Another instrument this one's data is derived from. The only editable value in the header. |
+| DataBasedOn | set at creation, editable | Another instrument this one's data is derived from; a combobox — type-ahead over the instrument database, linking to an existing instrument, never to itself (127). |
 | LastUpdate | logged by the system | When we last fetched. Covers both blocks, because one Refresh drives both. |
 | ErrorMessage | returned by the provider | Shown only when the last fetch failed. Old values stay visible and are marked stale. |
 
@@ -546,7 +546,7 @@ anything.
 | Data source *(details tab)* | Source, DataBasedOn | — |
 | Market data & performance *(performance tab)* | — | LastUpdate and DataDate in the section note, then Last price and Last close, the price chart with its session readout, the six percent changes, the 52-week range with the current price marked, Volatility90D |
 | Record info | — | Id with a copy button, created / modified by and on |
-| Active | — (a new instrument is active) | badge in the dialog header |
+| Active | — (a new instrument is active) | the switch card at the foot of General details, beside IsForPricer — an act with its own confirmation, not a field (100, 126) |
 
 Create mode is the fields alone: a new instrument has no numbers, no id and no
 history, so the value blocks, Record info and the whole performance tab are simply

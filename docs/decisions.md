@@ -43,7 +43,7 @@ Status is one of: `fixed` · `fixed for prototype` · `fixed for now` · `placeh
 | 29 | 2026-09-21 | Density stays shadcn default: controls 32 / 36 / 40px, table rows 40px, base text 14px. | fixed |
 | 30 | 2026-09-21 | Open: one column carrying two related values. | resolved by 40 |
 | 31 | 2026-09-21 | Status colours never come from the brand; `theme.css` has a BRAND layer and a SYSTEM layer, and a white-label swap replaces only the first. | fixed |
-| 32 | 2026-09-21 | Market data and Performance are one section with one shared header (Source, DataBasedOn, last update) and one Refresh. | fixed |
+| 32 | 2026-09-21 | Market data and Performance are one section with one shared header (Source, DataBasedOn, last update) and one Refresh. | amended by 127 |
 | 33 | 2026-09-21 | Financial values are never rounded or padded to a fixed precision. | amended by 53 |
 | 34 | 2026-09-21 | Tabs are underline tabs, not shadcn's pill container. | fixed |
 | 35 | 2026-09-21 | Dropdown menus use the native `popover` attribute, positioned from the trigger in `app.js`. | fixed for prototype |
@@ -137,3 +137,5 @@ Status is one of: `fixed` · `fixed for prototype` · `fixed for now` · `placeh
 | 123 | 2026-09-25 | Created and Modified show the date alone; the full date and time are the tooltip, on two rows. | fixed |
 | 124 | 2026-09-25 | Row edit covers every editable column that is shown: Financial sector, Industry group and Country join it, the industry select following the sector. | fixed |
 | 125 | 2026-09-25 | An icon-only control's tooltip is one word — the column chooser's reads Columns — and a tooltip is measured at the viewport origin before it is placed. | fixed |
+| 126 | 2026-09-25 | The record's Active switch moves from the header into General details, as a switch card beside Offer in the pricer, which becomes a checkbox card tinted with the brand when on. | fixed |
+| 127 | 2026-09-25 | Based on is a combobox: type-ahead over the instrument database, linking the edited instrument to an existing one. A Combobox atom joins the kit. | fixed |

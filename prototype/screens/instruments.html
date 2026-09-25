@@ -1096,14 +1096,17 @@
             </div>
                       <div class="field" data-field="basedon">
               <label class="label" for="i-basedon">Based on</label>
-              <div class="select ">
-                <button type="button" class="select-trigger" id="i-basedon" aria-haspopup="listbox" aria-expanded="false" data-placeholder><span>None</span><i class="ri-arrow-down-s-line"></i></button>
-                <div class="select-content" role="listbox" aria-labelledby="i-basedon" hidden>
-                  <div class="select-item" role="option" data-value="None" tabindex="-1">None</div>
-                  <div class="select-item" role="option" data-value="Apple Inc." tabindex="-1">Apple Inc.</div>
-                  <div class="select-item" role="option" data-value="Nestlé SA" tabindex="-1">Nestlé SA</div>
-                  <div class="select-item" role="option" data-value="SARON 3M" tabindex="-1">SARON 3M</div>
-                  <div class="select-item" role="option" data-value="Gold Spot" tabindex="-1">Gold Spot</div>
+              <!-- A combobox (127): type-ahead over the instrument database, linking
+                   this instrument to an existing one. instruments.js fills the
+                   listbox from the list each time the dialog opens, every
+                   instrument but this one; production asks a search endpoint. -->
+              <div class="combobox">
+                <div class="input-icon"><i class="ri-search-line"></i>
+                  <input class="input" id="i-basedon" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="i-basedon-list" autocomplete="off" placeholder="Search instruments">
+                  <button type="button" class="combobox-clear" aria-label="Unlink" data-tooltip="Unlink" hidden><i class="ri-close-line"></i></button>
+                </div>
+                <div class="combobox-content" role="listbox" id="i-basedon-list" hidden>
+                  <p class="combobox-empty" hidden>No instrument matches</p>
                 </div>
                 <input type="hidden" name="basedon" data-value="basedon" value="">
               </div>

@@ -132,6 +132,167 @@
   });
 })();
 
+/* ---------------------------------------------------------------- Combobox
+   Markup: see components.css. The list is filtered as the user types; the
+   focus stays in the input and the active option is announced through
+   aria-activedescendant. Enter picks the active option; Escape closes the
+   list and, closed, puts the linked value back; Tab closes; the cross
+   unlinks. The options are whatever the listbox holds — the screen fills it
+   (instruments.js builds it from the list); in production a search endpoint
+   does, debounced, with the same markup. A screen that sets the hidden value
+   itself dispatches `combobox:sync` on the root so the input follows.
+*/
+(() => {
+  const GAP = 4, GUTTER = 8, MAX = 288;     // the select's numbers (decision 80)
+
+  const parts = (root) => ({
+    root,
+    input: root.querySelector('input[role="combobox"]'),
+    clear: root.querySelector('.combobox-clear'),
+    content: root.querySelector('.combobox-content'),
+    items: [...root.querySelectorAll('.combobox-item')],
+    empty: root.querySelector('.combobox-empty'),
+    value: root.querySelector('input[type="hidden"]'),
+  });
+  const label = (item) => item.childNodes[0]?.textContent.trim() || item.textContent.trim();
+
+  function place(c) {
+    c.content.removeAttribute('data-side');
+    c.content.style.maxHeight = '';
+    const t = c.input.getBoundingClientRect();
+    const below = innerHeight - t.bottom - GAP - GUTTER;
+    const above = t.top - GAP - GUTTER;
+    const up = c.content.scrollHeight > below && above > below;
+    if (up) c.content.setAttribute('data-side', 'top');
+    c.content.style.maxHeight = Math.round(Math.min(MAX, Math.max(96, up ? above : below))) + 'px';
+  }
+  function open(c) {
+    if (c.input.disabled) return;
+    c.content.hidden = false;
+    place(c);
+    c.input.setAttribute('aria-expanded', 'true');
+  }
+  function close(c) {
+    c.content.hidden = true;
+    c.content.removeAttribute('data-side');
+    c.content.style.maxHeight = '';
+    c.input.setAttribute('aria-expanded', 'false');
+    setActive(c, null);
+  }
+  const isOpen = (c) => !c.content.hidden;
+
+  // Match the name and every identifier (decision 44): data-search on the option
+  // carries the same lowercased string the list's search box reads.
+  function filter(c) {
+    const q = c.input.value.trim().toLowerCase();
+    let n = 0;
+    c.items.forEach((i) => {
+      const ok = !q || label(i).toLowerCase().includes(q) || (i.dataset.search || '').includes(q);
+      i.hidden = !ok;
+      if (ok) n += 1;
+    });
+    if (c.empty) c.empty.hidden = n > 0;
+  }
+  const visible = (c) => c.items.filter((i) => !i.hidden);
+  const active = (c) => c.items.find((i) => i.hasAttribute('data-active')) || null;
+  function setActive(c, item) {
+    c.items.forEach((i) => i.toggleAttribute('data-active', i === item));
+    if (item) {
+      if (item.id) c.input.setAttribute('aria-activedescendant', item.id);
+      item.scrollIntoView({ block: 'nearest' });
+    } else {
+      c.input.removeAttribute('aria-activedescendant');
+    }
+  }
+
+  // The input follows the hidden value: the linked name, or nothing.
+  function sync(c) {
+    const v = c.value?.value || '';
+    const item = c.items.find((i) => (i.dataset.value ?? label(i)) === v) || null;
+    c.items.forEach((i) => i.setAttribute('aria-selected', String(i === item)));
+    c.input.value = item ? label(item) : '';
+    if (c.clear) c.clear.hidden = !item;
+  }
+  function commit(c, v) {
+    if (c.value) {
+      c.value.value = v;
+      c.value.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    sync(c);
+  }
+  function choose(c, item) { commit(c, item.dataset.value ?? label(item)); close(c); }
+
+  const rootOf = (t) => t.closest('.combobox');
+
+  document.addEventListener('combobox:sync', (e) => { const r = rootOf(e.target); if (r) sync(parts(r)); });
+
+  document.addEventListener('input', (e) => {
+    if (!e.target.matches('input[role="combobox"]')) return;
+    const c = parts(rootOf(e.target));
+    filter(c);
+    open(c);
+    setActive(c, visible(c)[0] || null);
+  });
+
+  // mousedown, not click: a click would blur the input first and close the list
+  document.addEventListener('mousedown', (e) => {
+    const item = e.target.closest('.combobox-item');
+    if (item) { e.preventDefault(); choose(parts(rootOf(item)), item); return; }
+    if (e.target.closest('.combobox-clear')) e.preventDefault();
+  });
+  document.addEventListener('click', (e) => {
+    const clear = e.target.closest('.combobox-clear');
+    if (clear) { const c = parts(rootOf(clear)); commit(c, ''); c.input.focus(); return; }
+    const input = e.target.closest('input[role="combobox"]');
+    if (input) { const c = parts(rootOf(input)); if (!isOpen(c)) { filter(c); open(c); } return; }
+    document.querySelectorAll('.combobox input[role="combobox"][aria-expanded="true"]')
+      .forEach((i) => close(parts(rootOf(i))));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!e.target.matches('input[role="combobox"]')) return;
+    const c = parts(rootOf(e.target));
+    const list = visible(c);
+    const i = list.indexOf(active(c));
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        if (!isOpen(c)) { filter(c); open(c); }
+        setActive(c, list[Math.min(i + 1, list.length - 1)] || null);
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (isOpen(c)) setActive(c, list[Math.max(i - 1, 0)] || null);
+        break;
+      case 'Enter':
+        if (isOpen(c)) { e.preventDefault(); const a = active(c); if (a) choose(c, a); }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        if (isOpen(c)) close(c); else sync(c);
+        break;
+      case 'Tab':
+        close(c);
+        break;
+    }
+  });
+
+  // Leaving without picking: the query was a query, the linked value comes back.
+  document.addEventListener('focusout', (e) => {
+    if (!e.target.matches('input[role="combobox"]')) return;
+    const root = rootOf(e.target);
+    setTimeout(() => {
+      if (root.contains(document.activeElement)) return;
+      const c = parts(root);
+      sync(c);
+      close(c);
+    }, 0);
+  });
+
+  // First paint: an input whose hidden value is set shows the linked name.
+  document.querySelectorAll('.combobox').forEach((root) => sync(parts(root)));
+})();
+
 /* -------------------------------------------------------------------- Menu
    Row-action menus and the Filters panel. Both are native popovers, so they
    render in the top layer and are not clipped by the table's horizontal scroll;

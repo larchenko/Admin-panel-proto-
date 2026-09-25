@@ -118,6 +118,11 @@
     const el = field(name);
     if (!el) return;
     if (el.type === 'checkbox') { el.checked = !!value; return; }
+    if (el.type === 'hidden' && el.closest('.combobox')) {   // combobox (127)
+      el.value = value ?? '';
+      el.closest('.combobox').dispatchEvent(new Event('combobox:sync', { bubbles: true }));
+      return;
+    }
     if (el.type === 'hidden') {                       // custom select (decision 17)
       const root = el.closest('.select');
       const trigger = root.querySelector('.select-trigger');
@@ -181,9 +186,44 @@
   // One way in. Reading the instrument and editing it are the same screen
   // (decision 91), so there is no second entry point and no mode to switch to:
   // the fields are live from the moment the dialog opens.
+  // Based on is a combobox over the instrument database (127). The prototype's
+  // database is the list: one option per row, name and Bloomberg code, matched
+  // on the same string the search box reads (44). Never the instrument itself.
+  function fillBasedOn(exclude) {
+    const list = document.getElementById('i-basedon-list');
+    if (!list) return;
+    const empty = list.querySelector('.combobox-empty');
+    list.replaceChildren();
+    let n = 0;
+    tbody.querySelectorAll('tr[data-name]').forEach((row) => {
+      if (row === exclude) return;
+      const cols = [...table.tHead.rows[0].cells].map((c) => c.dataset.col);
+      const name = row.querySelector('a[data-record]')?.textContent.trim() || '';
+      const bbg = row.cells[cols.indexOf('bbg')]?.textContent.trim() || '';
+      if (!name) return;
+      n += 1;
+      const item = document.createElement('div');
+      item.className = 'combobox-item';
+      item.setAttribute('role', 'option');
+      item.id = `i-basedon-o${n}`;
+      item.dataset.value = name;
+      item.dataset.search = row.dataset.name || name.toLowerCase();
+      item.append(name);
+      if (bbg && bbg !== '—') {
+        const meta = document.createElement('span');
+        meta.className = 'combobox-meta';
+        meta.textContent = bbg;
+        item.append(meta);
+      }
+      list.append(item);
+    });
+    if (empty) list.append(empty);
+  }
+
   function openRecord(row) {
     const base = readRow(row);
     current = { ...base, ...(DETAILS[base.bbg] || {}) };
+    fillBasedOn(row);
     fillForm(current);
     fillValues(current);
     setMode('record');
@@ -253,6 +293,7 @@
 
   function openCreate() {
     current = null;
+    fillBasedOn(null);
     resetForm();
     setV('title', 'New instrument');
     setMode('create');

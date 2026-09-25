@@ -45,9 +45,10 @@
       note: 'One control, nothing inside it that is a component of its own.',
       items: [
         { title: 'Button',   href: 'kit/components/button.html',   blurb: 'Triggers an action. Five variants in descending emphasis; the container sets the size.' },
-        { title: 'Input',    href: 'kit/components/input.html',    blurb: 'One line of text, with its error, disabled and read-only states.' },
+        { title: 'Input',    href: 'kit/components/input.html',    blurb: 'One line of text. Two sizes set by the container, a leading icon for search, mono for identifiers.' },
         { title: 'Textarea', href: 'kit/components/textarea.html', blurb: 'Multi-line text that grows with its content.' },
         { title: 'Select',   href: 'kit/components/select.html',   blurb: 'One value from a list. Custom, because the native control cannot be themed.' },
+        { title: 'Combobox', href: 'kit/components/combobox.html', blurb: 'One value from a long list, found by typing. Links a record to an existing one.' },
         { title: 'Checkbox', href: 'kit/components/checkbox.html', blurb: 'On, off, and the mixed state a header checkbox needs.' },
         { title: 'Radio',    href: 'kit/components/radio.html',    blurb: 'One of a few options, all of them visible at once.' },
         { title: 'Switch',   href: 'kit/components/switch.html',   blurb: 'A setting that takes effect the moment it is flipped.' },

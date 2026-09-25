@@ -55,6 +55,26 @@ another session's lines (see `CLAUDE.md`, *Worklog*).
   worklog started.
 - Kit overview: the Button card said six variants and three sizes; it now says
   five variants, size set by the container [102, 103].
+- Instrument record: the status moved from the header into General details. The
+  last row of the section is now two cards: Offer in the pricer on the left, a
+  checkbox card that turns brand-tinted when on, so it reads as the setting that
+  matters; Active on the right, a switch with a line saying what the state means
+  for the price. The switch still acts at once, still asks before switching off,
+  and still never lights up Save changes. The header keeps the name and the
+  Products card. Kit: Checkbox gains an "As a card" section [126].
+- Kit: the Input page is drawn to the Button page's standard — sizes set by the
+  container and where each goes, the search icon, text / identifier / number,
+  what a placeholder says, and every state drawn in a matrix (focus, invalid,
+  invalid and focused, disabled, read-only), with rules and markup [104]. The
+  field's focus rule was moved out so the kit can draw it; it looks the same.
+- Four rule breaks that predate today, reported by the new lint check, are
+  fixed. Two- and three-field rows lost their one-column fallback for narrow
+  windows, since the Admin panel is desktop only; at the desktop size they look
+  the same. The kit's Dialog demo lost two lines that explained a section under
+  its heading, since a heading stands alone.
+- Based on in the record is a combobox: type-ahead over the instrument
+  database, matching name and identifiers, linking to an existing instrument;
+  a Combobox atom in the kit next to Select [127].
 
 **Found**
 
