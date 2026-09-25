@@ -29,7 +29,7 @@
       chg6m: '+11.04%', chg1y: '+18.226%', chgytd: '+12.47%',
       low52: '164.075', high52: '237.49', vol90: '24.13%',
       id: '8f3c1a90-4b2e-4d77-9c6a-0d51ee7a1b42',
-      createdby: 'a.larchenko@vizibility.ch', createdon: '23 Sep 2025, 07:57:03',
+      createdby: 'a.keller@vizibility.ch', createdon: '23 Sep 2025, 07:57:03',
       modifiedby: 'system@capital-viz.com', modifiedon: '18 Sep 2026, 10:12:03',
     },
     'NESN SW Equity': {
@@ -41,17 +41,48 @@
       chg6m: '+3.882%', chg1y: '-5.163%', chgytd: '+2.184%',
       low52: '73.12', high52: '96.4', vol90: '16.08%',
       id: 'b1d7e504-2f18-4a3c-8e90-77cc21ab5f13',
-      createdby: 'a.larchenko@vizibility.ch', createdon: '14 Mar 2025, 11:02:44',
+      createdby: 'a.keller@vizibility.ch', createdon: '14 Mar 2025, 11:02:44',
       modifiedby: 'system@capital-viz.com', modifiedon: '18 Sep 2026, 10:12:03',
     },
   };
 
-  const FLAGS = {
-    Switzerland: 'ch', 'United States': 'us', 'United Kingdom': 'gb', Ireland: 'ie',
-    Germany: 'de', France: 'fr', Japan: 'jp',
-  };
-
   /* --------------------------------------------------------------- helpers */
+
+  // The demo's clock. The list's Last update and Timestamp cells are relative
+  // (117) — 5m ago, 3h ago, 2d ago — and relative to *this* moment, five
+  // minutes after the last scheduled update, so the data reads the same on any
+  // day the prototype is opened. Production uses the real clock and re-renders
+  // the cells on a timer.
+  const NOW = new Date('2026-09-18T10:17:05');
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const pad = (n) => String(n).padStart(2, '0');
+  const absText = (iso) => {
+    const t = new Date(iso);
+    return `${pad(t.getDate())} ${MONTHS[t.getMonth()]} ${t.getFullYear()}, ${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`;
+  };
+  const relText = (iso) => {
+    const s = Math.max(0, Math.round((NOW - new Date(iso)) / 1000));
+    if (s < 60) return 'just now';
+    if (s < 3600) return `${Math.floor(s / 60)}m ago`;
+    if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
+    return `${Math.floor(s / 86400)}d ago`;
+  };
+  // A <time data-age datetime> in the list shows the relative text (117); a
+  // <time datetime> without data-age shows the date alone (123). Either way
+  // the absolute date and time are its tooltip, two rows (Date, Time).
+  const renderTimes = (root = tbody) => {
+    root.querySelectorAll('time[data-age][datetime]').forEach((t) => { t.textContent = relText(t.dateTime); });
+  };
+  const timeParts = (iso) => {
+    const [date, time] = absText(iso).split(', ');
+    return { date, time };
+  };
+  // Created and Modified: the date, with the full stamp in the tooltip.
+  const dateCell = (iso) => {
+    const { date, time } = timeParts(iso);
+    return `<time datetime="${iso}" tabindex="0" data-tooltip-rows="Date=${date};Time=${time}">${date}</time>`;
+  };
+  const isoNow = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 
   const $ = (sel, root = dlg) => root.querySelector(sel);
   const num = (v) => parseFloat(String(v).replace(/[^\d.-]/g, ''));
@@ -130,17 +161,18 @@
       return t === '—' ? '' : t;
     };
     return {
-      name: text('instrument', '.cell a'),
-      bbg: text('instrument', '.cell-sub'),
+      name: text('instrument', 'a'),
+      bbg: text('bbg'),
       type: text('type'),
-      sector: text('sector', 'span:first-child'),
-      industry: text('sector', '.cell-sub'),
-      country: cell('country')?.textContent.trim().replace('—', '') || '',
+      sector: text('sector'),
+      industry: text('industry'),
+      country: text('country'),
       products: text('products'),
       pricer: !!cell('pricer')?.querySelector('[data-on]'),
       currency: text('currency'),
-      source: text('price', '.cell-sub'),
-      updated: [text('updated', '.cell > span:first-child'), text('updated', '.cell-sub')].filter(Boolean).join(', '),
+      source: text('source'),
+      updated: cell('updated')?.querySelector('time')?.dateTime ? absText(cell('updated').querySelector('time').dateTime) : '',
+      datadate: cell('timestamp')?.querySelector('time')?.dateTime ? absText(cell('timestamp').querySelector('time').dateTime) : '',
       status: text('status'),
       row,
     };
@@ -308,8 +340,6 @@
     const row = tbody.querySelector('tr[data-name]').cloneNode(true);
     const cell = (col) => row.cells[cols.indexOf(col)];
     const now = new Date();
-    const date = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-    const time = now.toLocaleTimeString('en-GB', { hour12: false });
 
     row.dataset.name = [d.name, ...d.identifiers].join(' ').toLowerCase();
     row.dataset.type = d.type.toLowerCase().replace(/\s+/g, '-');
@@ -326,40 +356,43 @@
     // instrument has not been updated yet, so it is neither healthy nor failed.
     delete row.dataset.health;
 
-    const flag = FLAGS[d.country]
-      ? `<img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/${FLAGS[d.country]}.svg" alt="${d.country}" data-tooltip="${d.country}">`
-      : '<span class="flag-empty" aria-hidden="true"></span>';
-
     // Nothing is required any more (decision 70), so an instrument can arrive
     // without a name. It gets the table's own no-value mark, like any empty cell.
     const label = d.name || '<span class="text-muted-foreground">—</span>';
-    cell('instrument').innerHTML = `
-      <div class="cell max-w-[360px]">
-        <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">${label}</a>${flag}</span>
-        <span class="cell-sub">${d.bbg || '—'}</span>
-      </div>`;
+    const dash = '<span aria-hidden="true">—</span>';
+    const plain = (col, value, extra = '') => {
+      const el = cell(col);
+      el.className = value ? extra : `${extra} muted`.trim();
+      el.innerHTML = value ? `<span class="block max-w-[220px] truncate">${value}</span>` : dash;
+    };
+    cell('instrument').innerHTML = `<span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">${label}</a></span>`;
+    plain('bbg', d.bbg);
+    cell('type').className = '';
     cell('type').textContent = d.type;
-    cell('sector').innerHTML = d.sector
-      ? `<div class="cell max-w-[220px]"><span class="truncate">${d.sector}</span><span class="cell-sub">${d.industry || '—'}</span></div>`
-      : '<div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div>';
-    cell('country').textContent = d.country || '—';
+    plain('sector', d.sector);
+    plain('industry', d.industry);
+    plain('country', d.country);
     cell('products').innerHTML = '<span class="text-muted-foreground">0</span>';
     cell('pricer').innerHTML = d.pricer
       ? '<span class="check-static" data-on></span><span class="sr-only">In pricer</span>'
       : '<span class="check-static"></span><span class="sr-only">Not in pricer</span>';
     cell('currency').textContent = d.currency;
-    cell('price').innerHTML = `<div class="cell"><span class="text-muted-foreground">—</span><span class="cell-sub">${d.source}</span></div>`;
+    cell('price').className = 'num muted';
+    cell('price').innerHTML = dash;
+    cell('source').textContent = d.source || '—';
+    cell('timestamp').className = 'muted';
+    cell('timestamp').innerHTML = dash;
     ['close', 'chg-ytd', 'vol90'].forEach((c) => {
       const el = cell(c);
       if (!el) return;
       el.className = 'num muted';
       el.innerHTML = '<span aria-hidden="true">—</span>';
     });
-    cell('updated').innerHTML = '<div class="cell"><span class="text-muted-foreground">—</span><span class="cell-sub">Awaiting first update</span></div>';
-    cell('status').innerHTML = '<span class="badge badge-success"><span class="badge-dot"></span> Active</span>';
-    cell('created').innerHTML = `<div class="cell"><span>${date}</span><span class="cell-sub">${time}</span></div>`;
-    cell('modified').innerHTML = `<div class="cell"><span>${date}</span><span class="cell-sub">${time}</span></div>`;
-    cell('actions').innerHTML = `<button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for ${d.name || 'this instrument'}" title="More actions"><i class="ri-more-2-line"></i></button>`;
+    cell('updated').innerHTML = updatedCell(d.name, false, '<span class="text-muted-foreground" tabindex="0" data-tooltip="Awaiting first update">—</span>');
+    cell('status').innerHTML = '<span class="badge badge-success"><i class="ri-check-line"></i> Active</span>';
+    cell('created').innerHTML = dateCell(isoNow(now));
+    cell('modified').innerHTML = dateCell(isoNow(now));
+    cell('actions').innerHTML = rowActions(d.name);
 
     row.setAttribute('data-new', '');
     tbody.prepend(row);
@@ -485,19 +518,21 @@
     if (e.target.closest('[data-new-instrument]')) { openCreate(); return; }
 
     // the instrument name opens the record
-    const link = e.target.closest('tbody a');
-    if (link && link.closest('.cell')) {
+    const link = e.target.closest('tbody a[data-record]');
+    if (link) {
       e.preventDefault();
       openRecord(link.closest('tr'));
       return;
     }
 
-    const rowAct = e.target.closest('#row-menu [data-row-act]');
+    // Row actions are icons in the row (109); the row is the button's own.
+    const rowAct = e.target.closest('tbody [data-row-act]');
     if (rowAct) {
-      document.getElementById('row-menu').hidePopover();
-      if (!lastRow) return;
-      if (rowAct.dataset.rowAct === 'view') openRecord(lastRow);
-      if (rowAct.dataset.rowAct === 'delete') askDelete(lastRow);
+      const row = rowAct.closest('tr');
+      if (rowAct.dataset.rowAct === 'view') openRecord(row);
+      if (rowAct.dataset.rowAct === 'edit') startEdit(row);
+      if (rowAct.dataset.rowAct === 'refresh') refreshRow(rowAct);
+      if (rowAct.dataset.rowAct === 'delete') askDelete(row);
       return;
     }
 
@@ -548,7 +583,7 @@
   });
 
   /* -------------------------------------------------------------- deleting
-     Decision 95. Delete replaces Deactivate in both More menus, and the answer
+     Decision 95. Delete replaces Deactivate among the row actions, and the answer
      depends on one number the list already carries: ProductCount.
 
        0 products   a destructive confirmation, and the row goes
@@ -640,7 +675,7 @@
     if (badge) {
       const hidden = badge.classList.contains('hidden') ? ' hidden' : '';
       badge.className = `badge ${inactive ? 'badge-secondary' : 'badge-success'}${hidden}`;
-      badge.innerHTML = inactive ? 'Inactive' : '<span class="badge-dot"></span> Active';
+      badge.innerHTML = inactive ? '<i class="ri-close-line"></i> Inactive' : '<i class="ri-check-line"></i> Active';
     }
     if (activeSwitch) {
       activeSwitch.checked = !inactive;
@@ -661,10 +696,12 @@
 
     row.dataset.status = active ? 'Active' : 'Inactive';
     row.toggleAttribute('data-inactive', !active);
+    const refresh = row.querySelector('[data-row-act="refresh"]');
+    if (refresh) refresh.disabled = !active;
     if (cell) {
       cell.innerHTML = active
-        ? '<span class="badge badge-success"><span class="badge-dot"></span> Active</span>'
-        : `<span class="badge badge-secondary" tabindex="0" data-tooltip="Deactivated" data-tooltip-rows="Date=${date};Time=${time};By=a.larchenko@vizibility.ch">Inactive</span>`;
+        ? '<span class="badge badge-success"><i class="ri-check-line"></i> Active</span>'
+        : `<span class="badge badge-secondary" tabindex="0" data-tooltip="Deactivated" data-tooltip-rows="Date=${date};Time=${time};By=a.keller@vizibility.ch"><i class="ri-close-line"></i> Inactive</span>`;
     }
 
     demo.inactive = Math.max(0, demo.inactive + (active ? -1 : 1));
@@ -716,12 +753,41 @@
     askRecord('deactivate');
   });
 
-  // Which row opened the shared row menu.
-  let lastRow = null;
-  document.addEventListener('click', (e) => {
-    const t = e.target.closest('tbody [popovertarget="row-menu"]');
-    if (t) lastRow = t.closest('tr');
-  }, true);
+  // The row actions (109, 120). The tooltip is one verb (116); the aria-label
+  // names the instrument. Refresh lives in the Last update cell (120), shown on
+  // hover, and is disabled on an inactive row: its updates are stopped (100),
+  // so there is nothing to refresh.
+  const actionBtn = (act, label, tip, icon, extra = '') =>
+    `<button type="button" class="btn btn-ghost btn-icon btn-sm${act === 'refresh' ? ' cell-action' : ''}" data-row-act="${act}" aria-label="${label}" data-tooltip="${tip}"${extra}><i class="${icon}"></i></button>`;
+  function rowActions(name) {
+    const who = name || 'this instrument';
+    return `<div class="row-actions">${
+      actionBtn('view', `View ${who}`, 'View', 'ri-file-list-line')}${
+      actionBtn('edit', `Edit ${who} in list`, 'Edit', 'ri-pencil-line')}${
+      actionBtn('delete', `Delete ${who}`, 'Delete', 'ri-delete-bin-line')}</div>`;
+  }
+  // The Last update cell: the value — the age, the Failed marker (66), or a
+  // dash with *Awaiting first update* in its tooltip — then the refresh action.
+  function updatedCell(name, inactive, value) {
+    const who = name || 'this instrument';
+    return `<span class="inline-flex items-center gap-1">${value}${
+      actionBtn('refresh', `Refresh data for ${who}`, 'Refresh', 'ri-refresh-line', inactive ? ' disabled' : '')}</span>`;
+  }
+
+  // Prototype only: the icon spins for a moment. The real call is the manual
+  // override of the update rule (83), and its result lands in Updated (66).
+  function refreshRow(btn) {
+    if (btn.disabled) return;
+    const icon = btn.querySelector('i');
+    btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
+    icon.className = 'ri-loader-4-line animate-spin';
+    setTimeout(() => {
+      icon.className = 'ri-refresh-line';
+      btn.removeAttribute('aria-busy');
+      btn.disabled = false;
+    }, 1200);
+  }
 
   // The header is the record's identity, so it follows the fields that make it
   // up: with one modal there is no moment when the title and the form can be
@@ -747,10 +813,281 @@
 
   dlg.addEventListener('close', () => { resetForm(); syncSave(); });
 
+  renderTimes();
   syncMetrics();
   syncExport();
   industryFields();
   setMode('create');
+
+  /* ------------------------------------------------------ row edit mode
+     Proposal in answer to the product manager's request to edit Name, Code,
+     Type, Currency, Last price and Source from the list. Modelled on
+     PatternFly's row editing rather than cell-by-cell editing, because four of
+     the six fields are coupled or system-owned:
+
+       Code + Source     the fetch is keyed on the pair (62), so they change together
+       Last price        written by the source at each update (83): a hand-typed
+                         price only makes sense where the source delivers by hand
+                         (Email, Excel, Web scraping), so the price field is
+                         read-only for SIX, Yahoo and Bloomberg
+       Last price        shown at two decimals (53) but stored in full (33), so
+                         the field opens on the stored value, never the display
+
+     One row at a time. Enter saves, Escape cancels. Every column holds one
+     value (108), so every editable cell becomes exactly one control, sized to
+     its column, and the row keeps its height. Saving a value in a sorted column
+     unsorts that column (Cloudscape), so the row does not jump away from under
+     the cursor. */
+
+  const ROW_EDIT_COLS = ['instrument', 'bbg', 'status', 'pricer', 'currency', 'price', 'source', 'type', 'sector', 'industry', 'country', 'actions'];
+  const HAND_SOURCES = ['Email', 'Excel', 'Web scraping'];
+  let editing = null;   // { row, original: {col: html}, values: {...} }
+
+  const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+  // A small select with the same options as the record form's control for the
+  // same field, so the list and the record can never disagree on the vocabulary.
+  // `keep` filters the options (the industry groups of one sector, 96);
+  // `disabled` is the industry select with no sector to hang off.
+  function rowSelect(name, value, label, width, { keep, disabled } = {}) {
+    const src = form.querySelector(`[name="${name}"]`)?.closest('.select');
+    const items = [...(src?.querySelectorAll('.select-item') || [])]
+      .filter((i) => !keep || keep(i))
+      .map((i) => `<div class="select-item" role="option" data-value="${esc(i.dataset.value)}"${i.dataset.sector ? ` data-sector="${esc(i.dataset.sector)}"` : ''} tabindex="-1" aria-selected="${i.dataset.value === value}">${i.textContent.trim()}</div>`)
+      .join('');
+    return `<div class="select select-sm ${width}">
+      <button type="button" class="select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="${esc(label)}"${value ? '' : ' data-placeholder'}${disabled ? ' disabled' : ''}><span>${esc(value || '—')}</span><i class="ri-arrow-down-s-line"></i></button>
+      <div class="select-content" role="listbox" hidden>${items}</div>
+      <input type="hidden" name="${name}" value="${esc(value)}">
+    </div>`;
+  }
+  // The industry select of a row follows its sector (96): a new sector empties
+  // it and offers that sector's groups only.
+  function rowIndustry(sector, value) {
+    return rowSelect('industry', value, 'Industry group', '', { keep: (i) => i.dataset.sector === sector, disabled: !sector });
+  }
+
+  function rowCells(row) {
+    const cols = [...table.tHead.rows[0].cells].map((c) => c.dataset.col);
+    return (col) => row.cells[cols.indexOf(col)];
+  }
+
+  // Full precision for the field: the stored value when the demo has it, else
+  // the display value with the thousands mark taken out.
+  function storedPrice(row, d) {
+    const raw = row.dataset.price || DETAILS[d.bbg]?.price || d.price || '';
+    return String(raw).replace(/'/g, '');
+  }
+
+  function syncPriceField(row) {
+    const price = row.querySelector('[name="price"]');
+    const source = row.querySelector('[name="source"]')?.value;
+    if (!price) return;
+    const byHand = HAND_SOURCES.includes(source);
+    price.readOnly = !byHand;
+    price.tabIndex = byHand ? 0 : -1;
+    const wrap = price.closest('[data-price-wrap]');
+    if (byHand) wrap.removeAttribute('data-tooltip');
+    else wrap.setAttribute('data-tooltip', `Written by ${source} at each update`);
+  }
+
+  function startEdit(row) {
+    if (editing?.row === row) return;
+    if (editing) {
+      if (editing.row.hasAttribute('data-dirty')) { editing.row.querySelector('.input')?.focus(); return; }
+      cancelEdit();
+    }
+    const d = readRow(row);
+    const cell = rowCells(row);
+    d.price = cell('price')?.textContent.trim() || '';
+    if (d.price === '—') d.price = '';
+    const original = Object.fromEntries(ROW_EDIT_COLS.map((c) => [c, { html: cell(c).innerHTML, cls: cell(c).className }]));
+    editing = { row, original, values: { ...d, price: storedPrice(row, d), active: d.status === 'Active' ? 'on' : '', pricer: d.pricer ? 'on' : '' } };
+
+    // Freeze the column widths first, so a row entering edit does not re-flow
+    // the table: each control then fills the column it replaces.
+    [...table.tHead.rows[0].cells].forEach((th) => { th.style.width = `${th.getBoundingClientRect().width}px`; });
+
+    cell('instrument').innerHTML = `<span class="block max-w-[360px]"><input class="input input-sm font-medium" name="name" value="${esc(d.name)}" aria-label="Instrument name" placeholder="Instrument name"></span>`;
+    cell('bbg').className = '';
+    cell('bbg').innerHTML = `<input class="input input-sm font-mono" name="bbg" value="${esc(d.bbg)}" aria-label="Bloomberg code" placeholder="Bloomberg code">`;
+    // Status is a checkbox (119): ticked is Active, the badge's check mark;
+    // clear is Inactive, the badge's cross. Pricer is the real checkbox behind
+    // the static one (49). Both are one control per cell.
+    cell('status').innerHTML = `<label class="inline-flex items-center gap-2 whitespace-nowrap"><input class="checkbox" type="checkbox" name="active" aria-label="Active"${d.status === 'Active' ? ' checked' : ''}><span data-status-word>${d.status === 'Active' ? 'Active' : 'Inactive'}</span></label>`;
+    cell('pricer').innerHTML = `<input class="checkbox" type="checkbox" name="pricer" aria-label="In pricer"${d.pricer ? ' checked' : ''}>`;
+    cell('type').className = '';
+    cell('type').innerHTML = rowSelect('type', d.type, 'Instrument type', '');
+    // The taxonomy trio, off by default (115) but editable whenever shown (124).
+    cell('sector').className = '';
+    cell('sector').innerHTML = rowSelect('sector', d.sector, 'Financial sector', '');
+    cell('industry').className = '';
+    cell('industry').innerHTML = rowIndustry(d.sector, d.industry);
+    cell('country').className = '';
+    cell('country').innerHTML = rowSelect('country', d.country, 'Country', '');
+    cell('currency').innerHTML = rowSelect('currency', d.currency, 'Currency', '');
+    cell('price').className = 'num';
+    cell('price').innerHTML = `<span class="block" data-price-wrap><input class="input input-sm tabular-nums" name="price" value="${esc(editing.values.price)}" inputmode="decimal" aria-label="Last price" placeholder="Last price"></span>`;
+    cell('source').innerHTML = rowSelect('source', d.source, 'Source', '');
+    cell('actions').innerHTML = `
+      <div class="flex items-center justify-end gap-1">
+        <button type="button" class="btn btn-default btn-icon btn-sm" data-row-edit="save" aria-label="Save changes to ${esc(d.name)}" data-tooltip="Save"><i class="ri-check-line"></i></button>
+        <button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-edit="cancel" aria-label="Cancel editing ${esc(d.name)}" data-tooltip="Cancel"><i class="ri-close-line"></i></button>
+      </div>`;
+    row.setAttribute('data-editing', '');
+    syncPriceField(row);
+    row.querySelector('[name="name"]')?.focus();
+  }
+
+  function rowValues(row) {
+    const v = {};
+    row.querySelectorAll('[name]').forEach((el) => {
+      v[el.name] = el.type === 'checkbox' ? (el.checked ? 'on' : '') : el.value.trim();
+    });
+    return v;
+  }
+
+  function syncRowDirty() {
+    if (!editing) return;
+    const now = rowValues(editing.row);
+    const was = editing.values;
+    const dirty = ['name', 'bbg', 'type', 'currency', 'price', 'source', 'active', 'pricer', 'sector', 'industry', 'country']
+      .some((k) => (now[k] || '') !== (was[k] || ''));
+    editing.row.toggleAttribute('data-dirty', dirty);
+  }
+
+  function restoreRow() {
+    const cell = rowCells(editing.row);
+    for (const c of ROW_EDIT_COLS) {
+      cell(c).innerHTML = editing.original[c].html;
+      cell(c).className = editing.original[c].cls;
+    }
+    editing.row.removeAttribute('data-editing');
+    editing.row.removeAttribute('data-dirty');
+    [...table.tHead.rows[0].cells].forEach((th) => { th.style.width = ''; });
+  }
+
+  function cancelEdit() {
+    if (!editing) return;
+    const row = editing.row;
+    restoreRow();
+    editing = null;
+    row.querySelector('[data-row-act="edit"]')?.focus();
+  }
+
+  // A sorted column whose value just changed is unsorted rather than re-sorted:
+  // the row stays where the eye left it.
+  function unsort(col) {
+    const btn = table.tHead.querySelector(`th[data-col="${col}"] .table-sort`);
+    if (!btn || btn.getAttribute('aria-sort') === 'none') return;
+    btn.setAttribute('aria-sort', 'none');
+    const i = btn.querySelector('i');
+    if (i) i.className = 'ri-expand-up-down-line';
+  }
+
+  function saveEdit() {
+    if (!editing) return;
+    const row = editing.row;
+    const v = rowValues(row);
+    const was = editing.values;
+    restoreRow();
+    editing = null;
+    const cell = rowCells(row);
+    const dash = '<span aria-hidden="true">—</span>';
+    // `wrap` is the 220px truncating span the long taxonomy values sit in
+    const plain = (col, value, wrap = false) => {
+      const el = cell(col);
+      el.className = value ? '' : 'muted';
+      el.innerHTML = !value ? dash : wrap ? `<span class="block max-w-[220px] truncate">${esc(value)}</span>` : esc(value);
+    };
+
+    const nameEl = cell('instrument').querySelector('a');
+    if (nameEl) nameEl.textContent = v.name || '—';
+    plain('bbg', v.bbg);
+    cell('type').textContent = v.type;
+    plain('sector', v.sector, true);
+    plain('industry', v.industry, true);
+    plain('country', v.country);
+    row.dataset.sector = v.sector;
+    row.dataset.country = v.country;
+    cell('currency').textContent = v.currency;
+    // the price carries its source in a tooltip (115): a new price rewrites
+    // the cell, an unchanged one keeps its display and only refreshes the tooltip
+    if (v.price !== was.price) {
+      cell('price').className = v.price ? 'num' : 'num muted';
+      cell('price').innerHTML = v.price
+        ? `<span tabindex="0" data-tooltip-rows="Source=${esc(v.source)}">${price2(v.price)}</span>`
+        : dash;
+    } else {
+      cell('price').querySelector('[data-tooltip-rows]')?.setAttribute('data-tooltip-rows', `Source=${esc(v.source)}`);
+    }
+    // the refresh action sits in Last update (120) and names the instrument
+    row.querySelector('[data-row-act="refresh"]')?.setAttribute('aria-label', `Refresh data for ${v.name || 'this instrument'}`);
+    plain('source', v.source);
+    cell('pricer').innerHTML = v.pricer
+      ? '<span class="check-static" data-on></span><span class="sr-only">In pricer</span>'
+      : '<span class="check-static"></span><span class="sr-only">Not in pricer</span>';
+    row.dataset.pricer = v.pricer ? 'Yes' : 'No';
+    if (v.pricer !== was.pricer) { demo.pricer = Math.max(0, demo.pricer + (v.pricer ? 1 : -1)); syncMetrics(); }
+    // Save is the confirmation here: the record's *Deactivate?* question (100)
+    // is not asked a second time on top of it.
+    if (v.active !== was.active) setStatus(row, !!v.active);
+    cell('actions').innerHTML = rowActions(v.name);
+
+    // what the filters, the search and the record read
+    const ids = Object.fromEntries((row.dataset.ids || '').split(';').filter(Boolean).map((p) => p.split('=')));
+    if (v.bbg) ids.bbg = v.bbg; else delete ids.bbg;
+    row.dataset.ids = Object.entries(ids).map(([k, val]) => `${k}=${val}`).join(';');
+    row.dataset.name = [v.name, ...Object.values(ids)].join(' ').toLowerCase();
+    row.dataset.type = v.type.toLowerCase().replace(/\s+/g, '-');
+    row.dataset.currency = v.currency;
+    row.dataset.source = v.source;
+    row.dataset.price = v.price;
+    if (DETAILS[was.bbg] && v.bbg !== was.bbg) { DETAILS[v.bbg] = DETAILS[was.bbg]; delete DETAILS[was.bbg]; }
+    if (DETAILS[v.bbg]) { DETAILS[v.bbg].price = v.price; DETAILS[v.bbg].source = v.source; }
+
+    cell('modified').innerHTML = dateCell(isoNow());
+
+    if (v.name !== was.name) unsort('instrument');
+    if (v.price !== was.price) unsort('price');
+    row.querySelector('[data-row-act="edit"]')?.focus();
+  }
+
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('tr[data-editing] [data-row-edit]');
+    if (!b) return;
+    if (b.dataset.rowEdit === 'save') saveEdit(); else cancelEdit();
+  });
+  // A double-click anywhere on a row is the quick way in (121): the same as
+  // its Edit icon. Not on a control — a link, a button, a field — whose own
+  // click must win, and not on the empty-state row.
+  tbody.addEventListener('dblclick', (e) => {
+    const row = e.target.closest('tr[data-name]');
+    if (!row || row.hasAttribute('data-editing')) return;
+    if (e.target.closest('a, button, input, label, .select')) return;
+    e.preventDefault();
+    getSelection()?.removeAllRanges();
+    startEdit(row);
+  });
+  document.addEventListener('input', (e) => { if (e.target.closest('tr[data-editing]')) syncRowDirty(); });
+  document.addEventListener('change', (e) => {
+    const row = e.target.closest('tr[data-editing]');
+    if (!row) return;
+    if (e.target.name === 'source') syncPriceField(row);
+    if (e.target.name === 'sector') {
+      const cell = rowCells(row)('industry');
+      if (cell) cell.innerHTML = rowIndustry(e.target.value, '');
+    }
+    if (e.target.name === 'active') { const w = row.querySelector('[data-status-word]'); if (w) w.textContent = e.target.checked ? 'Active' : 'Inactive'; }
+    syncRowDirty();
+  });
+  document.addEventListener('keydown', (e) => {
+    const row = e.target.closest('tr[data-editing]');
+    if (!row) return;
+    if (e.target.closest('.select-content')) return;     // the listbox owns its keys
+    if (e.key === 'Enter' && e.target.matches('.input')) { e.preventDefault(); saveEdit(); }
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); cancelEdit(); }
+  }, true);
 
   /* ------------------------------------------------- the kit's state links
      Documentation scaffolding and nothing else. `pages/instrument-record.html`

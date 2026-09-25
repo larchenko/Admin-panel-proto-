@@ -22,7 +22,7 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <!-- Prototype: the wordmark goes back to the index. In the app it is the home link. -->
-        <a class="sidebar-brand" href="../index.html"><img src="../assets/logo.svg?v=2026-09-23" alt="VIZ"></a>
+        <a class="sidebar-brand" href="../index.html"><img class="sidebar-wordmark" src="../assets/logo.svg?v=2026-09-25" alt="Vizibility"><img class="sidebar-mark" src="../assets/logo-mark.svg?v=2026-09-25" alt="Vizibility"></a>
         <button type="button" class="btn btn-ghost btn-icon btn-sm" data-sidebar-toggle
                 aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
           <i class="ri-menu-fold-line"></i>
@@ -41,9 +41,9 @@
 
       <div class="sidebar-footer">
         <a class="sidebar-item" href="#" title="Settings"><i class="ri-settings-3-line"></i><span>Settings</span></a>
-        <button type="button" class="sidebar-user" title="Andriy Larchenko · Master Admin">
-          <span class="sidebar-avatar" aria-hidden="true">AL</span>
-          <span class="sidebar-user-text"><span>Andriy Larchenko</span><span>Master Admin</span></span>
+        <button type="button" class="sidebar-user" title="Alex Keller · Master Admin">
+          <span class="sidebar-avatar" aria-hidden="true">AK</span>
+          <span class="sidebar-user-text"><span>Alex Keller</span><span>Master Admin</span></span>
           <i class="ri-more-2-line"></i>
         </button>
       </div>
@@ -315,316 +315,308 @@
       <thead>
         <tr>
           <th data-col="instrument"><button type="button" class="table-sort" aria-sort="ascending">Instrument <i class="ri-arrow-up-line"></i></button></th>
-          <th data-col="type">Type</th>
-          <th data-col="sector">Financial sector</th>
-          <th data-col="country" hidden>Country</th>
-          <th class="num" data-col="products"><button type="button" class="table-sort" aria-sort="none">Products <i class="ri-expand-up-down-line"></i></button></th>
+          <th hidden data-col="bbg">Bloomberg code</th>
+          <th data-col="status">Status</th>
           <th class="bool" data-col="pricer">Pricer</th>
           <th data-col="currency">Currency</th>
           <th class="num" data-col="price"><button type="button" class="table-sort" aria-sort="none">Last price <i class="ri-expand-up-down-line"></i></button></th>
-          <th class="num" data-col="close" hidden><button type="button" class="table-sort" aria-sort="none">Last close <i class="ri-expand-up-down-line"></i></button></th>
-          <th class="num" data-col="chg-ytd" hidden><button type="button" class="table-sort" aria-sort="none">Chg YTD <i class="ri-expand-up-down-line"></i></button></th>
-          <th class="num" data-col="vol90" hidden><button type="button" class="table-sort" aria-sort="none">Volatility 90D <i class="ri-expand-up-down-line"></i></button></th>
-          <th data-col="updated"><button type="button" class="table-sort" aria-sort="none">Updated <i class="ri-expand-up-down-line"></i></button></th>
-          <th data-col="status">Status</th>
-          <th data-col="created" hidden><button type="button" class="table-sort" aria-sort="none">Created <i class="ri-expand-up-down-line"></i></button></th>
-          <th data-col="modified" hidden><button type="button" class="table-sort" aria-sort="none">Modified <i class="ri-expand-up-down-line"></i></button></th>
-          <th class="actions" data-col="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="columns-menu" aria-haspopup="dialog" aria-label="Choose and reorder columns" data-tooltip="Choose and reorder columns"><i class="ri-layout-column-line"></i></button></th>
+          <th hidden data-col="source">Source</th>
+          <th data-col="updated"><button type="button" class="table-sort" aria-sort="none">Last update <i class="ri-expand-up-down-line"></i></button></th>
+          <th data-col="timestamp"><button type="button" class="table-sort" aria-sort="none">Timestamp <i class="ri-expand-up-down-line"></i></button></th>
+          <th hidden class="num" data-col="close"><button type="button" class="table-sort" aria-sort="none">Last close <i class="ri-expand-up-down-line"></i></button></th>
+          <th hidden class="num" data-col="chg-ytd"><button type="button" class="table-sort" aria-sort="none">Chg YTD <i class="ri-expand-up-down-line"></i></button></th>
+          <th hidden class="num" data-col="vol90"><button type="button" class="table-sort" aria-sort="none">Volatility 90D <i class="ri-expand-up-down-line"></i></button></th>
+          <th data-col="type">Type</th>
+          <th hidden data-col="sector">Financial sector</th>
+          <th hidden data-col="industry">Industry group</th>
+          <th hidden data-col="country">Country</th>
+          <th class="num" data-col="products"><button type="button" class="table-sort" aria-sort="none">Products <i class="ri-expand-up-down-line"></i></button></th>
+          <th data-col="created"><button type="button" class="table-sort" aria-sort="none">Created <i class="ri-expand-up-down-line"></i></button></th>
+          <th hidden data-col="modified"><button type="button" class="table-sort" aria-sort="none">Modified <i class="ri-expand-up-down-line"></i></button></th>
+          <th class="actions" data-col="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="columns-menu" aria-haspopup="dialog" aria-label="Choose and reorder columns" data-tooltip="Columns"><i class="ri-layout-column-line"></i></button></th>
         </tr>
       </thead>
       <tbody>
 
         <tr data-name="apple inc. us0378331005 037833100 bbg000b9xry4 aapl.o aapl aapl us equity" data-type="equity" data-currency="USD" data-sector="Information Technology" data-country="United States" data-status="Active" data-pricer="Yes" data-source="SIX" data-ids="bbg=AAPL US Equity;isin=US0378331005;cusip=037833100;figi=BBG000B9XRY4;sedol=2046251;valor=908440;wkn=865985;ric=AAPL.O;yahoo=AAPL;six-code=AAPL;six-schema=TICKER_BC;six-bc=67">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Apple Inc.</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/us.svg" alt="United States" data-tooltip="United States"></span>
-              <span class="cell-sub">AAPL US Equity</span>
-            </div>
-          </td>
-          <td class="muted">Equity</td>
-          <td><div class="cell max-w-[220px]"><span class="truncate">Information Technology</span><span class="cell-sub">Technology Hardware &amp; Equipment</span></div></td>
-          <td class="muted" hidden>United States</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">293</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">Apple Inc.</a></span></td>
+          <td hidden>AAPL US Equity</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
           <td>USD</td>
-          <td class="num"><div class="cell"><span>227.86</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=SIX">227.86</span></td>
+          <td hidden>SIX</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026, 10:12:03</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for Apple Inc." data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-17T22:00:00" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=22:00:00">17 Sep 2026, 22:00:00</time></td>
           <td class="num" hidden>226.514</td>
           <td class="num" hidden>+12.47%</td>
           <td class="num" hidden>24.13%</td>
-          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>23 Sep 2025</span><span class="cell-sub">07:57:03</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Apple Inc." title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Equity</td>
+          <td hidden><span class="block max-w-[220px] truncate">Information Technology</span></td>
+          <td hidden><span class="block max-w-[220px] truncate">Technology Hardware &amp; Equipment</span></td>
+          <td hidden>United States</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">293</a></td>
+          <td><time datetime="2025-09-23T07:57:03" tabindex="0" data-tooltip-rows="Date=23 Sep 2025;Time=07:57:03">23 Sep 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View Apple Inc." data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit Apple Inc. in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete Apple Inc." data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="nestlé sa ch0038863350 3886335 nesn.s nesn nesn sw equity" data-type="equity" data-currency="CHF" data-sector="Consumer Staples" data-country="Switzerland" data-status="Active" data-pricer="Yes" data-source="SIX" data-ids="bbg=NESN SW Equity;isin=CH0038863350;sedol=3886335;valor=3886335;ric=NESN.S;yahoo=NESN.SW;six-code=NESN;six-schema=TICKER_BC;six-bc=4">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Nestlé SA</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
-              <span class="cell-sub">NESN SW Equity</span>
-            </div>
-          </td>
-          <td class="muted">Equity</td>
-          <td><div class="cell max-w-[220px]"><span class="truncate">Consumer Staples</span><span class="cell-sub">Food, Beverage &amp; Tobacco</span></div></td>
-          <td class="muted" hidden>Switzerland</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">34</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">Nestlé SA</a></span></td>
+          <td hidden>NESN SW Equity</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
           <td>CHF</td>
-          <td class="num"><div class="cell"><span>336.85</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=SIX">336.85</span></td>
+          <td hidden>SIX</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026, 10:12:03</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for Nestlé SA" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-17T17:30:00" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=17:30:00">17 Sep 2026, 17:30:00</time></td>
           <td class="num" hidden>334.20</td>
           <td class="num" hidden>-4.18%</td>
           <td class="num" hidden>16.402%</td>
-          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:14:22</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Nestlé SA" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Equity</td>
+          <td hidden><span class="block max-w-[220px] truncate">Consumer Staples</span></td>
+          <td hidden><span class="block max-w-[220px] truncate">Food, Beverage &amp; Tobacco</span></td>
+          <td hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">34</a></td>
+          <td><time datetime="2025-01-12T09:14:22" tabindex="0" data-tooltip-rows="Date=12 Jan 2025;Time=09:14:22">12 Jan 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View Nestlé SA" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit Nestlé SA in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete Nestlé SA" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="astrazeneca plc gb0009895292 0989529 azn.l azn ln equity" data-type="equity" data-currency="GBp" data-sector="Health Care" data-country="United Kingdom" data-status="Active" data-pricer="Yes" data-source="Yahoo" data-ids="bbg=AZN LN Equity;isin=GB0009895292;sedol=0989529;ric=AZN.L;yahoo=AZN.L">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">AstraZeneca PLC</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/gb.svg" alt="United Kingdom" data-tooltip="United Kingdom"></span>
-              <span class="cell-sub">AZN LN Equity</span>
-            </div>
-          </td>
-          <td class="muted">Equity</td>
-          <td><div class="cell max-w-[220px]"><span class="truncate">Health Care</span><span class="cell-sub">Pharmaceuticals &amp; Biotechnology</span></div></td>
-          <td class="muted" hidden>United Kingdom</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">12</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">AstraZeneca PLC</a></span></td>
+          <td hidden>AZN LN Equity</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
           <td>GBp</td>
-          <td class="num"><div class="cell"><span>11'842.00</span><span class="cell-sub">Yahoo</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=Yahoo">11'842.00</span></td>
+          <td hidden>Yahoo</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026, 10:12:03</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for AstraZeneca PLC" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-17T16:35:00" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=16:35:00">17 Sep 2026, 16:35:00</time></td>
           <td class="num" hidden>11'795.00</td>
           <td class="num" hidden>+8.93%</td>
           <td class="num" hidden>21.7%</td>
-          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>04 Mar 2025</span><span class="cell-sub">11:03:47</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for AstraZeneca PLC" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Equity</td>
+          <td hidden><span class="block max-w-[220px] truncate">Health Care</span></td>
+          <td hidden><span class="block max-w-[220px] truncate">Pharmaceuticals &amp; Biotechnology</span></td>
+          <td hidden>United Kingdom</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">12</a></td>
+          <td><time datetime="2025-03-04T11:03:47" tabindex="0" data-tooltip-rows="Date=04 Mar 2025;Time=11:03:47">04 Mar 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View AstraZeneca PLC" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit AstraZeneca PLC in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete AstraZeneca PLC" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="roche holding ag ch0012032048 1203204 rog.s 855167 rog sw equity" data-type="equity" data-currency="CHF" data-sector="Health Care" data-country="Switzerland" data-status="Inactive" data-inactive data-pricer="No" data-source="SIX" data-ids="bbg=ROG SW Equity;isin=CH0012032048;sedol=1203204;valor=1203204;wkn=855167;ric=ROG.S;six-code=ROG;six-schema=TICKER_BC;six-bc=4">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Roche Holding AG</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
-              <span class="cell-sub">ROG SW Equity</span>
-            </div>
-          </td>
-          <td class="muted">Equity</td>
-          <td><div class="cell max-w-[220px]"><span class="truncate">Health Care</span><span class="cell-sub">Pharmaceuticals &amp; Biotechnology</span></div></td>
-          <td class="muted" hidden>Switzerland</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">41</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">Roche Holding AG</a></span></td>
+          <td hidden>ROG SW Equity</td>
+          <td><span class="badge badge-secondary" tabindex="0" data-tooltip="Deactivated" data-tooltip-rows="Date=12 Sep 2026;Time=17:30:11;By=aurelien.decoeyere@vizibility.ch"><i class="ri-close-line"></i> Inactive</span></td>
           <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
           <td>CHF</td>
-          <td class="num"><div class="cell"><span>268.40</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=SIX">268.40</span></td>
+          <td hidden>SIX</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-12T17:30:00" tabindex="0" data-tooltip-rows="Date=12 Sep 2026;Time=17:30:00">12 Sep 2026, 17:30:00</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for Roche Holding AG" data-tooltip="Refresh" disabled><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-12T17:30:00" tabindex="0" data-tooltip-rows="Date=12 Sep 2026;Time=17:30:00">12 Sep 2026, 17:30:00</time></td>
           <td class="num" hidden>268.40</td>
           <td class="num" hidden>-1.245%</td>
           <td class="num" hidden>18.06%</td>
-          <td><div class="cell"><span>12 Sep 2026</span><span class="cell-sub">17:30:00</span></div></td>
-          <td><span class="badge badge-secondary" tabindex="0" data-tooltip="Deactivated" data-tooltip-rows="Date=12 Sep 2026;Time=17:30:11;By=aurelien.decoeyere@vizibility.ch">Inactive</span></td>
-          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:14:58</span></div></td>
-          <td hidden><div class="cell"><span>12 Sep 2026</span><span class="cell-sub">17:30:00</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Roche Holding AG" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Equity</td>
+          <td hidden><span class="block max-w-[220px] truncate">Health Care</span></td>
+          <td hidden><span class="block max-w-[220px] truncate">Pharmaceuticals &amp; Biotechnology</span></td>
+          <td hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">41</a></td>
+          <td><time datetime="2025-01-12T09:14:58" tabindex="0" data-tooltip-rows="Date=12 Jan 2025;Time=09:14:58">12 Jan 2025</time></td>
+          <td hidden><time datetime="2026-09-12T17:30:00" tabindex="0" data-tooltip-rows="Date=12 Sep 2026;Time=17:30:00">12 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View Roche Holding AG" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit Roche Holding AG in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete Roche Holding AG" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="swiss market index .ssmi smi index" data-type="index" data-currency="CHF" data-sector="" data-country="Switzerland" data-status="Active" data-pricer="Yes" data-source="SIX" data-ids="bbg=SMI Index;ric=.SSMI;six-code=SMI;six-schema=TICKER_BC;six-bc=4">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Swiss Market Index</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
-              <span class="cell-sub">SMI Index</span>
-            </div>
-          </td>
-          <td class="muted">Index</td>
-          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
-          <td class="muted" hidden>Switzerland</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">58</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">Swiss Market Index</a></span></td>
+          <td hidden>SMI Index</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
           <td>CHF</td>
-          <td class="num"><div class="cell"><span>12'104.55</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=SIX">12'104.55</span></td>
+          <td hidden>SIX</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026, 10:12:03</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for Swiss Market Index" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-18T10:11:58" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:11:58">18 Sep 2026, 10:11:58</time></td>
           <td class="num" hidden>12'088.13</td>
           <td class="num" hidden>+6.72%</td>
           <td class="num" hidden>12.884%</td>
-          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:15:10</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Swiss Market Index" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Index</td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">58</a></td>
+          <td><time datetime="2025-01-12T09:15:10" tabindex="0" data-tooltip-rows="Date=12 Jan 2025;Time=09:15:10">12 Jan 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View Swiss Market Index" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit Swiss Market Index in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete Swiss Market Index" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="euro stoxx 50 eu0009658145 .stoxx50e sx5e index" data-type="index" data-currency="EUR" data-sector="" data-country="" data-status="Active" data-pricer="Yes" data-source="SIX" data-ids="bbg=SX5E Index;isin=EU0009658145;ric=.STOXX50E;six-code=SX5E;six-schema=TICKER_BC;six-bc=67">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">EURO STOXX 50</a></span>
-              <span class="cell-sub">SX5E Index</span>
-            </div>
-          </td>
-          <td class="muted">Index</td>
-          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
-          <td class="muted" hidden><span aria-hidden="true">—</span></td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">37</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">EURO STOXX 50</a></span></td>
+          <td hidden>SX5E Index</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
           <td>EUR</td>
-          <td class="num"><div class="cell"><span>5'412.77</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=SIX">5'412.77</span></td>
+          <td hidden>SIX</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026, 10:12:03</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for EURO STOXX 50" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-18T10:11:58" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:11:58">18 Sep 2026, 10:11:58</time></td>
           <td class="num" hidden>5'398.22</td>
           <td class="num" hidden>+9.04%</td>
           <td class="num" hidden>14.21%</td>
-          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:15:24</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for EURO STOXX 50" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Index</td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">37</a></td>
+          <td><time datetime="2025-01-12T09:15:24" tabindex="0" data-tooltip-rows="Date=12 Jan 2025;Time=09:15:24">12 Jan 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View EURO STOXX 50" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit EURO STOXX 50 in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete EURO STOXX 50" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="ishares core msci world ucits etf ie00b4l5y983 b4l5y98 a0rpwh iwda.as iwda na equity" data-type="etf" data-currency="USD" data-sector="" data-country="Ireland" data-status="Active" data-pricer="Yes" data-source="Yahoo" data-ids="bbg=IWDA NA Equity;isin=IE00B4L5Y983;sedol=B4L5Y98;wkn=A0RPWH;ric=IWDA.AS;yahoo=IWDA.AS">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">iShares Core MSCI World UCITS ETF</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ie.svg" alt="Ireland" data-tooltip="Ireland"></span>
-              <span class="cell-sub">IWDA NA Equity</span>
-            </div>
-          </td>
-          <td class="muted">ETF</td>
-          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
-          <td class="muted" hidden>Ireland</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">9</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">iShares Core MSCI World UCITS ETF</a></span></td>
+          <td hidden>IWDA NA Equity</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
           <td>USD</td>
-          <td class="num"><div class="cell"><span>102.44</span><span class="cell-sub">Yahoo</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=Yahoo">102.44</span></td>
+          <td hidden>Yahoo</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026, 10:12:03</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for iShares Core MSCI World UCITS ETF" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-17T17:35:00" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=17:35:00">17 Sep 2026, 17:35:00</time></td>
           <td class="num" hidden>102.07</td>
           <td class="num" hidden>+11.36%</td>
           <td class="num" hidden>13.95%</td>
-          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>28 Apr 2025</span><span class="cell-sub">14:22:05</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for iShares Core MSCI World UCITS ETF" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>ETF</td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td hidden>Ireland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">9</a></td>
+          <td><time datetime="2025-04-28T14:22:05" tabindex="0" data-tooltip-rows="Date=28 Apr 2025;Time=14:22:05">28 Apr 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View iShares Core MSCI World UCITS ETF" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit iShares Core MSCI World UCITS ETF in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete iShares Core MSCI World UCITS ETF" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="nestlé 1.5% 2029 ch0419041205 41904120 nesnvx 1.5 04/29 corp" data-type="bond" data-currency="CHF" data-sector="Consumer Staples" data-country="Switzerland" data-status="Active" data-pricer="No" data-source="SIX" data-ids="bbg=NESNVX 1.5 04/29 Corp;isin=CH0419041205;valor=41904120">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Nestlé 1.5% 2029</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
-              <span class="cell-sub">NESNVX 1.5 04/29 Corp</span>
-            </div>
-          </td>
-          <td class="muted">Bond</td>
-          <td><div class="cell max-w-[220px]"><span class="truncate">Consumer Staples</span><span class="cell-sub">Food, Beverage &amp; Tobacco</span></div></td>
-          <td class="muted" hidden>Switzerland</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">6</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">Nestlé 1.5% 2029</a></span></td>
+          <td hidden>NESNVX 1.5 04/29 Corp</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
           <td>CHF</td>
-          <td class="num"><div class="cell"><span>101.24</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=SIX">101.24</span></td>
+          <td hidden>SIX</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026, 10:12:03</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for Nestlé 1.5% 2029" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-15T17:30:00" tabindex="0" data-tooltip-rows="Date=15 Sep 2026;Time=17:30:00">15 Sep 2026, 17:30:00</time></td>
           <td class="num" hidden>101.19</td>
           <td class="num" hidden>+0.842%</td>
           <td class="num" hidden>3.16%</td>
-          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>19 Feb 2025</span><span class="cell-sub">16:41:33</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Nestlé 1.5% 2029" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Bond</td>
+          <td hidden><span class="block max-w-[220px] truncate">Consumer Staples</span></td>
+          <td hidden><span class="block max-w-[220px] truncate">Food, Beverage &amp; Tobacco</span></td>
+          <td hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">6</a></td>
+          <td><time datetime="2025-02-19T16:41:33" tabindex="0" data-tooltip-rows="Date=19 Feb 2025;Time=16:41:33">19 Feb 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View Nestlé 1.5% 2029" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit Nestlé 1.5% 2029 in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete Nestlé 1.5% 2029" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="saron 3m saron3md= ssaron3 index" data-type="rate" data-currency="%" data-sector="" data-country="Switzerland" data-status="Active" data-pricer="No" data-source="SIX" data-ids="bbg=SSARON3 Index;ric=SARON3MD=;six-code=SARON3M;six-schema=TICKER_BC;six-bc=4">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">SARON 3M</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
-              <span class="cell-sub">SSARON3 Index</span>
-            </div>
-          </td>
-          <td class="muted">Rate</td>
-          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
-          <td class="muted" hidden>Switzerland</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">16</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">SARON 3M</a></span></td>
+          <td hidden>SSARON3 Index</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
           <td>%</td>
-          <td class="num"><div class="cell"><span>1.25</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=SIX">1.25</span></td>
+          <td hidden>SIX</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026, 10:12:03</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for SARON 3M" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-17T18:00:00" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=18:00:00">17 Sep 2026, 18:00:00</time></td>
           <td class="num" hidden>1.2477</td>
           <td class="num muted" hidden><span aria-hidden="true">—</span></td>
           <td class="num muted" hidden><span aria-hidden="true">—</span></td>
-          <td><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:16:02</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for SARON 3M" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Rate</td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">16</a></td>
+          <td><time datetime="2025-01-12T09:16:02" tabindex="0" data-tooltip-rows="Date=12 Jan 2025;Time=09:16:02">12 Jan 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View SARON 3M" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit SARON 3M in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete SARON 3M" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="gold spot xau= gc=f xau curncy" data-type="commodity" data-currency="USD" data-sector="" data-country="" data-status="Active" data-health="failed" data-pricer="Yes" data-source="Yahoo" data-ids="bbg=XAU Curncy;ric=XAU=;yahoo=GC=F">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Gold Spot</a></span>
-              <span class="cell-sub">XAU Curncy</span>
-            </div>
-          </td>
-          <td class="muted">Commodity</td>
-          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
-          <td class="muted" hidden><span aria-hidden="true">—</span></td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">7</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">Gold Spot</a></span></td>
+          <td hidden>XAU Curncy</td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static" data-on></span><span class="sr-only">In pricer</span></td>
           <td>USD</td>
-          <td class="num"><div class="cell"><span class="text-muted-foreground">2'684.30</span><span class="cell-sub">Yahoo</span></div></td>
+          <td class="num"><span tabindex="0" class="text-muted-foreground" data-tooltip-rows="Source=Yahoo">2'684.30</span></td>
+          <td hidden>Yahoo</td>
+          <td><span class="inline-flex items-center gap-1"><span class="cell-error" tabindex="0" data-tooltip="Last update failed" data-tooltip-rows="Attempt=18 Sep 2026, 06:00:11;Source=Yahoo;Error=Symbol XAU= not found (404);Showing=18 Sep 2026"><i class="ri-error-warning-line"></i> Failed</span><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for Gold Spot" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-17T22:00:00" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=22:00:00">17 Sep 2026, 22:00:00</time></td>
           <td class="num" hidden>2'678.15</td>
           <td class="num" hidden>+27.41%</td>
           <td class="num" hidden>15.62%</td>
-          <td><div class="cell"><span class="cell-error" tabindex="0" data-tooltip="Last update failed" data-tooltip-rows="Attempt=21 Sep 2026, 06:00:11;Source=Yahoo;Error=Symbol XAU= not found (404)"><i class="ri-error-warning-line"></i> Failed</span><span class="cell-sub">Showing 18 Sep 2026</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>03 Jun 2025</span><span class="cell-sub">10:08:19</span></div></td>
-          <td hidden><div class="cell"><span>18 Sep 2026</span><span class="cell-sub">10:12:03</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Gold Spot" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Commodity</td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">7</a></td>
+          <td><time datetime="2025-06-03T10:08:19" tabindex="0" data-tooltip-rows="Date=03 Jun 2025;Time=10:08:19">03 Jun 2025</time></td>
+          <td hidden><time datetime="2026-09-18T10:12:03" tabindex="0" data-tooltip-rows="Date=18 Sep 2026;Time=10:12:03">18 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View Gold Spot" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit Gold Spot in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete Gold Spot" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="itraxx europe main s42 " data-type="credit-index" data-currency="EUR" data-sector="" data-country="" data-status="Active" data-pricer="No" data-source="Excel" data-ids="">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">iTraxx Europe Main S42</a></span>
-              <span class="cell-sub">—</span>
-            </div>
-          </td>
-          <td class="muted">Credit index</td>
-          <td><div class="cell max-w-[220px]"><span class="text-muted-foreground">—</span><span class="cell-sub">—</span></div></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">iTraxx Europe Main S42</a></span></td>
           <td class="muted" hidden><span aria-hidden="true">—</span></td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">4</a></td>
+          <td><span class="badge badge-success"><i class="ri-check-line"></i> Active</span></td>
           <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
           <td>EUR</td>
-          <td class="num"><div class="cell"><span>58.42</span><span class="cell-sub">Excel</span></div></td>
+          <td class="num"><span tabindex="0" data-tooltip-rows="Source=Excel">58.42</span></td>
+          <td hidden>Excel</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-09-17T15:43:41" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=15:43:41">17 Sep 2026, 15:43:41</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for iTraxx Europe Main S42" data-tooltip="Refresh"><i class="ri-refresh-line"></i></button></span></td>
+          <td><time data-age datetime="2026-09-17T15:43:41" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=15:43:41">17 Sep 2026, 15:43:41</time></td>
           <td class="num" hidden>58.42</td>
           <td class="num muted" hidden><span aria-hidden="true">—</span></td>
           <td class="num muted" hidden><span aria-hidden="true">—</span></td>
-          <td><div class="cell"><span>17 Sep 2026</span><span class="cell-sub">15:43:41</span></div></td>
-          <td><span class="badge badge-success"><span class="badge-dot"></span> Active</span></td>
-          <td hidden><div class="cell"><span>23 Sep 2025</span><span class="cell-sub">09:16:40</span></div></td>
-          <td hidden><div class="cell"><span>17 Sep 2026</span><span class="cell-sub">15:43:41</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for iTraxx Europe Main S42" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Credit index</td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="muted" hidden><span aria-hidden="true">—</span></td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">4</a></td>
+          <td><time datetime="2025-09-23T09:16:40" tabindex="0" data-tooltip-rows="Date=23 Sep 2025;Time=09:16:40">23 Sep 2025</time></td>
+          <td hidden><time datetime="2026-09-17T15:43:41" tabindex="0" data-tooltip-rows="Date=17 Sep 2026;Time=15:43:41">17 Sep 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View iTraxx Europe Main S42" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit iTraxx Europe Main S42 in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete iTraxx Europe Main S42" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <tr data-name="credit suisse group ag ch0012138530 1213853 csgn.s csgn sw equity" data-type="equity" data-currency="CHF" data-sector="Financials" data-country="Switzerland" data-status="Inactive" data-inactive data-pricer="No" data-source="SIX" data-ids="bbg=CSGN SW Equity;isin=CH0012138530;sedol=1213853;valor=1213853;ric=CSGN.S;six-code=CSGN;six-schema=TICKER_BC;six-bc=4">
-          <td>
-            <div class="cell max-w-[360px]">
-              <span class="flex items-center gap-2 font-medium"><a href="#" class="truncate underline-offset-4 hover:underline">Credit Suisse Group AG</a><img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/1x1/ch.svg" alt="Switzerland" data-tooltip="Switzerland"></span>
-              <span class="cell-sub">CSGN SW Equity</span>
-            </div>
-          </td>
-          <td class="muted">Equity</td>
-          <td><div class="cell max-w-[220px]"><span class="truncate">Financials</span><span class="cell-sub">Banks</span></div></td>
-          <td class="muted" hidden>Switzerland</td>
-          <td class="num"><a href="#" class="underline-offset-4 hover:underline">2</a></td>
+          <td><span class="block max-w-[360px] font-medium"><a href="#" data-record class="block truncate underline-offset-4 hover:underline">Credit Suisse Group AG</a></span></td>
+          <td hidden>CSGN SW Equity</td>
+          <td><span class="badge badge-secondary" tabindex="0" data-tooltip="Deactivated" data-tooltip-rows="Date=05 Jun 2026;Time=17:30:02;By=system@capital-viz.com"><i class="ri-close-line"></i> Inactive</span></td>
           <td class="bool"><span class="check-static"></span><span class="sr-only">Not in pricer</span></td>
           <td>CHF</td>
-          <td class="num"><div class="cell"><span class="text-muted-foreground">—</span><span class="cell-sub">SIX</span></div></td>
+          <td class="num muted"><span aria-hidden="true">—</span></td>
+          <td hidden>SIX</td>
+          <td><span class="inline-flex items-center gap-1"><time data-age datetime="2026-06-05T17:30:00" tabindex="0" data-tooltip-rows="Date=05 Jun 2026;Time=17:30:00">05 Jun 2026, 17:30:00</time><button type="button" class="btn btn-ghost btn-icon btn-sm cell-action" data-row-act="refresh" aria-label="Refresh data for Credit Suisse Group AG" data-tooltip="Refresh" disabled><i class="ri-refresh-line"></i></button></span></td>
+          <td class="muted"><span aria-hidden="true">—</span></td>
           <td class="num muted" hidden><span aria-hidden="true">—</span></td>
           <td class="num muted" hidden><span aria-hidden="true">—</span></td>
           <td class="num muted" hidden><span aria-hidden="true">—</span></td>
-          <td><div class="cell"><span>05 Jun 2026</span><span class="cell-sub">17:30:00</span></div></td>
-          <td><span class="badge badge-secondary" tabindex="0" data-tooltip="Deactivated" data-tooltip-rows="Date=05 Jun 2026;Time=17:30:02;By=system@capital-viz.com">Inactive</span></td>
-          <td hidden><div class="cell"><span>12 Jan 2025</span><span class="cell-sub">09:14:30</span></div></td>
-          <td hidden><div class="cell"><span>05 Jun 2026</span><span class="cell-sub">17:30:00</span></div></td>
-          <td class="actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" popovertarget="row-menu" aria-label="More actions for Credit Suisse Group AG" title="More actions"><i class="ri-more-2-line"></i></button></td>
+          <td>Equity</td>
+          <td hidden><span class="block max-w-[220px] truncate">Financials</span></td>
+          <td hidden><span class="block max-w-[220px] truncate">Banks</span></td>
+          <td hidden>Switzerland</td>
+          <td class="num"><a href="#" class="underline-offset-4 hover:underline">2</a></td>
+          <td><time datetime="2025-01-12T09:14:30" tabindex="0" data-tooltip-rows="Date=12 Jan 2025;Time=09:14:30">12 Jan 2025</time></td>
+          <td hidden><time datetime="2026-06-05T17:30:00" tabindex="0" data-tooltip-rows="Date=05 Jun 2026;Time=17:30:00">05 Jun 2026</time></td>
+          <td class="actions"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="view" aria-label="View Credit Suisse Group AG" data-tooltip="View"><i class="ri-file-list-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="edit" aria-label="Edit Credit Suisse Group AG in list" data-tooltip="Edit"><i class="ri-pencil-line"></i></button><button type="button" class="btn btn-ghost btn-icon btn-sm" data-row-act="delete" aria-label="Delete Credit Suisse Group AG" data-tooltip="Delete"><i class="ri-delete-bin-line"></i></button></div></td>
         </tr>
 
         <!-- No results. Placeholder for the real empty-state component (not designed yet). -->
         <tr data-empty hidden>
-          <td colspan="16" class="py-12 text-center text-muted-foreground">
+          <td colspan="19" class="py-12 text-center text-muted-foreground">
             <i class="ri-search-line block text-3xl" aria-hidden="true"></i>
             <p class="card-title mt-3">No instruments match these filters</p>
             <p class="mt-1">Clear all filters, or pick another type above.</p>
@@ -672,21 +664,13 @@
               <label><input class="checkbox" type="checkbox" checked disabled aria-label="Instrument is always shown"> <span>Instrument</span></label>
               <span class="column-lock">Always first</span>
             </li>
-            <li class="column-item" data-col="type">
-              <span class="column-handle" role="button" tabindex="0" aria-label="Move Type" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
-              <label><input class="checkbox" type="checkbox" checked> <span>Type</span></label>
+            <li class="column-item" data-col="bbg">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Bloomberg code" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Bloomberg code</span></label>
             </li>
-            <li class="column-item" data-col="sector">
-              <span class="column-handle" role="button" tabindex="0" aria-label="Move Financial sector" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
-              <label><input class="checkbox" type="checkbox" checked> <span>Financial sector</span></label>
-            </li>
-            <li class="column-item" data-col="country">
-              <span class="column-handle" role="button" tabindex="0" aria-label="Move Country" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
-              <label><input class="checkbox" type="checkbox"> <span>Country</span></label>
-            </li>
-            <li class="column-item" data-col="products">
-              <span class="column-handle" role="button" tabindex="0" aria-label="Move Products" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
-              <label><input class="checkbox" type="checkbox" checked> <span>Products</span></label>
+            <li class="column-item" data-col="status">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Status" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Status</span></label>
             </li>
             <li class="column-item" data-col="pricer">
               <span class="column-handle" role="button" tabindex="0" aria-label="Move Pricer" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
@@ -700,6 +684,18 @@
               <span class="column-handle" role="button" tabindex="0" aria-label="Move Last price" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
               <label><input class="checkbox" type="checkbox" checked> <span>Last price</span></label>
             </li>
+            <li class="column-item" data-col="source">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Source" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Source</span></label>
+            </li>
+            <li class="column-item" data-col="updated">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Last update" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Last update</span></label>
+            </li>
+            <li class="column-item" data-col="timestamp">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Timestamp" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Timestamp</span></label>
+            </li>
             <li class="column-item" data-col="close">
               <span class="column-handle" role="button" tabindex="0" aria-label="Move Last close" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
               <label><input class="checkbox" type="checkbox"> <span>Last close</span></label>
@@ -712,17 +708,29 @@
               <span class="column-handle" role="button" tabindex="0" aria-label="Move Volatility 90D" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
               <label><input class="checkbox" type="checkbox"> <span>Volatility 90D</span></label>
             </li>
-            <li class="column-item" data-col="updated">
-              <span class="column-handle" role="button" tabindex="0" aria-label="Move Updated" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
-              <label><input class="checkbox" type="checkbox" checked> <span>Updated</span></label>
+            <li class="column-item" data-col="type">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Type" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Type</span></label>
             </li>
-            <li class="column-item" data-col="status">
-              <span class="column-handle" role="button" tabindex="0" aria-label="Move Status" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
-              <label><input class="checkbox" type="checkbox" checked> <span>Status</span></label>
+            <li class="column-item" data-col="sector">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Financial sector" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Financial sector</span></label>
+            </li>
+            <li class="column-item" data-col="industry">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Industry group" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Industry group</span></label>
+            </li>
+            <li class="column-item" data-col="country">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Country" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox"> <span>Country</span></label>
+            </li>
+            <li class="column-item" data-col="products">
+              <span class="column-handle" role="button" tabindex="0" aria-label="Move Products" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
+              <label><input class="checkbox" type="checkbox" checked> <span>Products</span></label>
             </li>
             <li class="column-item" data-col="created">
               <span class="column-handle" role="button" tabindex="0" aria-label="Move Created" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
-              <label><input class="checkbox" type="checkbox"> <span>Created</span></label>
+              <label><input class="checkbox" type="checkbox" checked> <span>Created</span></label>
             </li>
             <li class="column-item" data-col="modified">
               <span class="column-handle" role="button" tabindex="0" aria-label="Move Modified" title="Drag, or focus and use the arrow keys"><i class="ri-draggable"></i></span>
@@ -731,15 +739,6 @@
           </ul>
         </div>
 
-        <!-- One menu shared by every row: the prototype has static data, so the row
-             is identified by whichever button opened it. In Angular this is one
-             hlm-menu instance per row inside the *ngFor. -->
-        <div class="menu" id="row-menu" popover role="menu">
-          <button type="button" class="menu-item" role="menuitem" data-row-act="view"><i class="ri-file-list-line"></i> View details</button>
-          <button type="button" class="menu-item" role="menuitem" data-row-act="refresh"><i class="ri-refresh-line"></i> Refresh data</button>
-          <div class="menu-separator" role="separator"></div>
-          <button type="button" class="menu-item menu-item-destructive" role="menuitem" data-row-act="delete"><i class="ri-delete-bin-line"></i> Delete instrument</button>
-        </div>
 
         <!-- Deleting an instrument, asked from the list (decision 95).
 
@@ -803,7 +802,7 @@
             <div class="dialog-heading">
               <h2 class="dialog-title" id="instrument-title">
                 <span data-v="title">New instrument</span>
-                <span class="badge badge-success hidden" data-only="record"><span class="badge-dot"></span> Active</span>
+                <span class="badge badge-success hidden" data-only="record"><i class="ri-check-line"></i> Active</span>
                 <!-- The badge reads the state, the switch changes it — "a badge plus
                      a switch", which is what the record header owed Active all along
                      (domain.md). It sits outside the form on purpose (100): the status
@@ -1156,7 +1155,7 @@
                     <div>
                       <h3 class="form-section-title">Market data &amp; performance</h3>
                       <p class="form-section-note">
-                        Updated <span data-v="updated">—</span> · data dated <span data-v="datadate">—</span>
+                        Last update <span data-v="updated">—</span> · Timestamp <span data-v="datadate">—</span>
                       </p>
                     </div>
                     <button type="button" class="btn btn-outline btn-sm" data-act="refresh"><i class="ri-refresh-line"></i> Refresh data</button>

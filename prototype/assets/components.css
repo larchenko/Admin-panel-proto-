@@ -66,7 +66,7 @@
      in decision 87.
 
        step  px   role
-       0.5   2    two lines that are one value            .cell  .stat-value
+       0.5   2    two lines that are one value            .stat-value
        1     4    items in a list that is one object      .sidebar-menu  .tabs-list  .prop
        1.5   6    icon next to 12px text; menu row pad    .field-error  .metric-label  .menu-item
        2     8    label -> control; icon -> label; two    .field  .btn  .page-actions
@@ -616,14 +616,27 @@
      grey and its colour accents lose weight. The status badge keeps its full
      strength — it is the one thing that explains why the row is quiet. */
   .table tbody tr[data-inactive] { @apply text-muted-foreground; }
-  .table tbody tr[data-inactive] .flag,
   .table tbody tr[data-inactive] .check-static { @apply opacity-60; }
   /* cell modifiers */
   .table .num   { @apply text-right tabular-nums; }        /* numbers: right-aligned, equal-width digits */
   .table .check { @apply w-10 pr-0; }                      /* checkbox column */
   .table .check .checkbox { @apply block; }
   .table .actions { @apply w-px text-right; }              /* row actions: shrink to content, scrolls with the table */
-  .table .actions .btn-icon { @apply -mr-2; }              /* icon optically on the row's right padding edge */
+  .table .actions .btn-icon:last-child { @apply -mr-2; }   /* last icon optically on the row's right padding edge */
+  /* Row actions are icons in the row, not a More menu (109): one 32px ghost
+     icon button per action, each named by aria-label and tooltip, delete last.
+     4px between them — one object, decision 87. */
+  .row-actions { @apply flex items-center justify-end gap-1; }
+  /* An action that lives in a value's cell (120): Refresh sits after the Last
+     update value and is invisible until the row is hovered, the button itself
+     is focused, or it is busy. It keeps its box either way, so the value does
+     not move when it appears. */
+  .cell-action { @apply opacity-0 transition-opacity; }
+  .cell-action:disabled { @apply opacity-0; }              /* .btn's disabled:opacity-50 would show it */
+  .table tbody tr:hover .cell-action,
+  .cell-action:focus-visible,
+  .cell-action[aria-busy="true"] { @apply opacity-100; }
+  .table tbody tr:hover .cell-action:disabled { @apply opacity-50; }
 
   /* Pinned first column. Opt in with data-pin-first on the .table-wrap. On a
      table wider than the screen the identity of the row is the one thing that
@@ -653,18 +666,10 @@
   .table .muted { @apply text-muted-foreground; }
   .table .bool  { @apply text-center; }                  /* yes/no column: icon or dash, label in sr-only */
   .table .bool i { @apply text-base leading-none; }
-  /* two-level cell: a primary value with a related second value under it
-     (name + identifiers, price + source, date + time). Header cells use the same
-     structure, so the column label explains what the second line holds. */
-  .cell      { @apply flex min-w-0 flex-col gap-0.5 leading-tight; }
-  .cell-sub  { @apply truncate text-xs font-normal text-muted-foreground; }
-  .table .num .cell   { @apply items-end; }
-  .table td:has(.cell) { @apply py-2; }
-  /* country flag after the instrument name: a square 16px SVG tile, so it stays
-     crisp at any zoom and reads as an icon rather than a small picture. The inset
-     ring keeps flags with a white field (Japan) from bleeding into the row. */
-  .flag { @apply inline-block size-4 shrink-0 rounded-[2px] object-cover ring-1 ring-inset ring-foreground/15; }
-  .flag-empty { @apply inline-block size-4 shrink-0; }
+  /* One value per cell (108). There is no second line: a related value is a
+     column of its own (Bloomberg code, Source, Industry group) and a timestamp
+     is one string, `18 Sep 2026, 10:12:03`. Long text truncates inside a
+     `block max-w-[…] truncate` span. */
   /* sortable header:  <th><button class="table-sort" aria-sort="ascending">Name <i class="ri-arrow-up-line"></i></button></th> */
   .table-sort {
     @apply flex h-10 w-full items-center gap-1 px-3 text-left text-xs font-semibold
@@ -681,6 +686,20 @@
   .cell-error i { @apply text-sm leading-none; }
   /* a row that has just been created, so the eye finds it without a toast */
   .table tbody tr[data-new] { animation: row-in 3s ease-out forwards; }
+  /* Row edit mode (proposal, after PatternFly's row editing): one row at a time
+     is switched into edit by its row menu. Every editable cell holds exactly one
+     value (108), so it becomes exactly one small control in place; the More
+     button becomes Save and Cancel. Each control is named by its aria-label and
+     placeholder, since a table header is not a form label. The row keeps its
+     height: a small control is 32px, the same as the row's action icons.
+     The column widths are frozen for the duration of the edit (instruments.js)
+     and each control fills its column, so the table does not re-flow. */
+  .table tbody tr[data-editing] { @apply bg-muted/30 hover:bg-muted/30; }
+  .table tbody tr[data-editing] .input-sm { @apply px-2; }
+  .table tbody tr[data-editing] .select-sm .select-trigger { @apply px-2; }
+  .table .num input.input { @apply text-right; }
+  /* Save is quiet until something changed, then it carries the brand colour. */
+  .table tbody tr[data-editing]:not([data-dirty]) [data-row-edit="save"] { @apply bg-transparent text-foreground shadow-none; }
   .table-toolbar { @apply flex items-center justify-between gap-3 pb-4; }
   .table-footer  { @apply flex items-center justify-between gap-3 pt-4 text-sm text-muted-foreground; }
 
