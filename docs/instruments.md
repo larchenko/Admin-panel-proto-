@@ -228,7 +228,7 @@ can be seen to agree; total, inactive and pricer are demo values, and total
 follows the footer so a created instrument moves both. In production all four
 arrive with the list as one aggregate over the whole set.
 
-#### Filtering — decisions 89, 90 and 91
+#### Filtering — decisions 89, 90 and 114
 
 Ten filters do not fit in a toolbar and none of them is opened often enough to earn
 the width, so they all live in one panel behind a **Filters** button and the button
@@ -285,59 +285,86 @@ better search, not a value box in this row.
 
 #### The table
 
-Some columns carry a second line under the primary value; the rest are single
-level. Headers are always one line, so a second line has to be self-explanatory.
+Every column holds one value (decision 108). There are no second lines: a
+related value is a column of its own, and a timestamp is one string.
 
-| Column | First line | Second line |
-|---|---|---|
-| Instrument | name, links to the detail view, square 16px country flag after it | the Bloomberg code, unlabelled — one identifier only, no tooltip; an em dash when the instrument has none |
-| Type | Instrument Type | — |
-| Financial sector | Financial sector | Industry group |
-| Products | count, links to that list | — |
-| Pricer | static checkbox — filled when the instrument is in the pricer, empty when it is not | — |
-| Currency | Currency | — |
-| Last price | price, right aligned, always 2 decimals | Source |
-| Updated | date | time |
-| Status | Active or Inactive badge; the Inactive tooltip holds date, time and who | — |
+The two freshness columns are relative (117): a `<time datetime="…">` whose text
+is the age — *just now* under a minute, then `Nm ago`, `Nh ago`, `Nd ago` — and
+whose tooltip carries the absolute value on two rows, *Date* and *Time*. The
+prototype's clock is fixed at 18 Sep 2026, 10:17 so the ages read the same on
+any day; production uses the real clock and re-renders on a timer. The record's
+market-data note keeps the absolute form (*Last update 18 Sep 2026, 10:12:03*).
+Created and Modified are `<time datetime>` too, but show the date alone (123);
+their tooltip carries the same two rows.
+
+The default set and its order (decision 115):
+
+| Column | Value |
+|---|---|
+| Instrument | name, links to the detail view |
+| Status | Active or Inactive badge; the Inactive tooltip holds date, time and who |
+| Pricer | static checkbox — filled when the instrument is in the pricer, empty when it is not |
+| Currency | Currency |
+| Last price | price, right aligned, always 2 decimals; the source in its tooltip (*Source: SIX*) |
+| Last update | when *our* system last wrote the price, as an age — `5m ago`, `3h ago`, `2d ago` — with the date and time in the tooltip on two rows (decision 117) |
+| Timestamp | the time the provider stamped on that price, shown the same way. Last update can be `5m ago` while the timestamp is `2d ago`: the provider handed over an older price. |
+| Type | Instrument Type |
+| Products | count, links to that list |
+| Created | the date, `23 Sep 2025`; the full stamp in the tooltip on two rows, *Date* and *Time* (123) |
 
 Sortable headers (Instrument, Products, Last price, Updated) highlight the whole
 column on hover — the button is the cell (decision 54).
 
 An inactive instrument keeps its row but mutes it (decision 55): the values go
-grey and the flag fades, so the Inactive badge is the only lit thing in the row.
+grey, so the Inactive badge is the only lit thing in the row.
 
-Row actions sit behind a More menu: **View details**, **Refresh data**, **Delete
-instrument** (decision 95). *View details* and *Edit* are one item, because the
-dialog is both (decision 91). Delete asks first, and what it asks depends on
-`ProductCount`. It is asked from here and from the **Delete instrument** button at
-the left end of the record's footer (100); the record has no More menu (97): with no products it is a plain destructive confirmation, with
-products it is refused — the confirmation says how many products read the
-instrument and offers *Edit instrument* in place of the delete. There is no
-selection checkbox — no bulk actions are planned (decision 42).
+Row actions are icon buttons in the row, not a More menu (decision 109):
+**View details**, **Edit in list**, **Delete instrument** at the right end, in
+that order, each a 32px ghost icon with a one-word tooltip (116) and an
+`aria-label` that names the instrument. **Refresh data** is the fourth action
+and lives in the **Last update** cell, after the age (120, 121): invisible until
+the row is hovered, the button is focused, or it is busy, and it keeps its box so
+the value never moves. *View details* opens the record, which is also the editor
+(decision 91); *Edit in list* switches the row itself into edit (108, 118, 119),
+and so does a **double-click** anywhere on the row that is not a control (121):
+Name, Bloomberg code, Status (a checkbox), Pricer (a checkbox), Currency,
+Last price, Source, Type, Financial sector, Industry group and Country each
+become one control in place (124) — the industry select follows the sector, as
+in the record (96) — Enter saves and Escape cancels. *Refresh data* is disabled on an inactive row — its updates are stopped
+(100). Delete asks first, and what it asks depends on `ProductCount`. It is asked
+from here and from the **Delete instrument** button at the left end of the
+record's footer (100); the record has no More menu (97): with no products it is
+a plain destructive confirmation, with products it is refused — the confirmation
+says how many products read the instrument and offers *Edit instrument* in place
+of the delete. There is no selection checkbox — no bulk actions are planned
+(decision 42).
 
 Last price is the one column with a fixed precision: always two decimals,
 rounded half up, thousands separated by `'`. The rounding is display only — the
 stored value and every calculation keep the full precision the source sent
 (decision 53). It applies to this column, not to prices elsewhere in the product.
 
-Country has no column of its own; it is the square flag icon after the name. Currency sits
-directly left of the price so that `GBp` is read together with the number.
+Country is a column, in words, not a flag after the name (decision 110). Currency
+sits directly left of the price so that `GBp` is read together with the number.
 
-The order is what the instrument *is* (Instrument, Type, Financial sector), what it is
-*used by* (Products, Pricer), what it is *worth* (Currency, Last price,
-Updated), and last what it *is right now* (Status). Created is not in the list:
-it never decides anything on this screen and it lives on the detail page.
+The order is the product manager's (115): the row's identity and state first
+(Instrument, Status, Pricer), then what it is worth and how fresh that is
+(Currency, Last price, Last update, Timestamp), then what it is and who uses it
+(Type, Products), then Created. Country is a column, in words, not a flag after
+the name (decision 110). Currency sits directly left of the price so that `GBp`
+is read together with the number.
 
 Search matches identifiers as well as names, so an ISIN or a RIC finds the
 instrument even though only the Bloomberg code is shown.
 
-Rows are 53px instead of 40px, which is the cost of the second line. The default
-nine columns need about 1150px, which fits a 1440 screen next to the sidebar.
+Rows are one line. The default eleven columns need about 1410px, which fits the
+list next to the sidebar at the fixed desktop size; switching more columns on
+makes the table scroll sideways with the Instrument column pinned (58).
 
 #### Choosing columns — decisions 56 and 57
 
 The table header carries the **Columns** control: an icon at the top of the
-row-actions column, directly above the row `More` buttons, with a tooltip for a
+row-actions column, directly above the row action icons, with a tooltip for a
 label. It decides which columns the list shows and in what order, per user.
 
 The **Instrument** column is pinned to the left edge (58): scrolled sideways, the
@@ -355,21 +382,28 @@ Available, off by default:
 
 | Column | Value | Why it is offered but not default |
 |---|---|---|
-| Country | country name | Normally read as the flag after the name; a text column is for sorting and scanning a country at a time. |
+| Bloomberg code | the one identifier in the list, unlabelled, in the body face (81); an em dash when the instrument has none (45) | The name is the identity; the code is for the people who key on it. Search matches it either way (44). |
+| Source | where the price comes from | It rides in the Last price tooltip by default; the column is for sorting and filtering by eye. |
 | Last close | previous close, right aligned | The other half of the price pair. Full precision as received — the 2-decimal rule (53) is for `Last price` only. |
 | Chg YTD | percent change, signed | One period out of six. The others (5D, 1M, 3M, 6M, 1YR) stay on the detail page; six change columns would turn the list into a market-data terminal. No red/green: the sign carries it, and colour alone is not a cue we use. |
 | Volatility 90D | percent | The one risk number that is comparable across instruments. |
-| Created | date + time | Record info, for the rare "what was added last week" question. |
-| Modified | date + time | Same, but note that automatic fetches write here too, so it is not a record of user edits. |
+| Financial sector | Financial sector, truncated at 220px | Long values; a dash on every non-equity row. |
+| Industry group | industry group, truncated at 220px | Qualifies the financial sector; same reason. |
+| Country | country name | An em dash for indices, commodities and the like. |
+| Modified | the date, with the full stamp in the tooltip (123) | Automatic fetches write here too, so it is not a record of user edits. |
+
+Hidden columns keep their place, so a column switched on lands next to its
+relatives: Bloomberg code after Instrument, Source after Last price, the three
+market-data columns after Timestamp, the three taxonomy columns after Type,
+Modified after Created.
 
 Not offered, and the rule behind each:
 
 - **Individual identifiers** (ISIN, CUSIP, FIGI, SEDOL, VALOR, WKN, RIC, Yahoo,
-  SIX) — the Bloomberg code already rides under the name and search matches all of
-  them (44). Ten identifier columns would repeat what is already on screen.
-- **Industry group, Source, the times under dates, the deactivation date** — a
-  second line belongs to its column. It is shown and hidden with that column and
-  is never a column of its own.
+  SIX) — the Bloomberg code has its own column and search matches all of them
+  (44). Ten more identifier columns would repeat what is already on screen.
+- **The deactivation date** — it lives in the Inactive badge's tooltip, and a
+  column that is empty on every active row is noise.
 - **Id, Created by, Modified by** — a UUID is not scannable, and the "by" fields
   are written by the fetcher (`system@capital-viz.com`), so a column of them would
   read as an audit trail it is not.
@@ -568,11 +602,12 @@ wait. The record has no More menu of its own (97).
 #### What a failed update looks like in the list
 
 In the **Updated** column: `Failed` in destructive red instead of the date, the
-reason in the tooltip (attempt, source, provider message), and a second line
-saying what data is still on screen — or *Awaiting first update* under an em dash
-if there never was any. Status stays what it always was, the lifecycle axis
-(decision 66). The word on screen is *update* everywhere — marker, tooltip and
-summary count (decision 84).
+reason in the tooltip (attempt, source, provider message) and, as the tooltip's
+last row, *Showing* with the date of the data still on screen. An instrument
+that was never fetched shows an em dash with *Awaiting first update* as its
+tooltip. Status stays what it always was, the lifecycle axis (decision 66). The
+word on screen is *update* everywhere — marker, tooltip and summary count
+(decision 84).
 
 #### Prototype notes
 
