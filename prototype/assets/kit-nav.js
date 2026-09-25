@@ -153,7 +153,7 @@
     const brand = el('a', 'kit-brand');
     brand.href = ROOT + 'index.html';
     brand.innerHTML = `
-      <img class="kit-brand-mark" src="${ROOT}assets/logo-mark.svg?v=2026-09-23" alt="">
+      <img class="kit-brand-mark" src="${ROOT}assets/logo-mark.svg?v=2026-09-25" alt="">
       <span class="kit-brand-name">VIZ 2.0 Admin panel</span>`;
     aside.append(brand);
 

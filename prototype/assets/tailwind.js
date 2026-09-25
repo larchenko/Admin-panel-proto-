@@ -21,7 +21,7 @@
   const icon = document.createElement('link');
   icon.rel = 'icon';
   icon.type = 'image/svg+xml';
-  icon.href = base + 'logo-mark.svg?v=2026-09-23';
+  icon.href = base + 'logo-mark.svg?v=2026-09-25';
   document.head.appendChild(icon);
 
   // cache: 'no-cache' revalidates on every load, so an edited theme or recipe

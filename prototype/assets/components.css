@@ -686,7 +686,12 @@
      Icons are 20px and switch line -> fill on the active item (decision 10).
      Markup:
        <aside class="sidebar">
-         <div class="sidebar-header"> <a class="sidebar-brand" href="…"><img src="assets/logo.svg" alt="VIZ"></a> … </div>
+         <div class="sidebar-header">
+           <a class="sidebar-brand" href="…">
+             <img class="sidebar-wordmark" src="assets/logo.svg" alt="Vizibility">
+             <img class="sidebar-mark" src="assets/logo-mark.svg" alt="Vizibility">
+           </a> …
+         </div>
          <nav class="sidebar-content">
            <ul class="sidebar-menu">
              <li><a class="sidebar-item" href="#" aria-current="page"><i class="ri-line-chart-fill"></i><span>Instruments</span></a></li>
@@ -706,11 +711,15 @@
      the screen in step: the wordmark sits on the same optical line as the page
      title, and the first nav item starts at 80px, level with the page's tabs. */
   .sidebar-header  { @apply flex shrink-0 items-center justify-between gap-2 px-3 pb-4 pt-6; }
-  /* The logo, 28px tall (≈78px wide). Full lockup in the open sidebar; the rail
-     keeps the mark alone, stacked over the toggle (see Collapsed rail). */
+  /* The wordmark, 20px tall (≈164px wide): the 327×40 artwork at 28px would be
+     229px, more than the 256px sidebar can give it beside the collapse button.
+     Two images, one shown at a time: the wordmark in the open sidebar, the mark
+     (logo-mark.svg, 54×40, "V.") in the rail, stacked over the toggle (see
+     Collapsed rail). Both 20px tall, so the V is the same size in both states. */
   .sidebar-brand   { @apply flex shrink-0 items-center rounded-sm px-1 outline-none
                             focus-visible:ring-[3px] focus-visible:ring-sidebar-ring/50; }
-  .sidebar-brand > img { @apply block h-7 w-auto; }
+  .sidebar-brand > img { @apply block h-5 w-auto; }
+  .sidebar-brand > .sidebar-mark { @apply hidden; }
   .sidebar-content { @apply flex-1 overflow-y-auto overflow-x-hidden p-2; }
   .sidebar-group   { @apply grid gap-1; }
   .sidebar-group + .sidebar-group { @apply mt-4; }
@@ -764,12 +773,12 @@
      would end up 35 wide against 36 tall. */
   .sidebar[data-collapsed] { @apply w-12; }
   /* The mark sits over the toggle: 48px cannot hold the two side by side. The
-     header grows by 36px (8px gap + 28px mark) and the nav moves down with it —
-     accepted, so the logo stays on screen in both states. The mark is the same
-     logo.svg cropped to its left 193 of 568 units, so there is one file to swap. */
+     header grows by 28px (8px gap + 20px mark) and the nav moves down with it —
+     accepted, so the logo stays on screen in both states. */
   .sidebar[data-collapsed] .sidebar-header { @apply flex-col justify-center gap-2 px-0; }
   .sidebar[data-collapsed] .sidebar-brand { @apply px-0; }
-  .sidebar[data-collapsed] .sidebar-brand > img { @apply w-[calc(1.75rem*193/205)] object-cover object-left; }
+  .sidebar[data-collapsed] .sidebar-brand > .sidebar-wordmark { @apply hidden; }
+  .sidebar[data-collapsed] .sidebar-brand > .sidebar-mark { @apply block; }
   .sidebar[data-collapsed] .sidebar-content,
   .sidebar[data-collapsed] .sidebar-footer { @apply px-0; }
   .sidebar[data-collapsed] .sidebar-group-label,
