@@ -40,8 +40,14 @@ prototype/
                       each section's overview and the previous/next pager all read this one file
 docs/
   domain.md           scope, entities, roles
-  decisions.md        decisions log
+  instruments.md      field model and screen spec for Instruments
+  decisions.md        decisions log: the index, one line per decision
+  decisions-full.md   the full wording and reasoning of each decision
+  worklog.md          one entry per working day, written to paste into Jira comments
   setup.md            this file
+scripts/
+  decisions.py        adds, looks up and checks decisions: python3 scripts/decisions.py -h
+  lint.py             checks the settled rules: python3 scripts/lint.py (also a Claude Code hook)
 ```
 
 ## Dependencies (all from CDN, versions pinned)
