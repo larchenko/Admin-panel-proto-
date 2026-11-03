@@ -1,0 +1,19 @@
+PY ?= .venv/bin/python
+
+.PHONY: setup data test eval serve
+
+setup:
+	python3 -m venv .venv
+	$(PY) -m pip install -r requirements.txt
+
+data:
+	$(PY) eval/fetch_data.py
+
+test:
+	$(PY) -m pytest -q
+
+eval:
+	$(PY) eval/run.py
+
+serve:
+	$(PY) -m uvicorn app.server:app --host 0.0.0.0 --port $${PORT:-8000}

@@ -1,0 +1,12 @@
+# CPU is enough; torch from PyPI.
+torch
+torchvision
+ultralytics>=8.4
+opencv-python-headless>=4.10
+numpy>=2.0
+scipy
+pillow
+fastapi
+uvicorn[standard]
+python-multipart
+pytest

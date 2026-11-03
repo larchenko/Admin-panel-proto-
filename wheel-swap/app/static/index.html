@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wheel Swap</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Wheel Swap</h1>
+      <p class="lead">Приміряйте нові диски на своє авто: фото авто, фото диска, розміри — і готово.</p>
+    </header>
+
+    <form id="form">
+      <section class="step">
+        <h2><span class="n">1</span> Фото авто</h2>
+        <label class="drop" data-for="car">
+          <input type="file" name="car" accept="image/*" required>
+          <img alt="" hidden>
+          <span class="hint">Перетягніть фото сюди або натисніть, щоб вибрати.<br>Збоку або під кутом — так, щоб диски було видно.</span>
+        </label>
+      </section>
+
+      <section class="step">
+        <h2><span class="n">2</span> Фото нового диска</h2>
+        <label class="drop" data-for="rim">
+          <input type="file" name="rim" accept="image/*" required>
+          <img alt="" hidden>
+          <span class="hint">Фото з магазину на білому фоні або диск на іншому авто.<br>Диск має бути видно хоча б наполовину.</span>
+        </label>
+      </section>
+
+      <section class="step">
+        <h2><span class="n">3</span> Розміри</h2>
+        <div class="sizes">
+          <label>Диск на фото авто
+            <select name="d0"></select>
+          </label>
+          <span class="arrow">→</span>
+          <label>Новий диск
+            <select name="d1"></select>
+          </label>
+        </div>
+        <p class="note">Зовнішній діаметр колеса не змінюється: більший диск — нижчий профіль шини, як у житті.</p>
+      </section>
+
+      <button type="submit" id="go">Підібрати диски</button>
+    </form>
+
+    <section id="status" hidden></section>
+
+    <section id="result" hidden>
+      <h2>Результат</h2>
+      <div class="compare" id="compare">
+        <img id="before" alt="До">
+        <div class="after-wrap"><img id="after" alt="Після"></div>
+        <input type="range" id="slider" min="0" max="100" value="50" aria-label="До / після">
+        <span class="tag tag-l">До</span><span class="tag tag-r">Після</span>
+      </div>
+      <p id="summary"></p>
+      <a id="download" class="btn" download="wheel-swap.jpg">Завантажити фото</a>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
