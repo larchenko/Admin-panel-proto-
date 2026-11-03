@@ -7,6 +7,7 @@ MODELS = ROOT / "models"
 
 URLS = {
     "yolov8m-oiv7.pt": "https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8m-oiv7.pt",
+    "isnet-general-use.onnx": "https://github.com/danielgatis/rembg/releases/download/v0.0.0/isnet-general-use.onnx",
     "mobile_sam.pt": "https://github.com/ultralytics/assets/releases/download/v8.4.0/mobile_sam.pt",
 }
 

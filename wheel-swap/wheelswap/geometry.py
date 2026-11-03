@@ -292,6 +292,32 @@ def _rim_by_tyre_split(img, mask, outer):
     return rim
 
 
+def tyre_extent(img_lab: np.ndarray, rim: Ellipse) -> float | None:
+    """Outer edge of the rubber in the rim frame, scanning outward along 360 rays.
+
+    Rubber = close to the tyre's own colour (sampled just outside the lip), plain grey.
+    Per ray the scan stops where rubber ends; the 40th percentile over rays ignores
+    the rays that run into a dark fender or the shadow under the car (too long) and
+    those cut by a fender edge (too short)."""
+    pol = polar_unwrap_const(img_lab, rim, 2.0, 200, 360).astype(np.float32)
+    rho = np.linspace(0, 2.0, 200)
+    ref = pol[:, (rho > 1.04) & (rho < 1.12)].reshape(-1, 3)
+    l_ref = np.median(ref[:, 0])
+    rubber = (np.abs(pol[..., 0] - l_ref) < 22) & (np.abs(pol[..., 1:] - 128).max(2) < 18)
+    rubber = cv2.morphologyEx(rubber.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((1, 5), np.uint8)).astype(bool)
+    start = int(np.searchsorted(rho, 1.04))
+    ext = []
+    for row in rubber:
+        r = row[start:]
+        stop = np.argmin(r) if not r.all() else len(r)
+        ext.append(rho[min(start + stop, len(rho) - 1)])
+    ext = np.array(ext)
+    ext = ext[ext > 1.08]
+    if len(ext) < 60:
+        return None
+    return float(np.percentile(ext, 40))
+
+
 def fit_wheel(img: np.ndarray, mask: np.ndarray, min_contrast: float = 0.35) -> WheelGeom | None:
     """min_contrast: required rim_contrast of the chosen lip. Black rims on black rubber
     score low by nature, so the caller lowers it for confident detections."""
@@ -350,5 +376,10 @@ def fit_wheel(img: np.ndarray, mask: np.ndarray, min_contrast: float = 0.35) -> 
         tyre_ratio = float((edges[i] + edges[i + 1]) / 2)
     else:
         tyre_ratio = 1.25
+    # SAM often leaves part of the sidewall out, so the mask under-estimates the tyre.
+    scan = tyre_extent(lab, rim)
+    if scan is not None and scan > tyre_ratio:
+        tyre_ratio = min(scan * 0.97, tyre_ratio + 0.35)
+    tyre_ratio = float(np.clip(tyre_ratio, 1.1, 1.75))
 
     return WheelGeom(rim, tyre_ratio, best_s, outer, debug=dict(rim_pts=rim_pts, method=best_name))

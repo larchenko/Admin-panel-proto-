@@ -2,6 +2,7 @@
 
     POST /api/swap   multipart: car, rim (images), d0, d1 (inches)
                      -> {"image": "data:image/jpeg;base64,...", "report": {...}}
+                     or {"error": "no_wheels" | "no_rim" | "rim_cut" | "rim_unclear" | "bad_input"}
 """
 import asyncio
 import base64
@@ -63,12 +64,14 @@ async def api_swap(car: UploadFile = File(...), rim: UploadFile = File(...), d0:
     async with _lock:
         try:
             out, report = await asyncio.to_thread(swap, car_img, rim_img, d0, d1)
+        # Expected refusals are answers, not failures: 200 with an "error" code, so the
+        # page can explain them and the browser console stays clean.
         except NoWheels as e:
-            return JSONResponse({"error": "no_wheels", "message": str(e)}, status_code=422)
+            return JSONResponse({"error": "no_wheels", "message": str(e)})
         except RimNotFound as e:
-            return JSONResponse({"error": str(e) or "no_rim", "message": str(e)}, status_code=422)
+            return JSONResponse({"error": str(e) or "no_rim", "message": str(e)})
         except ValueError as e:
-            return JSONResponse({"error": "bad_input", "message": str(e)}, status_code=400)
+            return JSONResponse({"error": "bad_input", "message": str(e)})
     ok, buf = cv2.imencode(".jpg", out, [cv2.IMWRITE_JPEG_QUALITY, 92])
     rep = asdict(report)
     rep["seconds"] = round(time.time() - t0, 2)

@@ -15,18 +15,21 @@ make setup      # venv + requirements (CPU torch from PyPI)
 make data       # evaluation photos from Open Images into data/ (not committed)
 make test       # unit tests on synthetic wheels
 make eval       # full evaluation → eval/out/metrics.json + contact sheets
+make eval-product  # synthetic product shots (rim on white) → eval/out/product.json
 make serve      # http://localhost:8000
 ```
 
 Model weights download on first use into `models/` (not committed), from the
-Ultralytics GitHub releases. HuggingFace is not reachable from the cloud sessions.
+Ultralytics and rembg GitHub releases. HuggingFace is not reachable from the cloud sessions.
 
 ## Layout
 
 ```
 wheelswap/detect.py     YOLOv8m-OIV7 boxes (Wheel, Tire, Car) + MobileSAM masks
 wheelswap/geometry.py   ellipses: RANSAC outline, polar DP for the rim lip, rim frame
-wheelswap/rimsource.py  rim photo → frontal RGBA texture (product shot or on a car)
+wheelswap/rimsource.py  rim photo → frontal RGBA texture (product shot or on a car),
+                        quality gate (RimNotFound: no_rim, rim_cut, rim_unclear),
+                        ISNet (rembg ONNX) vetoes "holes" that are white spokes
 wheelswap/render.py     texture into the rim frame, tyre remap, light, grain, occluders
 wheelswap/pipeline.py   filtering rules and the public swap()
 app/                    FastAPI + one static page, no build step

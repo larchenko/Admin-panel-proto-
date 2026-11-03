@@ -110,13 +110,13 @@ def render_wheel(img: np.ndarray, wheel_mask: np.ndarray, g: WheelGeom, tex: Rim
         rlab[..., 0] *= np.clip(shade, 0.6, 1.4) ** 0.6
     rim_rgb = _lab_to_bgr_f(rlab)
 
-    # 4. Between the spokes: the dark inside of the wheel.
-    inner_l = np.percentile(olab[..., 0][old_rim], 8) if old_rim.any() else 25
-    dark = np.full_like(rim_rgb, 0)
-    dark[...] = np.clip(inner_l * 0.8, 8, 45) * 255 / 100
-    radial = np.clip(1 - (rho / max(k, 1e-3)) * 0.35, 0.6, 1)[..., None]
-    dark = dark * radial
-    face = rim_rgb * rim_a[..., None] + dark * (1 - rim_a[..., None])
+    # 4. Between the spokes (product shots): the inside of the wheel. The darkest parts
+    # of the old wheel set the level (8-bit Lab L is already 0..255). A brake disc is
+    # suggested by a slightly lighter, finely grained ring, the hub by a darker centre.
+    if rim_a.min() < 1:
+        face = rim_rgb * rim_a[..., None] + _wheel_inside(olab, old_rim, rho, uy, k, size) * (1 - rim_a[..., None])
+    else:
+        face = rim_rgb
 
     # 5. Match softness and grain of the photo.
     sharp_o = cv2.Laplacian(cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY), cv2.CV_32F)[old_rim].var() if old_rim.any() else 0
@@ -145,6 +145,22 @@ def render_wheel(img: np.ndarray, wheel_mask: np.ndarray, g: WheelGeom, tex: Rim
     alpha = (reg_img * (1 - keep))[..., None]
     out = img.astype(np.float32) * (1 - alpha) + warped.astype(np.float32) * alpha
     return np.clip(out, 0, 255).astype(np.uint8), info
+
+
+def _wheel_inside(olab, old_rim, rho, uy, k, size):
+    base = float(np.clip(np.percentile(olab[..., 0][old_rim], 6) * 0.8, 10, 38)) if old_rim.any() else 20.0
+    r = rho / max(k, 1e-3)
+    level = np.full(rho.shape, base, np.float32)
+    disc = (r > 0.3) & (r < 0.8)
+    level[disc] += 14 * np.clip(1 - np.abs(r[disc] - 0.6) / 0.25, 0, 1)
+    level[r < 0.2] *= 0.7
+    rng = np.random.default_rng(1)
+    grain = cv2.GaussianBlur(rng.normal(0, 4, rho.shape).astype(np.float32), (0, 0), max(0.6, size / 600))
+    level += grain * disc
+    level *= np.clip(1 - 0.25 * uy / max(k, 1e-3), 0.7, 1.15)  # lit from above
+    # a dark band just inside the lip: the barrel
+    level *= np.clip(1 - 0.6 * np.clip((r - 0.85) / 0.15, 0, 1), 0.4, 1)
+    return np.repeat(np.clip(level, 0, 255)[..., None], 3, axis=2)
 
 
 def _lab_to_bgr_f(lab):

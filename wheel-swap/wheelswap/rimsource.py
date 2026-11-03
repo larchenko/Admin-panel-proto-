@@ -11,7 +11,7 @@ from dataclasses import dataclass
 import cv2
 import numpy as np
 
-from . import detect
+from . import detect, models
 from .geometry import Ellipse, _contour_points, _off_border, fit_ellipse_ransac, fit_wheel, polar_unwrap, rim_contrast
 
 N = 768  # canonical texture size
@@ -20,6 +20,27 @@ RIM_R = N * 0.48  # rim lip radius in the texture
 
 class RimNotFound(Exception):
     pass
+
+
+_isnet = None
+
+
+def matte(img: np.ndarray) -> np.ndarray:
+    """Foreground probability (0..1) from ISNet (rembg's general-use model), image size.
+
+    Colour alone cannot tell a white spoke from the white background seen between
+    spokes; ISNet can, and its outline is used only to veto such "holes"."""
+    global _isnet
+    if _isnet is None:
+        import onnxruntime as ort
+
+        _isnet = ort.InferenceSession(str(models.path("isnet-general-use.onnx")), providers=["CPUExecutionProvider"])
+    h, w = img.shape[:2]
+    x = cv2.resize(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), (1024, 1024), interpolation=cv2.INTER_AREA).astype(np.float32) / 255.0
+    x = (x - 0.5).transpose(2, 0, 1)[None]
+    y = _isnet.run(None, {_isnet.get_inputs()[0].name: x})[0][0, 0]
+    y = (y - y.min()) / (y.max() - y.min() + 1e-6)
+    return cv2.resize(y, (w, h), interpolation=cv2.INTER_LINEAR)
 
 
 @dataclass
@@ -41,10 +62,23 @@ def _border_bg(img: np.ndarray) -> tuple[np.ndarray, float]:
     return med, frac
 
 
+def _local_std(gray: np.ndarray, k: int = 5) -> np.ndarray:
+    m = cv2.blur(gray, (k, k))
+    return np.sqrt(np.maximum(cv2.blur(gray * gray, (k, k)) - m * m, 0))
+
+
+def _bg_like(lab: np.ndarray, bg: np.ndarray) -> np.ndarray:
+    """Background or its soft shadow: the background's tint, not much darker, flat."""
+    chroma_d = np.linalg.norm(lab[..., 1:] - bg[1:], axis=2)
+    dl = bg[0] - lab[..., 0]
+    flat = _local_std(lab[..., 0]) < 3.0
+    return (chroma_d < 6) & (dl > -8) & (dl < 70) & flat | (np.linalg.norm(lab - bg, axis=2) < 10)
+
+
 def _product_mask(img: np.ndarray, bg: np.ndarray) -> np.ndarray:
     lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype(np.float32)
-    d = np.linalg.norm(lab - bg, axis=2)
-    fg = (d > 14).astype(np.uint8)
+    fg = (~_bg_like(lab, bg)).astype(np.uint8)
+    fg = cv2.morphologyEx(fg, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
     fg = cv2.morphologyEx(fg, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
     n, lbl, stats, _ = cv2.connectedComponentsWithStats(fg)
     if n <= 1:
@@ -123,24 +157,23 @@ def _fill_symmetry(tex: np.ndarray, known: np.ndarray, n: int) -> np.ndarray:
     return out
 
 
-def _holes(tex: np.ndarray, bg: np.ndarray, inside: np.ndarray) -> np.ndarray:
-    """Background seen through the spokes of a product shot.
+def _holes(tex: np.ndarray, bg: np.ndarray, inside: np.ndarray, fg_prob: np.ndarray | None = None) -> np.ndarray:
+    """Background (or its shadow) seen through the spokes of a product shot.
 
     Only on a light background: on a dark one the gaps look like the dark inside of a
-    wheel anyway. Small specks close to the background colour are chrome highlights.
+    wheel anyway. Specks are chrome highlights; a gap is a sizeable flat patch.
     """
     if bg[0] < 150:
         return np.zeros(inside.shape, bool)
     lab = cv2.cvtColor(tex, cv2.COLOR_BGR2LAB).astype(np.float32)
-    d = np.linalg.norm(lab - bg, axis=2)
-    cand = ((d < 9) & inside).astype(np.uint8)
-    cand = cv2.morphologyEx(cand, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    cand = _bg_like(lab, bg) & inside
+    if fg_prob is not None:
+        cand &= fg_prob < 0.6
+    cand = cv2.morphologyEx(cand.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
     n, lbl, stats, _ = cv2.connectedComponentsWithStats(cand)
-    hole = np.zeros(inside.shape, bool)
-    for j in range(1, n):
-        comp = lbl == j
-        if stats[j, cv2.CC_STAT_AREA] >= 0.0015 * N * N and d[comp].mean() < 5.5:
-            hole |= comp
+    keep = np.zeros(n, bool)
+    keep[1:] = stats[1:, cv2.CC_STAT_AREA] >= 0.0012 * N * N
+    hole = keep[lbl]
     return cv2.dilate(hole.astype(np.uint8), np.ones((3, 3), np.uint8)).astype(bool)
 
 
@@ -186,8 +219,8 @@ def extract_rim(img: np.ndarray) -> RimTexture:
             raise RimNotFound("no_rim")
         x, y, bw, bh = cv2.boundingRect(mask)
         # the rim may continue past the frame: allow the ellipse to leave the box there
-        outer, inl = fit_ellipse_ransac(pts, tol=max(2.0, 0.01 * max(h, w)), box=(x, y, x + bw, y + bh), slack=0.6)
-        if outer is None or inl.mean() < 0.5:
+        outer, inl = fit_ellipse_ransac(pts, tol=max(1.5, 0.005 * max(h, w)), box=(x, y, x + bw, y + bh), slack=0.6, iters=500)
+        if outer is None or inl.mean() < 0.35:
             raise RimNotFound("no_rim")
         if _has_tyre(img, outer):
             g = fit_wheel(img, mask, min_contrast=0.2)
@@ -216,6 +249,8 @@ def extract_rim(img: np.ndarray) -> RimTexture:
             raise RimNotFound("rim_cut")
         kind = "on_car"
 
+    if rim.axis_ratio < 0.45:  # seen too much from the side to unfold into a frontal view
+        raise RimNotFound("rim_unclear")
     tex, known = _rectify(img, rim, valid)
     yy, xx = np.mgrid[0:N, 0:N]
     rr = np.hypot(xx - N / 2, yy - N / 2)
@@ -225,6 +260,10 @@ def extract_rim(img: np.ndarray) -> RimTexture:
     spokes = _rot_order(tex, known)
     if cover < 0.4 or (cover < 0.85 and spokes == 0):
         raise RimNotFound("rim_cut")
+    if kind == "product":
+        lip_var, _ = texture_stats(np.dstack([tex, inside.astype(np.uint8) * 255]))
+        if lip_var > 1.3:  # the outline found is not a lip running round the rim
+            raise RimNotFound("rim_unclear")
     if kind == "on_car":
         # Calibrated on the 22 eval rim photos (docs/progress.md, iteration 2): rejects
         # every texture that was a tyre, a hub close-up or a caliper; costs one good rim.
@@ -235,6 +274,8 @@ def extract_rim(img: np.ndarray) -> RimTexture:
 
     alpha = inside.astype(np.uint8) * 255
     if product:
-        alpha[_holes(tex, bg, inside)] = 0
+        fg = matte(img)
+        fg_tex, _ = _rectify(np.dstack([fg, fg, fg]), rim, valid)
+        alpha[_holes(tex, bg, inside, fg_tex[..., 0])] = 0
     rgba = np.dstack([tex, alpha])
     return RimTexture(rgba, known, spokes, kind, rim)

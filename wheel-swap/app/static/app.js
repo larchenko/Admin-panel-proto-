@@ -58,7 +58,7 @@ form.addEventListener('submit', async (e) => {
   try {
     const res = await fetch('/api/swap', { method: 'POST', body: data });
     const body = await res.json().catch(() => ({}));
-    if (!res.ok) {
+    if (!res.ok || body.error) {
       setStatus(ERRORS[body.error] || body.message || `Помилка ${res.status}`, 'err');
       return;
     }
