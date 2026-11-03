@@ -8,8 +8,8 @@ from .geometry import WheelGeom, fit_wheel
 from .render import render_wheel
 from .rimsource import RimTexture, extract_rim
 
-MIN_AXIS_RATIO = 0.30  # flatter than this the rim is seen edge-on: nothing to replace
-MAX_TILT = 30  # degrees between the wheel's long axis and the vertical
+MIN_AXIS_RATIO = 0.18  # flatter than this the rim is seen edge-on: nothing to replace
+MAX_TILT = 35  # degrees between the wheel's long axis and the vertical
 
 
 class NoWheels(Exception):
@@ -59,14 +59,15 @@ def find_wheels(img: np.ndarray, report: Report | None = None) -> list[Wheel]:
     detect.segment(img, cands)
     wheels = []
     for d in cands:
-        g = fit_wheel(img, d.mask)
+        g = fit_wheel(img, d.mask, min_contrast=0.1 if d.conf >= 0.4 else 0.35)
         if g is None:
             report.skipped.append(dict(box=d.box.tolist(), reason="no wheel outline"))
             continue
         if g.rim.axis_ratio < MIN_AXIS_RATIO:
             report.skipped.append(dict(box=d.box.tolist(), reason="rim seen edge-on"))
             continue
-        if g.rim.tilt_from_vertical() > MAX_TILT:
+        # The orientation of a near-circle is noise: only check tilt on flattened rims.
+        if g.rim.axis_ratio < 0.8 and g.rim.tilt_from_vertical() > MAX_TILT:
             report.skipped.append(dict(box=d.box.tolist(), reason="not upright"))
             continue
         wheels.append(Wheel(d, g))

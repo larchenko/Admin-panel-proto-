@@ -99,8 +99,25 @@ def _ellipse_residual(e: Ellipse, pts: np.ndarray) -> np.ndarray:
     return np.abs(rho - 1) * min(e.a, e.b)
 
 
-def fit_ellipse_ransac(pts: np.ndarray, tol: float, iters: int = 300, seed: int = 0) -> tuple[Ellipse | None, np.ndarray]:
-    """Robust ellipse fit: occluders (fender, ground, kerb) cut straight chunks out of the contour."""
+def _extent(e: Ellipse) -> tuple[float, float, float, float]:
+    t = np.deg2rad(e.angle)
+    hw = np.sqrt((e.a * np.cos(t)) ** 2 + (e.b * np.sin(t)) ** 2)
+    hh = np.sqrt((e.a * np.sin(t)) ** 2 + (e.b * np.cos(t)) ** 2)
+    return e.cx - hw, e.cy - hh, e.cx + hw, e.cy + hh
+
+
+def _within(e: Ellipse, box, slack: float) -> bool:
+    x0, y0, x1, y1 = _extent(e)
+    bw, bh = box[2] - box[0], box[3] - box[1]
+    return x0 > box[0] - slack * bw and y0 > box[1] - slack * bh and x1 < box[2] + slack * bw and y1 < box[3] + slack * bh
+
+
+def fit_ellipse_ransac(pts: np.ndarray, tol: float, iters: int = 300, seed: int = 0, box=None, slack: float = 0.12) -> tuple[Ellipse | None, np.ndarray]:
+    """Robust ellipse fit: occluders (fender, ground, kerb) cut straight chunks out of the contour.
+
+    box (x0, y0, x1, y1): the ellipse may not reach further than `slack` beyond it.
+    An occluded wheel is never much larger than its visible part.
+    """
     if len(pts) < 20:
         return None, np.zeros(len(pts), bool)
     rng = np.random.default_rng(seed)
@@ -114,6 +131,8 @@ def fit_ellipse_ransac(pts: np.ndarray, tol: float, iters: int = 300, seed: int 
             continue
         if not np.isfinite([e.a, e.b]).all() or min(e.a, e.b) < 3:
             continue
+        if box is not None and not _within(e, box, slack):
+            continue
         inl = _ellipse_residual(e, pts) < tol
         if inl.sum() > best_in.sum():
             best, best_in = e, inl
@@ -122,7 +141,10 @@ def fit_ellipse_ransac(pts: np.ndarray, tol: float, iters: int = 300, seed: int 
     for _ in range(3):  # refine on inliers
         if best_in.sum() < 6:
             break
-        best = Ellipse.from_cv(cv2.fitEllipse(pts[best_in].astype(np.float32)))
+        ref = Ellipse.from_cv(cv2.fitEllipse(pts[best_in].astype(np.float32)))
+        if box is not None and not _within(ref, box, slack):
+            break
+        best = ref
         best_in = _ellipse_residual(best, pts) < tol
     return best, best_in
 
@@ -182,18 +204,24 @@ def _off_border(pts: np.ndarray, shape) -> np.ndarray:
     return (pts[:, 0] > 1) & (pts[:, 1] > 1) & (pts[:, 0] < w - 2) & (pts[:, 1] < h - 2)
 
 
-def fit_wheel(img: np.ndarray, mask: np.ndarray) -> WheelGeom | None:
-    pts_all = _contour_points(mask)
-    pts = pts_all[_off_border(pts_all, mask.shape)]  # the frame edge is not the wheel's outline
-    if len(pts) < 30:
-        return None
-    x, y, w, h = cv2.boundingRect(mask)
-    tol = max(2.0, 0.02 * max(w, h))
-    outer, inl = fit_ellipse_ransac(pts, tol)
-    if outer is None or inl.mean() < 0.45:
-        return None
+def rim_contrast(img_lab: np.ndarray, e: Ellipse) -> float:
+    """How much this ellipse looks like a rim lip: lighter or textured metal inside,
+    plain dark rubber outside, around most of the circumference. 0..1."""
+    pol = polar_unwrap(img_lab, e, 1.2, 60, 180).astype(np.float32)
+    rho = np.linspace(0, 1.2, 60)
+    inn = pol[:, (rho > 0.82) & (rho < 0.96)]
+    out = pol[:, (rho > 1.04) & (rho < 1.16)]
+    l_in, l_out = inn[..., 0].mean(1), out[..., 0].mean(1)
+    chroma_out = np.abs(out[..., 1:] - 128).max(2).mean(1)
+    tex_in = inn[..., 0].std(1)
+    tex_out = out[..., 0].std(1)
+    step = (l_in - l_out > 6) | ((tex_in > tex_out + 3) & (l_in - l_out > -4))
+    rubber = chroma_out < 16
+    return float((step & rubber).mean())
 
-    # Rim boundary: strongest closed radial edge between 45% and 92% of the outer ellipse.
+
+def _rim_by_polar(img, outer):
+    """Strongest closed radial edge between 40% and 95% of the outer ellipse."""
     n_rho, r0, r1 = 160, 0.40, 0.95
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(np.float32)
     k = max(1, int(round(outer.major / 150)))
@@ -212,23 +240,103 @@ def fit_wheel(img: np.ndarray, mask: np.ndarray) -> WheelGeom | None:
     band = (rho >= r0) & (rho <= r1)
     e_band = edge[:, band]
     e_norm = e_band / (np.percentile(e_band, 99) + 1e-6)
-    # Prior: rim radius around 0.70 of the outer ellipse.
-    prior = 0.15 * ((rho[band] - 0.70) / 0.25) ** 2
-    cost = -e_norm + prior[None, :]
-    path = dp_path(cost, max_step=2)
+    prior = 0.15 * ((rho[band] - 0.70) / 0.25) ** 2  # rim around 0.70 of the outer ellipse
+    path = dp_path(-e_norm + prior[None, :], max_step=2)
     rr = rho[band][path]
     th = np.linspace(0, 2 * np.pi, len(rr), endpoint=False)
-    unit = np.stack([np.cos(th) * rr, np.sin(th) * rr], 1)
-    rim_pts = outer.from_unit(unit)
+    rim_pts = outer.from_unit(np.stack([np.cos(th) * rr, np.sin(th) * rr], 1))
     strength = e_norm[np.arange(len(path)), path]
     seen = in_frame[:, band][np.arange(len(path)), path]
     if seen.mean() < 0.4:
-        return None
+        return None, rim_pts
     good = seen & (strength > np.percentile(strength[seen], 30))
-    rim, rin = fit_ellipse_ransac(rim_pts[good], tol=max(1.5, 0.015 * outer.major), iters=200)
-    if rim is None:
+    rim, _ = fit_ellipse_ransac(rim_pts[good], tol=max(1.5, 0.015 * outer.major), iters=200)
+    return rim, rim_pts
+
+
+def _rim_by_tyre_split(img, mask, outer):
+    """Remove the dark rubber connected to the wheel's outline; the rest is the rim."""
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype(np.float32)
+    m = mask.astype(bool)
+    ring = m & ~outer.mask(img.shape, 0.85).astype(bool)
+    core = m & outer.mask(img.shape, 0.5).astype(bool)
+    if ring.sum() < 30 or core.sum() < 30:
         return None
-    rim_score = float(strength[seen].mean())
+    l_tyre = np.percentile(lab[..., 0][ring], 30)
+    l_rim = np.median(lab[..., 0][core])
+    if l_rim - l_tyre < 15:
+        return None  # dark rim on dark rubber: leave it to the edge search
+    thr = (l_tyre + l_rim) / 2
+    chroma = np.abs(lab[..., 1:] - 128).max(2)
+    rubber = m & (lab[..., 0] < thr) & (chroma < 20)
+    rubber = cv2.morphologyEx(rubber.astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    # keep the rubber that touches the outline (gaps between spokes are dark too)
+    n, lbl = cv2.connectedComponents(rubber)
+    edge_lbls = set(np.unique(lbl[ring & (rubber > 0)])) - {0}
+    tyre = np.isin(lbl, list(edge_lbls))
+    rim_region = (m & ~tyre).astype(np.uint8)
+    rim_region = cv2.morphologyEx(rim_region, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    n, lbl, stats, _ = cv2.connectedComponentsWithStats(rim_region)
+    if n <= 1:
+        return None
+    big = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
+    region = (lbl == big).astype(np.uint8)
+    pts = _contour_points(region)
+    pts = pts[_off_border(pts, img.shape)]
+    if len(pts) < 30:
+        return None
+    x, y, w, h = cv2.boundingRect(region)
+    rim, inl = fit_ellipse_ransac(pts, tol=max(1.5, 0.012 * outer.major), iters=200, box=(x, y, x + w, y + h), slack=0.08)
+    if rim is None or inl.mean() < 0.4:
+        return None
+    return rim
+
+
+def fit_wheel(img: np.ndarray, mask: np.ndarray, min_contrast: float = 0.35) -> WheelGeom | None:
+    """min_contrast: required rim_contrast of the chosen lip. Black rims on black rubber
+    score low by nature, so the caller lowers it for confident detections."""
+    pts_all = _contour_points(mask)
+    pts = pts_all[_off_border(pts_all, mask.shape)]  # the frame edge is not the wheel's outline
+    if len(pts) < 30:
+        return None
+    x, y, w, h = cv2.boundingRect(mask)
+    tol = max(2.0, 0.02 * max(w, h))
+    outer, inl = fit_ellipse_ransac(pts, tol, box=(x, y, x + w, y + h))
+    # A 3/4 view shows the tread and the mask grabs the shadow: the outline is then no
+    # ellipse. Keep a rough one and let only the rubber/metal split find the rim.
+    weak = outer is None or inl.mean() < 0.35
+    if weak:
+        outer = Ellipse.from_cv(cv2.fitEllipse(pts.astype(np.float32)))
+        inl = np.ones(len(pts), bool)
+
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype(np.float32)
+    cands = []
+    rim_pts = np.zeros((0, 2))
+    if not weak:
+        rim_p, rim_pts = _rim_by_polar(img, outer)
+        if rim_p is not None:
+            cands.append(("polar", rim_p))
+    rim_t = _rim_by_tyre_split(img, mask, outer)
+    if rim_t is not None:
+        cands.append(("split", rim_t))
+        rim_r, _ = _rim_by_polar(img, rim_t.scaled(1 / 0.72))  # edge search around it
+        if rim_r is not None:
+            cands.append(("split+polar", rim_r))
+    # SAM sometimes returns the rim alone: then the outline itself is the lip.
+    if not weak:
+        cands.append(("outline", outer))
+    best, best_s, best_name = None, -1.0, ""
+    for name, e in cands:
+        if e.major > outer.major * 1.03 or e.major < outer.major * 0.4:
+            continue
+        sc = rim_contrast(lab, e)
+        if name == "outline":
+            sc -= 0.15  # only when clearly better: usually the outline is the tyre
+        if sc > best_s:
+            best, best_s, best_name = e, sc, name
+    if best is None or best_s < (max(0.55, min_contrast) if weak else min_contrast):
+        return None
+    rim = best
 
     # Tyre outer edge in the rim frame: mode of the mask boundary radius.
     u = rim.to_unit(pts)
@@ -241,6 +349,6 @@ def fit_wheel(img: np.ndarray, mask: np.ndarray) -> WheelGeom | None:
         i = int(np.argmax(hist))
         tyre_ratio = float((edges[i] + edges[i + 1]) / 2)
     else:
-        tyre_ratio = float(np.median(np.linalg.norm(outer.to_unit(rim_pts), axis=1)) ** -1)
+        tyre_ratio = 1.25
 
-    return WheelGeom(rim, tyre_ratio, rim_score, outer, debug=dict(rim_pts=rim_pts, path=rr, strength=strength))
+    return WheelGeom(rim, tyre_ratio, best_s, outer, debug=dict(rim_pts=rim_pts, method=best_name))

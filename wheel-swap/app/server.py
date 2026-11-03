@@ -66,7 +66,7 @@ async def api_swap(car: UploadFile = File(...), rim: UploadFile = File(...), d0:
         except NoWheels as e:
             return JSONResponse({"error": "no_wheels", "message": str(e)}, status_code=422)
         except RimNotFound as e:
-            return JSONResponse({"error": "no_rim", "message": str(e)}, status_code=422)
+            return JSONResponse({"error": str(e) or "no_rim", "message": str(e)}, status_code=422)
         except ValueError as e:
             return JSONResponse({"error": "bad_input", "message": str(e)}, status_code=400)
     ok, buf = cv2.imencode(".jpg", out, [cv2.IMWRITE_JPEG_QUALITY, 92])

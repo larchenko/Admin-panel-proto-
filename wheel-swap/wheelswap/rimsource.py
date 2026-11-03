@@ -12,7 +12,7 @@ import cv2
 import numpy as np
 
 from . import detect
-from .geometry import Ellipse, fit_ellipse_ransac, fit_wheel, polar_unwrap, _contour_points
+from .geometry import Ellipse, _contour_points, _off_border, fit_ellipse_ransac, fit_wheel, polar_unwrap, rim_contrast
 
 N = 768  # canonical texture size
 RIM_R = N * 0.48  # rim lip radius in the texture
@@ -123,23 +123,76 @@ def _fill_symmetry(tex: np.ndarray, known: np.ndarray, n: int) -> np.ndarray:
     return out
 
 
-def extract_rim(img: np.ndarray) -> RimTexture:
-    h, w = img.shape[:2]
+def _holes(tex: np.ndarray, bg: np.ndarray, inside: np.ndarray) -> np.ndarray:
+    """Background seen through the spokes of a product shot.
+
+    Only on a light background: on a dark one the gaps look like the dark inside of a
+    wheel anyway. Small specks close to the background colour are chrome highlights.
+    """
+    if bg[0] < 150:
+        return np.zeros(inside.shape, bool)
+    lab = cv2.cvtColor(tex, cv2.COLOR_BGR2LAB).astype(np.float32)
+    d = np.linalg.norm(lab - bg, axis=2)
+    cand = ((d < 9) & inside).astype(np.uint8)
+    cand = cv2.morphologyEx(cand, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    n, lbl, stats, _ = cv2.connectedComponentsWithStats(cand)
+    hole = np.zeros(inside.shape, bool)
+    for j in range(1, n):
+        comp = lbl == j
+        if stats[j, cv2.CC_STAT_AREA] >= 0.0015 * N * N and d[comp].mean() < 5.5:
+            hole |= comp
+    return cv2.dilate(hole.astype(np.uint8), np.ones((3, 3), np.uint8)).astype(bool)
+
+
+def _is_product(img: np.ndarray) -> tuple[bool, np.ndarray]:
+    """A product shot: plain light background on most of the border (even when the rim
+    is cut by the frame). Dark plain backgrounds go the on-car way: a black rim on black
+    cannot be cut out by colour, and a dark close-up is usually a wheel on a car."""
     bg, uniform = _border_bg(img)
-    product = uniform > 0.6
+    return bg[0] > 150 and ((uniform > 0.6) or (uniform > 0.4 and bg[0] > 200)), bg
+
+
+def texture_stats(rgba: np.ndarray) -> tuple[float, float]:
+    """(lip_var, symmetry) of a rim texture.
+
+    lip_var: how much the outer flange changes around the circle, relative to the
+    disc's contrast. A real lip is a continuous ring (low); spokes or a tyre crossing
+    it mean the ellipse is not the lip. symmetry: best correlation of the spoke zone
+    with itself rotated by 360/n, n = 3..12."""
+    g = cv2.cvtColor(rgba[..., :3], cv2.COLOR_BGR2GRAY).astype(np.float32)
+    pol = cv2.warpPolar(g, (256, 720), (N / 2, N / 2), RIM_R, cv2.WARP_POLAR_LINEAR)
+    rho = np.linspace(0, 1, 256)
+    band = pol[:, (rho > 0.9) & (rho < 0.99)].mean(1)
+    disc = pol[:, (rho > 0.2) & (rho < 0.99)]
+    lip_var = float(band.std() / (disc.std() + 1e-6))
+    p = pol[:, (rho > 0.35) & (rho < 0.85)]
+    sym = max(float(np.corrcoef(p.ravel(), np.roll(p, int(round(720 / n)), 0).ravel())[0, 1]) for n in range(3, 13))
+    return lip_var, sym
+
+
+def extract_rim(img: np.ndarray) -> RimTexture:
+    """Raise RimNotFound with a reason when the photo cannot give a whole rim:
+    'no_rim' (nothing rim-like found) or 'rim_cut' (the rim's outer edge is not visible).
+    """
+    h, w = img.shape[:2]
+    product, bg = _is_product(img)
     valid = np.ones((h, w), np.uint8)
+    lab_img = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype(np.float32)
     if product:
         mask = _product_mask(img, bg)
-        pts = _contour_points(mask)
+        pts_all = _contour_points(mask)
+        pts = pts_all[_off_border(pts_all, img.shape)]
         if len(pts) < 30:
-            raise RimNotFound("no object on the rim photo")
-        outer, _ = fit_ellipse_ransac(pts, tol=max(2.0, 0.01 * max(h, w)))
-        if outer is None:
-            raise RimNotFound("rim outline not found")
+            raise RimNotFound("no_rim")
+        x, y, bw, bh = cv2.boundingRect(mask)
+        # the rim may continue past the frame: allow the ellipse to leave the box there
+        outer, inl = fit_ellipse_ransac(pts, tol=max(2.0, 0.01 * max(h, w)), box=(x, y, x + bw, y + bh), slack=0.6)
+        if outer is None or inl.mean() < 0.5:
+            raise RimNotFound("no_rim")
         if _has_tyre(img, outer):
-            g = fit_wheel(img, mask)
+            g = fit_wheel(img, mask, min_contrast=0.2)
             if g is None:
-                raise RimNotFound("rim edge not found")
+                raise RimNotFound("no_rim")
             rim = g.rim
         else:
             rim = outer.scaled(0.995)
@@ -148,13 +201,19 @@ def extract_rim(img: np.ndarray) -> RimTexture:
         dets, _ = detect.propose(img)
         dets = [d for d in dets if d.conf >= 0.1]
         if not dets:
-            raise RimNotFound("no wheel on the rim photo")
+            raise RimNotFound("no_rim")
         d = max(dets, key=lambda d: (d.box[2] - d.box[0]) * (d.box[3] - d.box[1]) * (0.5 + d.conf))
         detect.segment(img, [d])
-        g = fit_wheel(img, d.mask)
+        g = fit_wheel(img, d.mask, min_contrast=0.3)
         if g is None:
-            raise RimNotFound("rim edge not found")
+            raise RimNotFound("no_rim")
         rim = g.rim
+        box_r = max(d.box[2] - d.box[0], d.box[3] - d.box[1]) / 2
+        if rim.major < 0.45 * box_r:  # a centre cap or a brake caliper, not the rim
+            raise RimNotFound("rim_cut")
+        contrast = rim_contrast(lab_img, rim)
+        if contrast < 0.3:  # no rubber around it: the lip is outside the photo
+            raise RimNotFound("rim_cut")
         kind = "on_car"
 
     tex, known = _rectify(img, rim, valid)
@@ -162,14 +221,20 @@ def extract_rim(img: np.ndarray) -> RimTexture:
     rr = np.hypot(xx - N / 2, yy - N / 2)
     inside = rr <= RIM_R
     known &= inside
+    cover = known.sum() / inside.sum()
     spokes = _rot_order(tex, known)
+    if cover < 0.4 or (cover < 0.85 and spokes == 0):
+        raise RimNotFound("rim_cut")
+    if kind == "on_car":
+        # Calibrated on the 22 eval rim photos (docs/progress.md, iteration 2): rejects
+        # every texture that was a tyre, a hub close-up or a caliper; costs one good rim.
+        lip_var, sym = texture_stats(np.dstack([tex, inside.astype(np.uint8) * 255]))
+        if not (sym >= 0.4 or (lip_var <= 0.5 and contrast >= 0.75)):
+            raise RimNotFound("rim_unclear")
     tex = _fill_symmetry(tex, known, spokes)
 
     alpha = inside.astype(np.uint8) * 255
-    if product:  # background seen between spokes
-        lab = cv2.cvtColor(tex, cv2.COLOR_BGR2LAB).astype(np.float32)
-        hole = (np.linalg.norm(lab - bg, axis=2) < 10) & inside
-        hole = cv2.morphologyEx(hole.astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8)).astype(bool)
-        alpha[hole] = 0
+    if product:
+        alpha[_holes(tex, bg, inside)] = 0
     rgba = np.dstack([tex, alpha])
     return RimTexture(rgba, known, spokes, kind, rim)
