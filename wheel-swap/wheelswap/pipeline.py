@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from . import detect
+from . import detect, quality
 from .geometry import WheelGeom, fit_wheel
 from .render import render_wheel
 from .rimsource import RimTexture, extract_rim
@@ -70,6 +70,9 @@ def find_wheels(img: np.ndarray, report: Report | None = None) -> list[Wheel]:
         if g.rim.axis_ratio < 0.8 and g.rim.tilt_from_vertical() > MAX_TILT:
             report.skipped.append(dict(box=d.box.tolist(), reason="not upright"))
             continue
+        e = g.tyre
+        box = (e.cx - e.major, e.cy - e.major, e.cx + e.major, e.cy + e.major)
+        g.debug["eff_px"] = quality.effective_size(2 * g.rim.major, img, box)
         wheels.append(Wheel(d, g))
     if wheels:  # wheels of one car are of similar size in the photo
         top = max(w.geom.rim.major for w in wheels)
@@ -77,6 +80,17 @@ def find_wheels(img: np.ndarray, report: Report | None = None) -> list[Wheel]:
         for w in wheels:
             if w.geom.rim.major < 0.45 * top:
                 report.skipped.append(dict(box=w.det.box.tolist(), reason="much smaller than the other wheels"))
+            else:
+                keep.append(w)
+        wheels = keep
+    if wheels:  # too little detail: say so rather than paint a smudge
+        best = max(w.geom.debug["eff_px"] for w in wheels)
+        if best < quality.MIN_MAIN_WHEEL_PX:
+            raise quality.LowResolution("car", best, quality.MIN_MAIN_WHEEL_PX)
+        keep = []
+        for w in wheels:
+            if w.geom.debug["eff_px"] < quality.MIN_WHEEL_PX:
+                report.skipped.append(dict(box=w.det.box.tolist(), reason="too little detail"))
             else:
                 keep.append(w)
         wheels = keep
@@ -88,6 +102,8 @@ def swap(car_img: np.ndarray, rim_img: np.ndarray, d0: float, d1: float, rim: Ri
     report = Report()
     if not (10 <= d0 <= 26 and 10 <= d1 <= 26):
         raise ValueError("rim diameters are expected between 10 and 26 inches")
+    if min(car_img.shape[:2]) < quality.MIN_SIDE_PX:
+        raise quality.LowResolution("car", min(car_img.shape[:2]), quality.MIN_SIDE_PX)
     rim = rim or extract_rim(rim_img)
     report.rim_kind, report.spokes = rim.kind, rim.spokes
     wheels = find_wheels(car_img, report)

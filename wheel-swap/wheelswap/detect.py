@@ -12,7 +12,7 @@ import numpy as np
 
 from . import models
 
-WHEEL, TIRE, CAR = 582, 536, 90
+WHEEL, TIRE, CAR, BICYCLE_WHEEL = 582, 536, 90, 44
 _yolo = None
 _sam = None
 
@@ -51,18 +51,21 @@ def _iou(a, b):
 
 
 def propose(img: np.ndarray, conf: float = 0.08) -> tuple[list[Detection], list[np.ndarray]]:
-    """Wheel proposals (Wheel and Tire merged) and car boxes."""
-    r = _get_yolo().predict(img, conf=conf, classes=[WHEEL, TIRE, CAR], verbose=False, imgsz=960)[0]
+    """Wheel proposals (Wheel and Tire merged) and car boxes. Bicycle wheels are dropped."""
+    r = _get_yolo().predict(img, conf=conf, classes=[WHEEL, TIRE, CAR, BICYCLE_WHEEL], verbose=False, imgsz=960)[0]
     boxes = r.boxes.xyxy.cpu().numpy()
     confs = r.boxes.conf.cpu().numpy()
     cls = r.boxes.cls.cpu().numpy().astype(int)
     cars = [b for b, c, k in zip(boxes, confs, cls) if k == CAR and c >= 0.25]
+    bikes = [b for b, c, k in zip(boxes, confs, cls) if k == BICYCLE_WHEEL and c >= 0.3]
     cand = sorted(
         [(float(c), b) for b, c, k in zip(boxes, confs, cls) if k in (WHEEL, TIRE)],
         key=lambda t: -t[0],
     )
     kept: list[Detection] = []
     for c, b in cand:  # Wheel and Tire boxes of the same wheel: keep the stronger one
+        if any(_iou(b, bk) > 0.4 for bk in bikes):
+            continue
         if all(_iou(b, k.box) < 0.5 for k in kept):
             kept.append(Detection(b.astype(float), c))
     return kept, cars

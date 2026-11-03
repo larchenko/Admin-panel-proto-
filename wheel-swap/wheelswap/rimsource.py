@@ -1,7 +1,8 @@
 """Turn a rim photo into a frontal, centred rim texture.
 
 Accepts a product shot (rim alone, usually on a light background, sometimes with a
-tyre) or a photo of a rim on a car (possibly cut off by the frame). Output: a square
+tyre) or a photo of a rim on a car. The whole circle of the rim must be in the photo:
+a rim cut by the frame is refused ("rim_cut"), not completed by guessing. Output: a square
 RGBA image, the rim lip on the circle of radius RIM_R around the centre. Alpha 0 marks
 holes between spokes where the background of a product shot shows through; the
 renderer fills those with the dark inside of the wheel.
@@ -11,8 +12,8 @@ from dataclasses import dataclass
 import cv2
 import numpy as np
 
-from . import detect, models
-from .geometry import Ellipse, _contour_points, _off_border, fit_ellipse_ransac, fit_wheel, polar_unwrap, rim_contrast
+from . import detect, models, quality
+from .geometry import Ellipse, _contour_points, _extent, _off_border, _rim_by_polar, fit_ellipse_ransac, fit_wheel, polar_unwrap, rim_contrast
 
 N = 768  # canonical texture size
 RIM_R = N * 0.48  # rim lip radius in the texture
@@ -92,14 +93,47 @@ def _product_mask(img: np.ndarray, bg: np.ndarray) -> np.ndarray:
     return filled
 
 
-def _has_tyre(img: np.ndarray, e: Ellipse) -> bool:
-    """A dark rubber ring just inside the outline means the photo shows a tyre."""
-    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+def _has_tyre(img: np.ndarray, e: Ellipse, bg: np.ndarray) -> bool:
+    """A dark rubber ring just inside the outline means the photo shows a tyre.
+
+    Rubber is dark in absolute terms and darker than the metal; the background seen
+    between the spokes is left out of "the metal", or a grey rim on white would pass."""
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype(np.float32)
     pol = polar_unwrap(lab, e, 1.0, 100)
-    ring = pol[:, 86:98].reshape(-1, 3).astype(np.float32)
-    inner = pol[:, 30:70].reshape(-1, 3).astype(np.float32)
-    dark = (ring[:, 0] < 0.6 * np.median(inner[:, 0]) + 10) & (np.abs(ring[:, 1:] - 128).max(1) < 14)
+    ring = pol[:, 86:98].reshape(-1, 3)
+    inner = pol[:, 30:70].reshape(-1, 3)
+    inner = inner[np.linalg.norm(inner - bg, axis=1) > 14]
+    metal_l = np.median(inner[:, 0]) if len(inner) > 50 else 160.0
+    dark = (ring[:, 0] < min(95.0, 0.6 * metal_l + 10)) & (np.abs(ring[:, 1:] - 128).max(1) < 14)
     return dark.mean() > 0.55
+
+
+def _front_lip(img: np.ndarray, outer: Ellipse, outline_pts: np.ndarray) -> Ellipse:
+    """The rim's front lip inside a product shot's outline.
+
+    Shot at an angle, the outline is the front lip on one side and the back of the
+    barrel on the other; the lip then shows as an edge inside the outline. Frontal, the
+    lip is the outline itself. Search the closed edge between 50% and 100% of the outline
+    and keep it when it is a clearly smaller, shifted ellipse."""
+    lip, _ = _rim_by_polar(img, outer, r0=0.50, r1=1.0, prior_c=0.95, prior_w=0.6, signed=False)
+    if lip is None or lip.major > outer.major * 1.01 or lip.major < outer.major * 0.7:
+        return outer.scaled(0.995)
+    shift = np.hypot(lip.cx - outer.cx, lip.cy - outer.cy) / outer.major
+    # A real front lip runs along the outline on the side away from the barrel; an inner
+    # circle (spoke tips, a centre ring) found by mistake touches it nowhere.
+    from scipy.spatial import cKDTree
+
+    t = np.linspace(0, 2 * np.pi, 360, endpoint=False)
+    on_lip = lip.from_unit(np.stack([np.cos(t), np.sin(t)], 1))
+    dist, _ = cKDTree(outline_pts).query(on_lip)
+    touch = float((dist < 0.03 * outer.major).mean())
+    # 3% and 0.2: the angled chrome rim of the eval set touches 0.26, inner circles found
+    # by mistake on the frontal synthetic shots at most 0.04 (one real example so far).
+    if lip.major < outer.major * 0.97 and shift > 0.02 and touch >= 0.2:  # barrel on one side
+        return lip
+    if outer.axis_ratio < 0.65:  # seen at an angle, yet no lip found: the outline is lip + barrel
+        raise RimNotFound("rim_unclear")
+    return outer.scaled(0.995)
 
 
 def _rectify(img: np.ndarray, rim: Ellipse, valid: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -137,24 +171,6 @@ def _rot_order(tex: np.ndarray, known: np.ndarray) -> int:
         if r > best + 0.03:  # prefer the lower order unless clearly better
             best, best_n = r, n
     return best_n if best > 0.55 else 0
-
-
-def _fill_symmetry(tex: np.ndarray, known: np.ndarray, n: int) -> np.ndarray:
-    """Fill unknown pixels with the same pixel rotated by k*360/n degrees."""
-    out = tex.copy()
-    todo = ~known
-    if n <= 0 or not todo.any():
-        return out
-    for k in range(1, n):
-        if not todo.any():
-            break
-        m = cv2.getRotationMatrix2D((N / 2, N / 2), 360.0 * k / n, 1.0)
-        rt = cv2.warpAffine(tex, m, (N, N), flags=cv2.INTER_LINEAR)
-        rk = cv2.warpAffine(known.astype(np.uint8), m, (N, N), flags=cv2.INTER_NEAREST).astype(bool)
-        take = todo & rk
-        out[take] = rt[take]
-        todo &= ~take
-    return out
 
 
 def _holes(tex: np.ndarray, bg: np.ndarray, inside: np.ndarray, fg_prob: np.ndarray | None = None) -> np.ndarray:
@@ -205,9 +221,13 @@ def texture_stats(rgba: np.ndarray) -> tuple[float, float]:
 
 def extract_rim(img: np.ndarray) -> RimTexture:
     """Raise RimNotFound with a reason when the photo cannot give a whole rim:
-    'no_rim' (nothing rim-like found) or 'rim_cut' (the rim's outer edge is not visible).
+    'no_rim' (nothing rim-like found), 'rim_cut' (part of the rim's circle is not in
+    the photo: the frame cuts it, or only the centre is shown), 'rim_unclear'.
+    Raise quality.LowResolution when the rim has too little detail.
     """
     h, w = img.shape[:2]
+    if min(h, w) < quality.MIN_SIDE_PX:
+        raise quality.LowResolution("rim", min(h, w), quality.MIN_SIDE_PX)
     product, bg = _is_product(img)
     valid = np.ones((h, w), np.uint8)
     lab_img = cv2.cvtColor(img, cv2.COLOR_BGR2LAB).astype(np.float32)
@@ -218,17 +238,21 @@ def extract_rim(img: np.ndarray) -> RimTexture:
         if len(pts) < 30:
             raise RimNotFound("no_rim")
         x, y, bw, bh = cv2.boundingRect(mask)
+        # The object runs off the frame along a long stretch: part of the rim is missing.
+        on_edge = int(mask[0].sum() + mask[-1].sum() + mask[:, 0].sum() + mask[:, -1].sum())
+        if on_edge > 0.08 * max(bw, bh):
+            raise RimNotFound("rim_cut")
         # the rim may continue past the frame: allow the ellipse to leave the box there
         outer, inl = fit_ellipse_ransac(pts, tol=max(1.5, 0.005 * max(h, w)), box=(x, y, x + bw, y + bh), slack=0.6, iters=500)
         if outer is None or inl.mean() < 0.35:
             raise RimNotFound("no_rim")
-        if _has_tyre(img, outer):
+        if _has_tyre(img, outer, bg):
             g = fit_wheel(img, mask, min_contrast=0.2)
             if g is None:
                 raise RimNotFound("no_rim")
             rim = g.rim
         else:
-            rim = outer.scaled(0.995)
+            rim = _front_lip(img, outer, pts)
         kind = "product"
     else:
         dets, _ = detect.propose(img)
@@ -249,17 +273,25 @@ def extract_rim(img: np.ndarray) -> RimTexture:
             raise RimNotFound("rim_cut")
         kind = "on_car"
 
-    if rim.axis_ratio < 0.45:  # seen too much from the side to unfold into a frontal view
+    # The whole circle must be in the photo: a missing piece is not invented.
+    x0, y0, x1, y1 = _extent(rim)
+    m = max(2.0, 0.005 * max(h, w))
+    if x0 < m or y0 < m or x1 > w - 1 - m or y1 > h - 1 - m:
+        raise RimNotFound("rim_cut")
+    # Seen too much from the side to unfold into a frontal view. Product shots are held
+    # to a stricter limit: at a steep angle the back flange of the barrel looks like the
+    # lip (a black rim shot from behind was taken for its own front, ratio 0.61).
+    if rim.axis_ratio < (0.65 if kind == "product" else 0.45):
         raise RimNotFound("rim_unclear")
+    eff = quality.effective_size(2 * rim.major, img, (x0, y0, x1, y1))
+    if eff < quality.MIN_RIM_PHOTO_PX:
+        raise quality.LowResolution("rim", eff, quality.MIN_RIM_PHOTO_PX)
     tex, known = _rectify(img, rim, valid)
     yy, xx = np.mgrid[0:N, 0:N]
     rr = np.hypot(xx - N / 2, yy - N / 2)
     inside = rr <= RIM_R
     known &= inside
-    cover = known.sum() / inside.sum()
     spokes = _rot_order(tex, known)
-    if cover < 0.4 or (cover < 0.85 and spokes == 0):
-        raise RimNotFound("rim_cut")
     if kind == "product":
         lip_var, _ = texture_stats(np.dstack([tex, inside.astype(np.uint8) * 255]))
         if lip_var > 1.3:  # the outline found is not a lip running round the rim
@@ -270,7 +302,6 @@ def extract_rim(img: np.ndarray) -> RimTexture:
         lip_var, sym = texture_stats(np.dstack([tex, inside.astype(np.uint8) * 255]))
         if not (sym >= 0.4 or (lip_var <= 0.5 and contrast >= 0.75)):
             raise RimNotFound("rim_unclear")
-    tex = _fill_symmetry(tex, known, spokes)
 
     alpha = inside.astype(np.uint8) * 255
     if product:

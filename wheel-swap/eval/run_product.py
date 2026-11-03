@@ -14,6 +14,7 @@ import numpy as np
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from wheelswap.quality import LowResolution  # noqa: E402
 from wheelswap.rimsource import N, RIM_R, RimNotFound, extract_rim  # noqa: E402
 
 SYN = ROOT / "data" / "synth"
@@ -41,7 +42,7 @@ def main():
         img = cv2.imread(str(SYN / f"{name}.jpg"))
         try:
             t = extract_rim(img)
-        except RimNotFound as e:
+        except (RimNotFound, LowResolution) as e:
             rows.append(dict(name=name, fail=str(e)))
             tiles.append(tile(img, None, f"{name} {e}"))
             continue

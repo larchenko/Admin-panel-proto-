@@ -65,7 +65,7 @@ def main():
         img = cv2.imread(str(ROOT / "data" / "rims" / f"{rid}.jpg"))
         try:
             t = extract_rim(img)
-        except RimNotFound:
+        except Exception:
             continue
         if t.kind != "on_car":
             continue

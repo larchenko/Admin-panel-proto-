@@ -220,9 +220,12 @@ def rim_contrast(img_lab: np.ndarray, e: Ellipse) -> float:
     return float((step & rubber).mean())
 
 
-def _rim_by_polar(img, outer):
-    """Strongest closed radial edge between 40% and 95% of the outer ellipse."""
-    n_rho, r0, r1 = 160, 0.40, 0.95
+def _rim_by_polar(img, outer, r0=0.40, r1=0.95, prior_c=0.70, prior_w=0.25, signed=True):
+    """Strongest closed radial edge between r0 and r1 of the outer ellipse.
+
+    signed: favour bright inside -> dark outside (metal over rubber). Returns the
+    ellipse (or None) and the path points."""
+    n_rho = 160
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(np.float32)
     k = max(1, int(round(outer.major / 150)))
     gray = cv2.GaussianBlur(gray, (0, 0), k)
@@ -236,11 +239,12 @@ def _rim_by_polar(img, outer):
     g = np.gradient(pol, axis=1)
     gc = np.linalg.norm(np.gradient(pol_lab, axis=1), axis=2)
     # Rim is usually brighter than rubber: favour bright->dark going outward.
-    edge = (np.maximum(-g, 0) * 1.0 + np.abs(g) * 0.3 + gc * 0.3) * in_frame
+    edge = ((np.maximum(-g, 0) * 1.0 + np.abs(g) * 0.3) if signed else np.abs(g)) + gc * 0.3
+    edge = edge * in_frame
     band = (rho >= r0) & (rho <= r1)
     e_band = edge[:, band]
     e_norm = e_band / (np.percentile(e_band, 99) + 1e-6)
-    prior = 0.15 * ((rho[band] - 0.70) / 0.25) ** 2  # rim around 0.70 of the outer ellipse
+    prior = 0.15 * ((rho[band] - prior_c) / prior_w) ** 2  # rim around prior_c of the outer ellipse
     path = dp_path(-e_norm + prior[None, :], max_step=2)
     rr = rho[band][path]
     th = np.linspace(0, 2 * np.pi, len(rr), endpoint=False)

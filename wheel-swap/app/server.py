@@ -3,6 +3,7 @@
     POST /api/swap   multipart: car, rim (images), d0, d1 (inches)
                      -> {"image": "data:image/jpeg;base64,...", "report": {...}}
                      or {"error": "no_wheels" | "no_rim" | "rim_cut" | "rim_unclear" | "bad_input"}
+                     or {"error": "car_low_res" | "rim_low_res", "have": px, "need": px}
 """
 import asyncio
 import base64
@@ -23,6 +24,7 @@ sys.path.insert(0, str(ROOT))
 
 from wheelswap import detect  # noqa: E402
 from wheelswap.pipeline import NoWheels, swap  # noqa: E402
+from wheelswap.quality import LowResolution  # noqa: E402
 from wheelswap.rimsource import RimNotFound  # noqa: E402
 
 MAX_SIDE = 2000  # larger photos are scaled down before processing
@@ -70,6 +72,8 @@ async def api_swap(car: UploadFile = File(...), rim: UploadFile = File(...), d0:
             return JSONResponse({"error": "no_wheels", "message": str(e)})
         except RimNotFound as e:
             return JSONResponse({"error": str(e) or "no_rim", "message": str(e)})
+        except LowResolution as e:
+            return JSONResponse({"error": e.code, "have": e.have, "need": e.need})
         except ValueError as e:
             return JSONResponse({"error": "bad_input", "message": str(e)})
     ok, buf = cv2.imencode(".jpg", out, [cv2.IMWRITE_JPEG_QUALITY, 92])

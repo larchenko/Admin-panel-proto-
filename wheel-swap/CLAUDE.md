@@ -30,6 +30,7 @@ wheelswap/geometry.py   ellipses: RANSAC outline, polar DP for the rim lip, rim 
 wheelswap/rimsource.py  rim photo → frontal RGBA texture (product shot or on a car),
                         quality gate (RimNotFound: no_rim, rim_cut, rim_unclear),
                         ISNet (rembg ONNX) vetoes "holes" that are white spokes
+wheelswap/quality.py    effective resolution (spectral cut-off) and LowResolution
 wheelswap/render.py     texture into the rim frame, tyre remap, light, grain, occluders
 wheelswap/pipeline.py   filtering rules and the public swap()
 app/                    FastAPI + one static page, no build step
@@ -41,6 +42,11 @@ eval/                   sets.json (photo ids + wheel boxes), fetch_data.py, run.
 - Fully automatic: no manual correction in the UI. When unsure, skip the wheel and
   say why (`Report.skipped`), never draw a doubtful wheel.
 - Straight front or rear views with no visible rim are rejected (`NoWheels`).
+- A rim photo whose rim circle is not entirely in the frame is rejected (`rim_cut`):
+  nothing is completed by guessing. Low effective resolution of either photo is
+  rejected (`LowResolution`, the message says how many px there are and are needed).
+- Test photos come only from free sources (Open Images, CC BY 2.0).
+- Hosting: Hugging Face Spaces, free CPU (`docs/deploy.md`, GitHub Actions deploys).
 - The tyre's outer diameter is fixed; the new rim is `k = d1 / d0` of the old one.
 - Every quality change goes through the loop in `docs/PLAN.md`: run `make eval`, look
   at the sheets, record the numbers in `docs/progress.md`, keep only improvements.

@@ -1,0 +1,37 @@
+# Deploys wheel-swap/ to a Hugging Face Space (free CPU hardware) on every push to
+# main that touches it, or by hand from the Actions tab.
+# One-time setup in the GitHub repository settings:
+#   Secrets and variables → Actions → Secrets:   HF_TOKEN  (a Hugging Face write token)
+#   Secrets and variables → Actions → Variables: HF_SPACE  (e.g. your-name/wheel-swap)
+# The Space itself is created once on huggingface.co with the Docker SDK.
+name: Wheel Swap → Hugging Face Space
+
+on:
+  push:
+    branches: [main]
+    paths: ["wheel-swap/**", ".github/workflows/wheel-swap-space.yml"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: ${{ vars.HF_SPACE != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push wheel-swap/ to the Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ vars.HF_SPACE }}
+        run: |
+          set -euo pipefail
+          git clone "https://user:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE}" space
+          rsync -a --delete --exclude .git --exclude .venv --exclude data --exclude models \
+            --exclude eval/out --exclude __pycache__ wheel-swap/ space/
+          cp wheel-swap/deploy/space_README.md space/README.md
+          cd space
+          git config user.email "actions@users.noreply.github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          if git diff --cached --quiet; then echo "nothing to deploy"; exit 0; fi
+          git commit -m "Deploy ${GITHUB_SHA::7}"
+          git push

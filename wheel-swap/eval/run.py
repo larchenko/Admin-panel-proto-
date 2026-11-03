@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT))
 
 from wheelswap import detect  # noqa: E402
 from wheelswap.pipeline import NoWheels, Report, find_wheels, swap  # noqa: E402
+from wheelswap.quality import LowResolution  # noqa: E402
 from wheelswap.rimsource import RimNotFound, extract_rim  # noqa: E402
 
 SETS = json.loads((ROOT / "eval" / "sets.json").read_text())
@@ -86,7 +87,7 @@ def main():
         img = cv2.imread(str(ROOT / "data" / "rims" / f"{rim_ids[i]}.jpg"))
         try:
             rims.append((i, extract_rim(img)))
-        except RimNotFound as e:
+        except (RimNotFound, LowResolution) as e:
             rim_fail.append((i, str(e)))
 
     cars = SETS["cars"][: args.cars or None]
@@ -99,8 +100,9 @@ def main():
         t0 = time.time()
         try:
             res, rep = swap(img, None, d0, d1, rim=rim)
-        except NoWheels:
+        except (NoWheels, LowResolution) as e:
             res, rep = img, Report()
+            rep.skipped.append(dict(box=[0, 0, 0, 0], reason=str(e) or "no wheels"))
         dt = time.time() - t0
         times.append(dt)
         _, cars_boxes = detect.propose(img)
@@ -123,7 +125,10 @@ def main():
     rejected = 0
     for cid, _ in SETS["frontal"]:
         img = cv2.imread(str(ROOT / "data" / "frontal" / f"{cid}.jpg"))
-        rejected += int(not find_wheels(img))
+        try:
+            rejected += int(not find_wheels(img))
+        except LowResolution:
+            rejected += 1
 
     metrics = dict(
         cars=len(cars),
